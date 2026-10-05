@@ -26,7 +26,8 @@ so `v₁` is the covariance and `v₂` is half the commutator.
 * `A → λA`, `B → B/λ` keeps `[A, B]` and acts on `G` as `diag(λ, 1/λ) ∈ SL(2, ℂ)`: a boost along
   `v₃`. The interval, `v₁` and `v₂` do not change, which is why `C_Nava` carries no units.
 * The boost reaches the frame `v₃ = 0`; there `v₀ = ‖x‖ ‖y‖` and the speed of `v` is
-  `β = |⟪x, y⟫| / (‖x‖ ‖y‖) = cos θ_NRS` (`D37b`). At `ψ*`, `β = 1 / C_Nava(d)`: `v` is null iff
+  `β = |⟪x, y⟫| / (‖x‖ ‖y‖) = cos θ_NRS` (`D37b`). At the maximal current state,
+  `β = 1 / C_Nava(d)`: `v` is null iff
   `d = 2, 3` and timelike from `d = 4` on.
 
 Over `ℝ` the inner product is real and `v₂ = 0`: the commutator axis is lost. The four
@@ -41,8 +42,9 @@ components are variances, covariance and commutator of the pair, not coordinates
 - `UncertaintyCone.coneVector_smul`, `UncertaintyCone.boost_coeff` : the rescaling is a boost.
 - `UncertaintyCone.balanced_frame` : a rescaling sets `v₃ = 0` and `v₀ = ‖x‖ ‖y‖`.
 - `UncertaintyCone.interval_eq_speed` : `η(v, v) = (‖x‖ ‖y‖)² (1 − β²)`.
-- `UncertaintyCone.speed_psiStar` : `β = 1 / C_Nava(d)` at `ψ*`.
-- `UncertaintyCone.null_psiStar_iff`, `UncertaintyCone.timelike_psiStar` : null iff `d = 2, 3`,
+- `UncertaintyCone.speed_maxCurrentState` : `β = 1 / C_Nava(d)` at the maximal current state.
+- `UncertaintyCone.null_maxCurrentState_iff`, `UncertaintyCone.timelike_maxCurrentState` : null iff
+  `d = 2, 3`,
   timelike for `d ≥ 4`.
 -/
 
@@ -180,28 +182,29 @@ theorem interval_eq_speed (x y : H) (h : ‖x‖ * ‖y‖ ≠ 0) :
 
 variable {d : ℕ}
 
-/-- **The speed at `ψ*` is `1 / C_Nava(d)`.** -/
-theorem speed_psiStar (hd : 2 ≤ d) :
-    speed (centered (TdOp d) (psiStar d)) (centered (PdOp d) (psiStar d)) =
+/-- **The speed at the maximal current state is `1 / C_Nava(d)`.** -/
+theorem speed_maxCurrentState (hd : 2 ≤ d) :
+    speed (centered (TdOp d) (maxCurrentState d)) (centered (PdOp d) (maxCurrentState d)) =
       1 / CoherenceConstant d :=
   NRSAngle.cos_angleNRS hd
 
-theorem norm_mul_norm_psiStar_ne_zero (hd : 2 ≤ d) :
-    ‖centered (TdOp d) (psiStar d)‖ * ‖centered (PdOp d) (psiStar d)‖ ≠ 0 := by
+theorem norm_mul_norm_maxCurrentState_ne_zero (hd : 2 ≤ d) :
+    ‖centered (TdOp d) (maxCurrentState d)‖ * ‖centered (PdOp d) (maxCurrentState d)‖ ≠ 0 := by
   intro h0
-  have h := speed_psiStar hd
+  have h := speed_maxCurrentState hd
   rw [speed, h0, div_zero] at h
   have hC := NRSAngle.CoherenceConstant_ge_one hd
   have : 0 < 1 / CoherenceConstant d := by positivity
   linarith
 
 /-- **Null iff `d = 2, 3`.** -/
-theorem null_psiStar_iff (hd : 2 ≤ d) :
-    interval (coneVector (centered (TdOp d) (psiStar d)) (centered (PdOp d) (psiStar d))) = 0 ↔
+theorem null_maxCurrentState_iff (hd : 2 ≤ d) :
+    interval (coneVector (centered (TdOp d) (maxCurrentState d)) (centered (PdOp d) (maxCurrentState
+        d))) = 0 ↔
       d = 2 ∨ d = 3 := by
   have hC := NRSAngle.CoherenceConstant_ge_one hd
-  have hn := norm_mul_norm_psiStar_ne_zero hd
-  rw [interval_eq_speed _ _ hn, speed_psiStar hd, ← CoherenceConstant_eq_one_iff d hd]
+  have hn := norm_mul_norm_maxCurrentState_ne_zero hd
+  rw [interval_eq_speed _ _ hn, speed_maxCurrentState hd, ← CoherenceConstant_eq_one_iff d hd]
   constructor
   · intro h
     have h1 := (mul_eq_zero.mp h).resolve_left (pow_ne_zero 2 hn)
@@ -212,15 +215,17 @@ theorem null_psiStar_iff (hd : 2 ≤ d) :
     ring
 
 /-- **Timelike from `d = 4` on.** -/
-theorem timelike_psiStar (hd : 4 ≤ d) :
-    0 < interval (coneVector (centered (TdOp d) (psiStar d)) (centered (PdOp d) (psiStar d))) := by
+theorem timelike_maxCurrentState (hd : 4 ≤ d) :
+    0 < interval (coneVector (centered (TdOp d) (maxCurrentState d)) (centered (PdOp d)
+        (maxCurrentState d))) := by
   have hC := one_lt_CoherenceConstant_of_four_le d hd
-  have hn := norm_mul_norm_psiStar_ne_zero (d := d) (by omega)
-  rw [interval_eq_speed _ _ hn, speed_psiStar (by omega)]
+  have hn := norm_mul_norm_maxCurrentState_ne_zero (d := d) (by omega)
+  rw [interval_eq_speed _ _ hn, speed_maxCurrentState (by omega)]
   have : (1 / CoherenceConstant d) ^ 2 < 1 := by
     rw [div_pow, one_pow, div_lt_one (by positivity)]
     nlinarith
-  have : 0 < (‖centered (TdOp d) (psiStar d)‖ * ‖centered (PdOp d) (psiStar d)‖) ^ 2 := by
+  have : 0 < (‖centered (TdOp d) (maxCurrentState d)‖ * ‖centered (PdOp d) (maxCurrentState d)‖) ^ 2
+      := by
     positivity
   nlinarith
 

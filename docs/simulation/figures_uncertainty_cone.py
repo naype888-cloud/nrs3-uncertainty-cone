@@ -2,7 +2,7 @@
 
 Every number is computed from the matrices T_d, P_d of the base repository:
 T_d = adjacency / ρ_d with ρ_d = 2 cos(π/(d+1)), P_d = diag(−1 + 2j/(d−1)), and the
-maximal-tension state ψ*_j ∝ (−i)^j sin((j+1)π/(d+1)) (speed 1). The four-vector of a pair is
+maximal current state maxCurrentState_j ∝ (−i)^j sin((j+1)π/(d+1)) (speed 1). The four-vector of a pair is
 v = ((‖x‖² + ‖y‖²)/2, Re⟪x,y⟫, Im⟪x,y⟫, (‖x‖² − ‖y‖²)/2) (`Cone.coneVector`).
 """
 
@@ -24,7 +24,7 @@ def ops(d):
     return T.astype(complex), P.astype(complex)
 
 
-def psi_star(d):
+def max_current_state(d):
     v = np.array([(-1j) ** j * np.sin((j + 1) * np.pi / (d + 1)) for j in range(d)])
     return v / np.linalg.norm(v)
 
@@ -52,7 +52,7 @@ def speed(T, P, psi, d):
 
 def C_nava(d):
     T, P = ops(d)
-    s = psi_star(d)
+    s = max_current_state(d)
     x, y = fluct(T, s), fluct(P, s)
     return np.linalg.norm(x) * np.linalg.norm(y) / abs(np.vdot(x, y))
 
@@ -83,12 +83,12 @@ def figure_cone_3d():
     cone_surface(ax)
     d = 4
     T, P = ops(d)
-    # every state of H_4 lies inside the cone; those in the band Ϙ(4) sit near ψ*
+    # every state of H_4 lies inside the cone; those in the band Ϙ(4) sit near the maximal current state
     for k in range(1600):
         if k % 2:
             s = random_state(d)
         else:
-            s = psi_star(d) + 0.3 * RNG.random() * random_state(d)
+            s = max_current_state(d) + 0.3 * RNG.random() * random_state(d)
             s /= np.linalg.norm(s)
         b1, b2 = balanced(cone_vector(fluct(T, s), fluct(P, s)))
         inband = abs(speed(T, P, s, d)) > VSTAR[4]
@@ -98,7 +98,7 @@ def figure_cone_3d():
                             (4, GREEN, "d = 4: β = 0.9916", -0.02),
                             (30, GREEN, "d = 30", -0.02)]:
         T2, P2 = ops(dd)
-        s = psi_star(dd)
+        s = max_current_state(dd)
         b1, b2 = balanced(cone_vector(fluct(T2, s), fluct(P2, s)))
         ax.plot([0, b1], [0, b2], [0, 1], color=c, lw=1.8)
         ax.scatter(b1, b2, 1, color=c, s=30, depthshade=False)
@@ -111,9 +111,9 @@ def figure_cone_3d():
     ax.view_init(elev=30, azim=-25)
     style3d(ax)
     ax.set_title("The uncertainty cone of $T_4 : P_4$ in the balanced frame $v_3 = 0$")
-    leg = [Line2D([], [], color=RED, marker="o", lw=1.8, label="ψ* at d = 2, 3: on the rim, null"),
+    leg = [Line2D([], [], color=RED, marker="o", lw=1.8, label="max current at d = 2, 3: on the rim, null"),
            Line2D([], [], color=GREEN, marker="o", lw=1.8,
-                  label="ψ* at d = 4 (β = 0.9916) and d = 30: inside, timelike"),
+                  label="max current at d = 4 (β = 0.9916) and d = 30: inside, timelike"),
            Line2D([], [], color=VIOLET, marker="o", lw=1.4, ls="--",
                   label=f"d → ∞: β = 1/C∞ = {1 / C_INF:.4f}, never reached"),
            Line2D([], [], color=ORANGE, marker="o", lw=0, label="states of $H_4$ in the band Ϙ(4)"),
@@ -154,7 +154,7 @@ def figure_speed():
 def figure_boost():
     d = 4
     T, P = ops(d)
-    s = psi_star(d)
+    s = max_current_state(d)
     x, y = fluct(T, s), fluct(P, s)
     v = cone_vector(x, y)
     m = np.sqrt(v[0] ** 2 - v[3] ** 2)
@@ -170,7 +170,7 @@ def figure_boost():
         xs, ys = lam * x, y / lam
         w = cone_vector(xs, ys)
         ax.scatter(w[3], w[0], color=c, s=40, zorder=4)
-        ax.annotate(f"λ = {lam:g}" + ("  (the units of ψ*)" if lam == 1 else ""), (w[3], w[0]),
+        ax.annotate(f"λ = {lam:g}" + ("  (the units of the maximal current state)" if lam == 1 else ""), (w[3], w[0]),
                     xytext=(10, -16 if lam == 1 else -4), textcoords="offset points", color=c,
                     fontsize=9)
     lb = np.sqrt(np.linalg.norm(y) / np.linalg.norm(x))
@@ -202,10 +202,10 @@ def figure_real_vs_complex():
                         for s in (random_state(d, real) for _ in range(2500))])
         ax.scatter(pts[:, 0], pts[:, 1], s=3, color=MUTED if real else BLUE, alpha=0.5)
         if not real:
-            s = psi_star(d)
+            s = max_current_state(d)
             b = balanced(cone_vector(fluct(T, s), fluct(P, s)))
             ax.scatter(*b, color=GREEN, s=40, zorder=4)
-            ax.annotate("ψ*", b, xytext=(8, 4), textcoords="offset points", color=GREEN)
+            ax.annotate("max current", b, xytext=(8, 4), textcoords="offset points", color=GREEN)
         ax.set_title(title, fontsize=10.5)
         ax.set_aspect("equal")
         ax.set_xlabel(r"$v_1/v_0'$  covariance")
@@ -227,7 +227,7 @@ def figure_band_cube():
     ds = (4, 4, 4)
     TT = [kron3(ops(k)[0], i, ds) for i, k in enumerate(ds)]
     PP = [kron3(ops(k)[1], i, ds) for i, k in enumerate(ds)]
-    S = np.kron(np.kron(psi_star(4), psi_star(4)), psi_star(4))
+    S = np.kron(np.kron(max_current_state(4), max_current_state(4)), max_current_state(4))
     pts, n = [], 0
     while len(pts) < 700 and n < 40000:
         n += 1
@@ -246,7 +246,7 @@ def figure_band_cube():
     sc = ax.scatter(pts[:, 0], pts[:, 1], pts[:, 2], c=pts.min(axis=1), cmap="viridis", s=7)
     c4 = 1 - 1 / C_nava(4) ** 2
     ax.scatter([c4], [c4], [c4], color=RED, s=60, marker="*")
-    ax.text(c4, c4, c4 * 1.08, "Ψ*", color=RED)
+    ax.text(c4, c4, c4 * 1.08, "max current", color=RED)
     ax.scatter([0], [0], [0], color=INK, s=30, marker="x")
     ax.text(0, 0, 0.004, "  saturation: never reached in the band", color=INK2, fontsize=8)
     ax.set_xlabel("$1-\\beta_x^2$"); ax.set_ylabel("$1-\\beta_y^2$"); ax.set_zlabel("$1-\\beta_z^2$")

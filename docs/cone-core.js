@@ -1,6 +1,6 @@
 // The uncertainty cone, computed from the matrices of the base repository.
 // T_d = adjacency / ρ_d with ρ_d = 2 cos(π/(d+1)); P_d = diag(−1 + 2j/(d−1));
-// ψ*_j ∝ (−i)^j sin((j+1)π/(d+1)), the maximal-tension state (speed 1).
+// maxCurrentState_j ∝ (−i)^j sin((j+1)π/(d+1)), the maximal current state (speed 1).
 // For a state ψ the fluctuation vectors are x = (T − ⟨T⟩)ψ, y = (P − ⟨P⟩)ψ and the four-vector
 // is v = ((‖x‖² + ‖y‖²)/2, Re⟪x,y⟫, Im⟪x,y⟫, (‖x‖² − ‖y‖²)/2)   (Cone.coneVector, Lean).
 // v*(d) for 4 ≤ d ≤ 16: D44 of the base (exact at d = 4, numerical above).
@@ -54,7 +54,7 @@ window.Cone = (() => {
     for (let j = 0; j < d; j++) { const p = pos(d, j); o.re[j] = p * a.re[j]; o.im[j] = p * a.im[j]; }
     return o;
   }
-  function psiStar(d) {
+  function maxCurrentState(d) {
     const s = vec(d), ph = [[1, 0], [0, -1], [-1, 0], [0, 1]];
     for (let j = 0; j < d; j++) {
       const a = Math.sin((j + 1) * Math.PI / (d + 1));
@@ -62,9 +62,9 @@ window.Cone = (() => {
     }
     return scale(s, 1 / Math.sqrt(norm2(s)));
   }
-  // ψ = ψ* + ε χ (χ a fixed random state), normalized; over ℝ the imaginary part is dropped
+  // ψ = maxCurrentState + ε χ (χ a fixed random state), normalized; over ℝ the imaginary part is dropped
   function state(d, eps, seed, real) {
-    const r = rng(seed * 7919 + d), s = psiStar(d);
+    const r = rng(seed * 7919 + d), s = maxCurrentState(d);
     for (let j = 0; j < d; j++) { s.re[j] += eps * gauss(r); s.im[j] += eps * gauss(r); }
     if (real) s.im.fill(0);
     const n = Math.sqrt(norm2(s));
@@ -93,7 +93,7 @@ window.Cone = (() => {
   const cache = {};
   function CNava(d) {
     if (cache[d]) return cache[d];
-    const r = analyse(d, psiStar(d));
+    const r = analyse(d, maxCurrentState(d));
     return (cache[d] = r.beta > 0 ? 1 / r.beta : Infinity);
   }
 
@@ -172,6 +172,6 @@ window.Cone = (() => {
       redraw();
     });
   }
-  return { VSTAR, C_INF, psiStar, state, analyse, CNava, css, setup, view3d, projector, line, poly,
+  return { VSTAR, C_INF, maxCurrentState, state, analyse, CNava, css, setup, view3d, projector, line, poly,
     dot, label, mix, drawCone, themeToggle, rng, gauss };
 })();

@@ -5,7 +5,7 @@ Gram matrix of the fluctuations of transport `T_d` and position `P_d` is a Hermi
 matrix, and a Hermitian `2 × 2` matrix is a four-vector whose determinant is the Minkowski
 interval (van der Waerden 1929). Robertson–Schrödinger is the light cone; saturation is a null
 vector; changing units is a Lorentz boost; and the quantum of NRS³ keeps the vector **strictly
-inside the cone** — at `ψ*` from four positions on, and in the band `Ϙ(d)` for every state, on
+inside the cone** — at the maximal current state from four positions on, and in the band `Ϙ(d)` for every state, on
 every axis, entangled or not. Its speed is `1 / C_Nava(d)`, and its square is the
 Mandelstam–Tamm ratio. Lean 4, Mathlib, and the base repository.
 
@@ -27,11 +27,11 @@ has components `v = ((‖x‖² + ‖y‖²)/2, Re ⟪x, y⟫, Im ⟪x, y⟫, (�
 |---|---|
 | Robertson–Schrödinger, `G ≥ 0` | `v` in the closed future cone |
 | Gram defect, `det G` | interval `τ²` |
-| saturation (`d = 2, 3` at `ψ*`) | null vector, on the cone |
+| saturation (`d = 2, 3` at the maximal current state) | null vector, on the cone |
 | the quantum (`d ≥ 4`; the band) | timelike vector, strictly inside |
 | units: `A → λA`, `B → B/λ` | boost `diag(λ, λ⁻¹)` along `v₃` |
 | `cos θ_NRS = 1 / C_Nava(d)` | speed `β` of `v` in the frame `v₃ = 0` |
-| Mandelstam–Tamm ratio at `ψ*` | `β²` |
+| Mandelstam–Tamm ratio at the maximal current state | `β²` |
 
 ![Speed by dimension](docs/figures/speed_by_dimension.png)
 
@@ -59,8 +59,8 @@ has components `v = ((‖x‖² + ‖y‖²)/2, Re ⟪x, y⟫, Im ⟪x, y⟫, (�
 | the rescaling is a boost; the interval does not move | `coneVector_smul`, `boost_coeff`, `interval_smul` |
 | a rescaling reaches `v₃ = 0`, with `v₀ = ‖x‖ ‖y‖` | `balanced_frame` |
 | `η(v, v) = (‖x‖ ‖y‖)² (1 − β²)` | `interval_eq_speed` |
-| at `ψ*`, `β = 1 / C_Nava(d)` | `speed_psiStar` |
-| null iff `d = 2, 3`; timelike from `d = 4` | `null_psiStar_iff`, `timelike_psiStar` |
+| at the maximal current state, `β = 1 / C_Nava(d)` | `speed_maxCurrentState` |
+| null iff `d = 2, 3`; timelike from `d = 4` | `null_maxCurrentState_iff`, `timelike_maxCurrentState` |
 
 ![Units are a boost](docs/figures/units_are_a_boost.png)
 

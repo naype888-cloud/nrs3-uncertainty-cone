@@ -14,8 +14,8 @@ import NRS3UncertaintyCone
 #print axioms UncertaintyCone.interval_eq_zero_iff
 #print axioms UncertaintyCone.interval_smul
 #print axioms UncertaintyCone.balanced_frame
-#print axioms UncertaintyCone.speed_psiStar
-#print axioms UncertaintyCone.null_psiStar_iff
-#print axioms UncertaintyCone.timelike_psiStar
+#print axioms UncertaintyCone.speed_maxCurrentState
+#print axioms UncertaintyCone.null_maxCurrentState_iff
+#print axioms UncertaintyCone.timelike_maxCurrentState
 #print axioms UncertaintyCone.timelike_of_band
 #print axioms UncertaintyCone.robertson_det_strict_of_band

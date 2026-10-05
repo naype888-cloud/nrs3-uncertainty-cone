@@ -1,0 +1,13 @@
+name = "NRS3UncertaintyCone"
+defaultTargets = ["NRS3UncertaintyCone"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "NavaRobertsonIndependent"
+git = "https://github.com/naype888-cloud/nava-robertson-schrodinger.git"
+rev = "8ca02123b68a9f61af8d2337149869c23a66d345"
+
+[[lean_lib]]
+name = "NRS3UncertaintyCone"

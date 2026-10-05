@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NRS³ Uncertainty Cone</title>
+<meta name="description" content="The uncertainty of a pair of observables is a four-vector of Minkowski space. Robertson–Schrödinger is the light cone; the quantum of NRS³ keeps the vector strictly inside it.">
+<style>
+  :root {
+    --bg: #fcfcfb; --panel: #ffffff; --ink: #0b0b0b; --ink2: #52514e; --muted: #8a8985;
+    --grid: #e4e3df; --blue: #2a78d6; --orange: #eb6834; --green: #2f8f5b; --red: #d0343a; --violet: #7c5cd6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f0f0e; --panel: #171716; --ink: #f2f1ee; --ink2: #c4c3bf; --muted: #8a8985;
+      --grid: #2a2927; --blue: #5b9be6; --orange: #f08a5d; --green: #4fb37d; --red: #f0605f; --violet: #a48bf0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f0f0e; --panel: #171716; --ink: #f2f1ee; --ink2: #c4c3bf; --muted: #8a8985;
+    --grid: #2a2927; --blue: #5b9be6; --orange: #f08a5d; --green: #4fb37d; --red: #f0605f; --violet: #a48bf0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 22px 16px 40px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; font-weight: 650; }
+  .lead { color: var(--ink2); margin: 0 0 14px; max-width: 860px; }
+  .top { display: flex; gap: 8px; float: right; }
+  .theme, .navlink { font: inherit; font-size: 0.8rem; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--grid); background: var(--panel); color: var(--ink); cursor: pointer; text-decoration: none; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+  @media (max-width: 900px) { .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--panel); border: 1px solid var(--grid); border-radius: 12px; padding: 10px 12px;
+    font-variant-numeric: tabular-nums; }
+  .step .n { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--blue); color: #fff; font-size: 0.78rem; font-weight: 650; margin-right: 6px; }
+  .step h3 { font-size: 0.92rem; margin: 0 0 6px; font-weight: 620; display: flex; align-items: center; }
+  .step p { margin: 0; font-size: 0.84rem; color: var(--ink2); }
+  .step .val { margin-top: 6px; font-size: 0.86rem; color: var(--ink); }
+  .mat { display: inline-grid; grid-template-columns: auto auto; gap: 2px 14px; padding: 2px 8px;
+    border-left: 1.5px solid var(--ink2); border-right: 1.5px solid var(--ink2); border-radius: 6px;
+    font-size: 0.82rem; margin: 2px 0; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 10px 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  button.chip, button.act {
+    font: inherit; font-size: 0.88rem; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--grid); background: var(--panel); color: var(--ink);
+  }
+  button[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .sliders { display: grid; grid-template-columns: repeat(3, minmax(170px, 1fr)); gap: 8px 18px; }
+  @media (max-width: 760px) { .sliders { grid-template-columns: 1fr; } }
+  .sl { display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; font-size: 0.92rem; }
+  .sl input { flex: 1; min-width: 0; accent-color: var(--blue); }
+  .sl b { min-width: 3.4em; text-align: right; }
+  .verdict { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+  .pill { border-radius: 999px; padding: 5px 12px; font-size: 0.86rem; border: 1.5px solid var(--grid); }
+  .pill.ok { border-color: var(--green); color: var(--green); background: color-mix(in srgb, var(--green) 9%, transparent); }
+  .pill.null { border-color: var(--red); color: var(--red); background: color-mix(in srgb, var(--red) 9%, transparent); }
+  .pill.info { border-color: var(--violet); color: var(--violet); }
+  .grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; margin-top: 12px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--grid); border-radius: 12px; padding: 10px; position: relative; }
+  .card h2 { font-size: 0.95rem; margin: 2px 4px 4px; font-weight: 600; color: var(--ink2); }
+  .card .hint { position: absolute; right: 12px; top: 10px; font-size: 0.75rem; color: var(--muted); }
+  .card .sub { color: var(--ink2); font-size: .86rem; margin: 0 4px 6px; }
+  canvas { width: 100%; display: block; touch-action: none; }
+  #cone { aspect-ratio: 1 / 0.92; cursor: grab; }
+  #cone:active { cursor: grabbing; }
+  #boost { aspect-ratio: 1 / 0.92; }
+  #phasors { aspect-ratio: 16 / 4.6; }
+  #betas { aspect-ratio: 16 / 5.4; }
+  #cube { aspect-ratio: 16 / 4.2; }
+  @media (max-width: 640px) { #phasors, #betas, #cube { aspect-ratio: 4 / 3; } }
+  .wide { margin-top: 14px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 0.88rem; }
+  th, td { padding: 6px 8px; border-bottom: 1px solid var(--grid); text-align: left; vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+  .tablewrap { overflow-x: auto; }
+  .note { color: var(--ink2); font-size: 0.88rem; margin-top: 14px; max-width: 900px; }
+  code { font-size: 0.86em; }
+  a { color: var(--blue); }
+  .tour { border: 1.5px solid var(--blue); border-radius: 10px; padding: 8px 12px; margin: 10px 0 0;
+    background: color-mix(in srgb, var(--blue) 7%, transparent); font-size: 0.92rem; }
+  .tour[hidden] { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <a class="navlink" href="lorentz.html">SL(2, ℂ) page →</a>
+    <button class="theme" id="theme" type="button" aria-label="Toggle dark mode">Theme</button>
+  </div>
+  <h1>NRS³ — the uncertainty cone</h1>
+  <p class="lead">Take a state ψ and the pair transport <code>T</code> : position <code>P</code> on an axis with
+    <code>d</code> positions. Their fluctuations are two vectors of <code>ℂ<sup>d</sup></code>; their Gram matrix is a
+    Hermitian 2×2 matrix, and a Hermitian 2×2 matrix <em>is</em> a vector of Minkowski space (van der Waerden 1929).
+    Robertson–Schrödinger says that vector never leaves the light cone. The quantum of NRS³ says more: from four
+    positions on, in the band, it stays <strong>strictly inside</strong>. Every number below is computed live from the
+    matrices <code>T<sub>d</sub></code>, <code>P<sub>d</sub></code>; every claim is a Lean theorem (table at the end).</p>
+
+  <div class="steps" aria-live="polite">
+    <div class="step"><h3><span class="n">1</span>Two fluctuation vectors</h3>
+      <p><code>x = (T − ⟨T⟩)ψ</code>, <code>y = (P − ⟨P⟩)ψ</code> in ℂ<sup>d</sup>.</p>
+      <div class="val" id="s1">–</div></div>
+    <div class="step"><h3><span class="n">2</span>Their Gram matrix</h3>
+      <p>Hermitian: <code>G = [‖x‖², ⟪x,y⟫; ⟪y,x⟫, ‖y‖²]</code>.</p>
+      <div class="val" id="s2">–</div></div>
+    <div class="step"><h3><span class="n">3</span>A four-vector</h3>
+      <p><code>G = v₀1 + v₁σ₁ − v₂σ₂ + v₃σ₃</code>; v₁ covariance, v₂ commutator.</p>
+      <div class="val" id="s3">–</div></div>
+    <div class="step"><h3><span class="n">4</span>The interval</h3>
+      <p><code>det G = v₀² − v₁² − v₂² − v₃²</code> ≥ 0: inside the cone.</p>
+      <div class="val" id="s4">–</div></div>
+  </div>
+
+  <div class="bar">
+    <div class="chips" role="group" aria-label="Presets">
+      <button class="chip" type="button" data-p="2,0">ψ*, d = 2</button>
+      <button class="chip" type="button" data-p="3,0">ψ*, d = 3</button>
+      <button class="chip" type="button" data-p="4,0">ψ*, d = 4</button>
+      <button class="chip" type="button" data-p="12,0">ψ*, d = 12</button>
+      <button class="chip" type="button" data-p="6,0.03">in the band</button>
+      <button class="chip" type="button" data-p="8,0.9">a far state</button>
+      <button class="chip" type="button" id="seed">🎲 New direction</button>
+    </div>
+    <button class="act" type="button" id="field" aria-pressed="false">ℝ only</button>
+    <button class="act" type="button" id="tourbtn" aria-pressed="false">✦ Guided tour</button>
+  </div>
+  <div class="sliders">
+    <label class="sl">d<input type="range" id="d" min="2" max="16" value="4"><b id="vd">4</b></label>
+    <label class="sl">ε away from ψ*<input type="range" id="eps" min="0" max="1" step="0.001" value="0"><b id="veps">0</b></label>
+    <label class="sl">units λ<input type="range" id="lam" min="-2" max="2" step="0.01" value="0"><b id="vlam">1</b></label>
+  </div>
+  <div class="tour" id="tour" hidden></div>
+  <div class="verdict" id="verdict" aria-live="polite"></div>
+
+  <div class="grid">
+    <div class="card"><h2>The cone, in the frame v₃ = 0</h2><span class="hint">drag to turn</span>
+      <p class="sub">The arrow is the uncertainty vector, rescaled to height 1. The rim is the speed of light β = 1:
+        saturation. Dots: ψ* for d = 2 … 16; dashed ring: the limit 1/C<sub>∞</sub>, never reached.</p>
+      <canvas id="cone" aria-label="Three-dimensional light cone with the uncertainty vector"></canvas></div>
+    <div class="card"><h2>Units are a boost</h2>
+      <p class="sub"><code>A → λA</code>, <code>B → B/λ</code> keeps <code>[A, B]</code> and slides the vector along its
+        hyperbola <code>v₀² − v₃² = (‖x‖‖y‖)²</code>. The interval, the covariance and the commutator do not move: that is
+        why <code>C<sub>Nava</sub></code> has no units.</p>
+      <canvas id="boost" aria-label="The hyperbola of boosts in the plane v3, v0"></canvas></div>
+  </div>
+
+  <div class="card wide"><h2>Step 1, seen: the two vectors site by site</h2>
+    <p class="sub">Each site j carries x<sub>j</sub> (blue) and y<sub>j</sub> (orange) as arrows in the complex plane.
+      β = |⟪x, y⟫| / (‖x‖‖y‖) = cos θ<sub>NRS</sub>: the two vectors are parallel only when β = 1.</p>
+    <canvas id="phasors" aria-label="The components of the two fluctuation vectors as phasors"></canvas></div>
+
+  <div class="card wide"><h2>The speed of the vector at ψ*: β(d) = 1 / C<sub>Nava</sub>(d)</h2>
+    <p class="sub">Null at d = 2, 3, timelike from d = 4, decreasing towards 1/C<sub>∞</sub> = 0.8805 without reaching it.
+      Dashed: β², the Mandelstam–Tamm ratio ⟨K⟩² / (4 Var T Var P).</p>
+    <canvas id="betas" aria-label="The speed beta of d against d"></canvas></div>
+
+  <div class="card wide"><h2>Three axes, one determinant: det|NRS³ at Ψ* = ψ* ⊗ ψ* ⊗ ψ*</h2>
+    <p class="sub">On the box d<sub>x</sub> × d<sub>y</sub> × d<sub>z</sub> each axis has its own cone. Robertson 1934 for
+      the six observables gives det Σ / |det Ω| = C(d<sub>x</sub>)² C(d<sub>y</sub>)² C(d<sub>z</sub>)², strict as soon as
+      one axis has 4 positions; in the band it is strict for every state, entangled or not (D49t).</p>
+    <div class="sliders">
+      <label class="sl">d<sub>x</sub><input type="range" id="dx" min="2" max="16" value="4"><b id="vdx">4</b></label>
+      <label class="sl">d<sub>y</sub><input type="range" id="dy" min="2" max="16" value="7"><b id="vdy">7</b></label>
+      <label class="sl">d<sub>z</sub><input type="range" id="dz" min="2" max="16" value="10"><b id="vdz">10</b></label>
+    </div>
+    <canvas id="cube" aria-label="The three axis speeds of the box and the determinant ratio"></canvas></div>
+
+  <div class="card wide"><h2>What you see, and the theorem behind it</h2>
+    <div class="tablewrap"><table>
+      <tr><th>On the page</th><th>Statement</th><th>Lean</th></tr>
+      <tr><td>Step 2 → 3</td><td>G in the components of v; every Hermitian 2×2 matrix is a four-vector</td><td><code>gramMatrix_eq</code>, <code>herm_coords</code></td></tr>
+      <tr><td>Step 4</td><td>det G is the Minkowski interval</td><td><code>det_gramMatrix</code>, <code>det_herm</code></td></tr>
+      <tr><td>never outside</td><td>Robertson–Schrödinger is the closed future cone</td><td><code>mem_futureCone</code>, <code>robertsonSchrodinger_future</code></td></tr>
+      <tr><td>on the rim</td><td>saturation is a null vector</td><td><code>interval_eq_zero_iff</code></td></tr>
+      <tr><td>λ slider</td><td>units are a boost; the interval does not move</td><td><code>coneVector_smul</code>, <code>interval_smul</code>, <code>gram_boost</code></td></tr>
+      <tr><td>frame v₃ = 0</td><td>a rescaling reaches it, with v₀ = ‖x‖‖y‖</td><td><code>balanced_frame</code></td></tr>
+      <tr><td>β(d)</td><td>at ψ*, β = 1 / C<sub>Nava</sub>(d); null iff d = 2, 3; timelike from 4</td><td><code>speed_psiStar</code>, <code>null_psiStar_iff</code>, <code>timelike_psiStar</code></td></tr>
+      <tr><td>“in the band”</td><td>every axis strictly timelike for every state in Ϙ, entangled included; det|NRS³ strict</td><td><code>timelike_of_band</code>, <code>robertson_det_strict_of_band</code></td></tr>
+      <tr><td>ℝ only</td><td>over ℝ the commutator component v₂ vanishes</td><td>stated in the docstrings; <code>coords_gram_two</code></td></tr>
+    </table></div>
+    <p class="note">The four components are statistics of the pair — variances, covariance, commutator — not coordinates of
+      events. Outside the band the defect can vanish only trivially (Robertson as 0 = 0, nothing moves). Source:
+      <a href="https://github.com/naype888-cloud/nrs3-uncertainty-cone">nrs3-uncertainty-cone</a> ·
+      base theorem: <a href="https://github.com/naype888-cloud/nava-robertson-schrodinger">nava-robertson-schrodinger</a>.</p>
+  </div>
+</main>
+<script src="cone-core.js"></script>
+<script>
+(() => {
+  const C = window.Cone, $ = (id) => document.getElementById(id);
+  const st = { d: 4, eps: 0, lam: 1, seed: 1, real: false };
+  const view = { yaw: -0.9, pitch: 0.55, user: false };
+  const f = (x, n = 4) => (Math.abs(x) < 1e-12 ? "0" : x.toFixed(n));
+  const cpx = (re, im) => `${f(re)} ${im < 0 ? "−" : "+"} ${f(Math.abs(im))}i`;
+  let R = null;
+
+  function compute() {
+    const s = C.state(st.d, st.eps, st.seed, st.real);
+    R = C.analyse(st.d, s, st.lam);
+    R.s = s;
+  }
+  function steps() {
+    $("s1").innerHTML = `‖x‖² = ${f(R.a)} &nbsp; ‖y‖² = ${f(R.b)}<br>⟪x, y⟫ = ${cpx(R.v[1], R.v[2])}`;
+    $("s2").innerHTML = `<span class="mat"><span>${f(R.a)}</span><span>${cpx(R.v[1], R.v[2])}</span>
+      <span>${cpx(R.v[1], -R.v[2])}</span><span>${f(R.b)}</span></span>`;
+    $("s3").innerHTML = `v = (${f(R.v[0])}, ${f(R.v[1])}, ${f(R.v[2])}, ${f(R.v[3])})`;
+    $("s4").innerHTML = `det G = ${R.interval.toExponential(4)}<br>β = ${f(R.beta, 6)} &nbsp; 1 − β² = ${(1 - R.beta ** 2).toExponential(3)}`;
+    const pills = [];
+    const nullish = R.interval <= 1e-12 * Math.max(1, R.v[0] ** 2);
+    pills.push(nullish ? `<span class="pill null">on the cone: saturated (null)</span>`
+                       : `<span class="pill ok">strictly inside: timelike, defect ${R.interval.toExponential(3)}</span>`);
+    if (R.band === true) pills.push(`<span class="pill ok">speed ${f(Math.abs(R.speed), 5)} in the band Ϙ(${st.d}) = (${R.vstar}, 1]</span>`);
+    else if (R.band === false) pills.push(`<span class="pill info">speed ${f(Math.abs(R.speed), 5)} below v*(${st.d}) = ${R.vstar}: outside the band</span>`);
+    else pills.push(`<span class="pill info">d = ${st.d}: no band (Ϙ(2) = Ϙ(3) = ∅)</span>`);
+    if (st.real) pills.push(`<span class="pill info">ℝ only: v₂ = 0, the commutator axis is lost</span>`);
+    if (st.eps === 0 && !st.real) pills.push(`<span class="pill info">ψ*: β = 1/C<sub>Nava</sub>(${st.d}) = ${f(1 / C.CNava(st.d), 6)}</span>`);
+    $("verdict").innerHTML = pills.join("");
+  }
+
+  function drawCone() {
+    const { g, w, h } = C.setup($("cone"));
+    const P = C.projector(w, h, view, 0.42, 0.62);
+    const ink = C.css("--ink"), muted = C.css("--muted"), blue = C.css("--blue"), red = C.css("--red"),
+      green = C.css("--green"), violet = C.css("--violet"), orange = C.css("--orange"), grid = C.css("--grid");
+    C.line(g, P, [-1.25, 0, 0], [1.25, 0, 0], grid); C.line(g, P, [0, -1.25, 0], [0, 1.25, 0], grid);
+    C.line(g, P, [0, 0, 0], [0, 0, 1.25], grid);
+    C.label(g, P, [1.3, 0, 0], "v₁ cov", muted); C.label(g, P, [0, 1.3, 0], "v₂ comm", muted);
+    C.label(g, P, [0, 0, 1.3], "v₀′", muted);
+    C.drawCone(g, P, 1, blue);
+    const ring = [];
+    for (let t = 0; t <= 80; t++) ring.push([Math.cos(t * Math.PI / 40) / C.C_INF, Math.sin(t * Math.PI / 40) / C.C_INF, 1]);
+    C.poly(g, P, ring, violet, 1.2, [5, 4]);
+    for (let d = 2; d <= 16; d++) {
+      const b = 1 / C.CNava(d);
+      C.dot(g, P, [0, -b, 1], d === st.d ? 4.5 : 2.6, d <= 3 ? red : green);
+    }
+    // the current vector, rescaled to v₀′ = 1 (balanced frame)
+    const b1 = R.rest > 0 ? R.v[1] / R.rest : 0, b2 = R.rest > 0 ? R.v[2] / R.rest : 0;
+    const tip = [b1, b2, 1];
+    const rr = [];
+    for (let t = 0; t <= 80; t++) rr.push([R.beta * Math.cos(t * Math.PI / 40), R.beta * Math.sin(t * Math.PI / 40), 1]);
+    C.poly(g, P, rr, C.mix(orange, 0.55), 1);
+    C.line(g, P, [b1, b2, 0], tip, C.mix(muted, 0.6), 1, [3, 3]);
+    C.line(g, P, [0, 0, 0], tip, orange, 2.6);
+    C.dot(g, P, tip, 5, orange);
+    C.label(g, P, tip, `β = ${R.beta.toFixed(4)}`, ink, 9, -8, "600 12px system-ui");
+    C.label(g, P, [0, 1, 1], "rim: β = 1", red, 6, -8, "11px system-ui");
+  }
+
+  function drawBoost() {
+    const { g, w, h } = C.setup($("boost"));
+    const ink = C.css("--ink"), muted = C.css("--muted"), blue = C.css("--blue"), red = C.css("--red"),
+      orange = C.css("--orange"), grid = C.css("--grid");
+    const m = R.rest, L = Math.max(m * Math.cosh(1.5), Math.abs(R.v[3]) * 1.15, R.v[0] * 1.08);
+    const pad = 34, sx = (w - 2 * pad) / (2 * L), sy = (h - 2 * pad) / L, S = Math.min(sx, sy);
+    const X = (v3) => w / 2 + v3 * S, Y = (v0) => h - pad - v0 * S;
+    g.strokeStyle = grid; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(X(-L), Y(0)); g.lineTo(X(L), Y(0)); g.moveTo(X(0), Y(0)); g.lineTo(X(0), Y(L)); g.stroke();
+    g.setLineDash([4, 4]); g.strokeStyle = red;
+    g.beginPath(); g.moveTo(X(0), Y(0)); g.lineTo(X(L), Y(L)); g.moveTo(X(0), Y(0)); g.lineTo(X(-L), Y(L)); g.stroke();
+    g.setLineDash([]);
+    g.strokeStyle = blue; g.lineWidth = 2.2; g.beginPath();
+    for (let k = 0; k <= 200; k++) {
+      const e = -3 + 6 * k / 200, a = m * Math.sinh(e), b = m * Math.cosh(e);
+      if (b > L) continue;
+      const px = X(a), py = Y(b);
+      k && g.lineTo(px, py) || g.moveTo(px, py);
+    }
+    g.stroke();
+    g.fillStyle = ink; g.beginPath(); g.arc(X(0), Y(m), 4, 0, 7); g.fill();
+    g.font = "12px system-ui"; g.fillText("v₃ = 0, v₀ = ‖x‖‖y‖", X(0) + 8, Y(m) + 16);
+    g.fillStyle = orange; g.beginPath(); g.arc(X(R.v[3]), Y(R.v[0]), 6, 0, 7); g.fill();
+    g.font = "600 12px system-ui"; g.fillText(`λ = ${st.lam.toFixed(2)}`, X(R.v[3]) + 9, Y(R.v[0]) - 8);
+    g.fillStyle = muted; g.font = "12px system-ui";
+    g.fillText("v₃ = (Var A − Var B)/2", w - pad - 150, Y(0) - 6);
+    g.fillText("v₀ = (Var A + Var B)/2", X(0) + 6, pad - 6);
+    g.fillStyle = red; g.fillText("light lines", X(L * 0.62) + 6, Y(L * 0.62));
+    g.fillStyle = ink;
+    g.fillText(`interval = ${R.interval.toExponential(4)} (same for every λ)`, pad, pad + 4);
+  }
+
+  function drawPhasors() {
+    const { g, w, h } = C.setup($("phasors"));
+    const blue = C.css("--blue"), orange = C.css("--orange"), muted = C.css("--muted"), grid = C.css("--grid");
+    const d = st.d, cw = (w - 20) / d, r = Math.min(cw * 0.42, h * 0.2);
+    let mx = 1e-12, my = 1e-12;
+    for (let j = 0; j < d; j++) {
+      mx = Math.max(mx, Math.hypot(R.x.re[j], R.x.im[j]) * st.lam);
+      my = Math.max(my, Math.hypot(R.y.re[j], R.y.im[j]) / st.lam);
+    }
+    const row = (cy, vec, k, m, col) => {
+      for (let j = 0; j < d; j++) {
+        const cx = 10 + cw * (j + 0.5);
+        g.strokeStyle = grid; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.stroke();
+        const re = vec.re[j] * k / m * r, im = vec.im[j] * k / m * r;
+        g.strokeStyle = col; g.lineWidth = 2; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + re, cy - im); g.stroke();
+        g.fillStyle = col; g.beginPath(); g.arc(cx + re, cy - im, 2.6, 0, 7); g.fill();
+      }
+    };
+    row(h * 0.3, R.x, st.lam, mx, blue);
+    row(h * 0.74, R.y, 1 / st.lam, my, orange);
+    g.font = "12px system-ui"; g.fillStyle = blue; g.fillText("x = (T − ⟨T⟩)ψ", 10, 14);
+    g.fillStyle = orange; g.fillText("y = (P − ⟨P⟩)ψ", 10, h * 0.52);
+    g.fillStyle = muted;
+    for (let j = 0; j < d; j++) g.fillText(`${j + 1}`, 10 + cw * (j + 0.5) - 3, h - 4);
+  }
+
+  function drawBetas() {
+    const { g, w, h } = C.setup($("betas"));
+    const blue = C.css("--blue"), red = C.css("--red"), violet = C.css("--violet"), orange = C.css("--orange"),
+      muted = C.css("--muted"), grid = C.css("--grid"), green = C.css("--green"), ink = C.css("--ink");
+    const D = 60, lo = 0.76, hi = 1.02, pl = 46, pr = 14, pt = 12, pb = 26;
+    const X = (d) => pl + (d - 2) / (D - 2) * (w - pl - pr), Y = (b) => pt + (hi - b) / (hi - lo) * (h - pt - pb);
+    g.strokeStyle = grid; g.fillStyle = muted; g.font = "11px system-ui";
+    for (let b = 0.8; b <= 1.0001; b += 0.05) { g.beginPath(); g.moveTo(pl, Y(b)); g.lineTo(w - pr, Y(b)); g.stroke(); g.fillText(b.toFixed(2), 8, Y(b) + 4); }
+    for (const d of [2, 10, 20, 30, 40, 50, 60]) g.fillText(`${d}`, X(d) - 5, h - 8);
+    const hl = (b, col, dash, txt) => { g.strokeStyle = col; g.setLineDash(dash); g.beginPath(); g.moveTo(pl, Y(b)); g.lineTo(w - pr, Y(b)); g.stroke(); g.setLineDash([]); g.fillStyle = col; g.fillText(txt, w - pr - 210, Y(b) - 4); };
+    hl(1, red, [2, 3], "β = 1: the rim, saturation");
+    hl(1 / C.C_INF, violet, [6, 4], `1/C∞ = ${(1 / C.C_INF).toFixed(4)}: never reached`);
+    const curve = (fn, col, dash) => { g.strokeStyle = col; g.lineWidth = 2; g.setLineDash(dash); g.beginPath();
+      for (let d = 2; d <= D; d++) { const y = Y(fn(d)); d === 2 ? g.moveTo(X(d), y) : g.lineTo(X(d), y); } g.stroke(); g.setLineDash([]); g.lineWidth = 1; };
+    curve((d) => 1 / C.CNava(d), blue, []);
+    curve((d) => 1 / C.CNava(d) ** 2, orange, [5, 4]);
+    for (let d = 2; d <= D; d++) { g.fillStyle = d <= 3 ? red : blue; g.beginPath(); g.arc(X(d), Y(1 / C.CNava(d)), d === st.d ? 5 : 1.8, 0, 7); g.fill(); }
+    g.fillStyle = ink; g.font = "600 12px system-ui";
+    g.fillText(`d = ${st.d}: β = ${(1 / C.CNava(st.d)).toFixed(5)}`, X(st.d) + 8, Y(1 / C.CNava(st.d)) + 18);
+    g.font = "11px system-ui"; g.fillStyle = muted; g.fillText("positions per axis d", X(13), h - 8);
+  }
+
+  function drawCube() {
+    const { g, w, h } = C.setup($("cube"));
+    const ds = [+$("dx").value, +$("dy").value, +$("dz").value];
+    ["x", "y", "z"].forEach((a, i) => { $("vd" + a).textContent = ds[i]; });
+    const blue = C.css("--blue"), red = C.css("--red"), green = C.css("--green"), muted = C.css("--muted"),
+      ink = C.css("--ink"), grid = C.css("--grid"), violet = C.css("--violet");
+    const pl = 70, pr = 270, lo = 0.86, hi = 1.0;
+    const X = (b) => pl + (b - lo) / (hi - lo) * (w - pl - pr);
+    let ratio = 1;
+    ds.forEach((d, i) => {
+      const c = C.CNava(d), b = 1 / c, y = 18 + i * (h - 30) / 3;
+      ratio *= c * c;
+      g.strokeStyle = grid; g.beginPath(); g.moveTo(X(lo), y + 10); g.lineTo(X(hi), y + 10); g.stroke();
+      g.strokeStyle = violet; g.setLineDash([4, 3]); g.beginPath(); g.moveTo(X(1 / C.C_INF), y); g.lineTo(X(1 / C.C_INF), y + 20); g.stroke(); g.setLineDash([]);
+      g.fillStyle = d <= 3 ? red : green; g.fillRect(X(lo), y + 4, X(b) - X(lo), 12);
+      g.fillStyle = ink; g.font = "12px system-ui"; g.fillText(`${"xyz"[i]}: d = ${d}`, 8, y + 14);
+      g.fillStyle = muted; g.fillText(`β = ${b.toFixed(5)}${d <= 3 ? " (null)" : ""}`, X(b) + 6, y + 14);
+    });
+    g.fillStyle = muted; g.font = "11px system-ui";
+    g.fillText("0.86", X(lo) - 10, h - 2); g.fillText("1", X(hi) - 3, h - 2);
+    g.fillStyle = violet; g.fillText("1/C∞", X(1 / C.C_INF) - 12, h - 2);
+    const strict = ratio > 1 + 1e-12;
+    g.fillStyle = strict ? green : red; g.font = "600 13px system-ui";
+    g.fillText("det Σ / |det Ω| at Ψ*", w - pr + 16, 30);
+    g.font = "600 20px system-ui"; g.fillText(ratio.toFixed(6), w - pr + 16, 58);
+    g.font = "12px system-ui"; g.fillText(strict ? "> 1: det|NRS³ strict" : "= 1: every axis has 2 or 3", w - pr + 16, 80);
+  }
+
+  function drawAll() { compute(); steps(); drawCone(); drawBoost(); drawPhasors(); drawBetas(); drawCube(); }
+
+  function sync() {
+    $("d").value = st.d; $("vd").textContent = st.d;
+    $("eps").value = Math.cbrt(st.eps); $("veps").textContent = st.eps.toFixed(st.eps < 0.01 ? 4 : 3);
+    $("lam").value = Math.log2(st.lam); $("vlam").textContent = st.lam.toFixed(2);
+    $("field").setAttribute("aria-pressed", st.real);
+  }
+  $("d").addEventListener("input", (e) => { st.d = +e.target.value; sync(); drawAll(); });
+  $("eps").addEventListener("input", (e) => { st.eps = (+e.target.value) ** 3; sync(); drawAll(); });
+  $("lam").addEventListener("input", (e) => { st.lam = 2 ** (+e.target.value); sync(); drawAll(); });
+  $("seed").addEventListener("click", () => { st.seed = 1 + Math.floor(Math.random() * 1e6); if (st.eps === 0) st.eps = 0.2; sync(); drawAll(); });
+  $("field").addEventListener("click", () => { st.real = !st.real; if (st.real && st.eps === 0) st.eps = 0.3; sync(); drawAll(); });
+  document.querySelectorAll("[data-p]").forEach((b) => b.addEventListener("click", () => {
+    const [d, e] = b.dataset.p.split(",").map(Number);
+    st.d = d; st.eps = e; st.lam = 1; st.real = false; sync(); drawAll();
+  }));
+  ["dx", "dy", "dz"].forEach((id) => $(id).addEventListener("input", drawCube));
+  C.view3d($("cone"), view, drawCone);
+  C.themeToggle($("theme"), drawAll);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
+  window.addEventListener("resize", drawAll);
+
+  // guided tour: each stop sets the controls and explains
+  const STOPS = [
+    [{ d: 2, eps: 0, lam: 1, real: false }, "d = 2 at ψ*: the arrow touches the rim. β = 1, the interval is 0: Robertson–Schrödinger is saturated, the vector is null."],
+    [{ d: 3, eps: 0, lam: 1, real: false }, "d = 3: still on the rim. With 2 or 3 positions there is no quantum (null_psiStar_iff)."],
+    [{ d: 4, eps: 0, lam: 1, real: false }, "d = 4: the arrow leaves the rim and goes inside, β = 0.99159. The defect is positive: the vector is timelike (timelike_psiStar)."],
+    [{ d: 16, eps: 0, lam: 1, real: false }, "More positions push it further in, towards the dashed ring 1/C∞ = 0.8805, which no finite d reaches."],
+    [{ d: 6, eps: 0.03, lam: 1, real: false }, "Move the state a little away from ψ*: its speed stays in the band Ϙ(6) and the vector stays strictly inside, for every such state (timelike_of_band)."],
+    [{ d: 6, eps: 0.03, lam: 3.2, real: false }, "Change the units, A → λA and B → B/λ: the point slides on its hyperbola (a Lorentz boost) and the interval does not change (interval_smul)."],
+    [{ d: 6, eps: 0.5, lam: 1, real: true }, "ℝ only: drop the imaginary part of the state. The commutator component v₂ is 0 for every real state; the arrow is stuck in the plane v₂ = 0. The cone needs ℂ."],
+    [{ d: 4, eps: 0, lam: 1, real: false }, "Back to ψ* at d = 4. Drag the cone to turn it; try the three axes of a box below."],
+  ];
+  let tourT = null, stop = 0;
+  function runStop() {
+    const [s, txt] = STOPS[stop];
+    Object.assign(st, s); sync(); drawAll();
+    $("tour").hidden = false; $("tour").innerHTML = `<strong>${stop + 1}/${STOPS.length}</strong> · ${txt}`;
+    stop += 1;
+    if (stop >= STOPS.length) { clearInterval(tourT); tourT = null; $("tourbtn").setAttribute("aria-pressed", "false"); }
+  }
+  $("tourbtn").addEventListener("click", () => {
+    if (tourT) { clearInterval(tourT); tourT = null; $("tourbtn").setAttribute("aria-pressed", "false"); return; }
+    stop = 0; $("tourbtn").setAttribute("aria-pressed", "true"); runStop(); tourT = setInterval(runStop, 6500);
+  });
+  function spin() { if (!view.user) { view.yaw += 0.0025; drawCone(); } requestAnimationFrame(spin); }
+  sync(); drawAll();
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) requestAnimationFrame(spin);
+})();
+</script>
+</body>
+</html>

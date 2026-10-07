@@ -24,3 +24,4 @@ import NRS3UncertaintyCone
 #print axioms UncertaintyCone.properTime_le_time
 #print axioms UncertaintyCone.properTime_maxCurrentState
 #print axioms UncertaintyCone.properTime_maxCurrentState_pos
+#print axioms UncertaintyCone.contrast_maxCurrentState

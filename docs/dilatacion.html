@@ -109,6 +109,13 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
     <div class="plot"><div class="cap">sen θ_NRS(d) = τ / (σ_A σ_B): cero en 2 y 3, positivo y creciente desde 4, bajo su límite de Szegő.</div><div class="chart" id="curve"></div></div>
   </section>
 
+  <section class="plots">
+    <div class="plot"><div class="cap">Contraste tan θ_NRS(d) = cateto oscuro / cateto de luz, estrictamente entre las dos saturaciones.</div><div class="chart" id="contrast"></div></div>
+    <div class="plot"><div class="cap">Ilustración (no es un teorema): la misma escena con el contraste de la d elegida. Todo blanco y todo negro son la misma ceguera.</div>
+      <canvas id="scene" width="480" height="320" style="width:100%;height:auto;display:block;border-radius:6px" role="img" aria-label="Escena ilustrativa cuyo contraste sigue a tan θ_NRS(d)"></canvas>
+      <div class="cap" id="scene-cap"></div></div>
+  </section>
+
   <p class="note">La luz resuelve el cateto cos θ; el cateto sen θ es el tiempo propio, lo que la luz no resuelve. Cuando
     β = cos θ → 1 (saturación, en c) el tiempo propio se anula. El cuanto de NRS³ mantiene β &lt; 1 desde d = 4, y el
     límite de Szegő C∞ = √(π²/3 − 2) acota el ángulo sin alcanzarlo nunca.</p>
@@ -123,6 +130,10 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
         <tr><td>dilatación: τ ≤ v₀</td><td class="name">properTime_le_time</td><td><span class="pill">probado</span></td></tr>
         <tr><td>en el estado de máxima corriente, τ = ‖x‖ ‖y‖ sen θ_NRS(d)</td><td class="name">properTime_maxCurrentState</td><td><span class="pill">probado</span></td></tr>
         <tr><td>τ &gt; 0 desde d = 4</td><td class="name">properTime_maxCurrentState_pos</td><td><span class="pill">probado</span></td></tr>
+        <tr><td>contraste τ / ‖⟪x, y⟫‖ = tan θ_NRS(d)</td><td class="name">contrast_maxCurrentState</td><td><span class="pill">probado</span></td></tr>
+        <tr><td>en Physlib: el contraste vive en (0, √(π²/3 − 3)) desde N = 4</td><td class="name">properTimeQuantum_mem_Ioo</td><td><span class="pill">probado</span></td></tr>
+        <tr><td>en Physlib: mismo N, mismo contraste, en cualquier escala (microscopio, salón, telescopio)</td><td class="name">properTimeQuantum_eq_of_N_eq</td><td><span class="pill">probado</span></td></tr>
+        <tr><td>en Physlib: ningún vector de incertidumbre es spacelike (nada va más rápido que c)</td><td class="name">causalCharacter_uncertaintyVector_ne_spaceLike</td><td><span class="pill">probado</span></td></tr>
         <tr><td>en Physlib: τ ≤ v₀ por la Cauchy–Schwarz inversa (Kevorkian)</td><td class="name">properTime_uncertaintyVector_le_timeComponent</td><td><span class="pill">probado</span></td></tr>
       </tbody>
     </table></div>
@@ -172,6 +183,37 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
       { type: "scatter", mode: "markers", name: "d elegida", x: [d], y: [s], marker: { color: warm, size: 11 } }
     ], layout("d", "τ / (σ_A σ_B)"), cfg);
   }
+  const tanInf = Math.sqrt(Cinf * Cinf - 1);
+  const W = 480, Hh = 320, base = new Float32Array(W * Hh);
+  for (let y = 0; y < Hh; y++) for (let x = 0; x < W; x++) {
+    const u = (x - W / 2) / 110, v = (y - Hh / 2) / 110, r = Math.hypot(u, v);
+    base[y * W + x] = Math.min(1, Math.max(0, 0.5 + 0.35 * Math.cos(6 * r) * Math.exp(-0.35 * r * r) + 0.15 * (x / W - 0.5) + 0.12 * Math.sin(3 * u) * Math.cos(2 * v)));
+  }
+  function scene(t) {
+    const r = t / tanInf, k = 4 * r * (1 - r), cv = $("scene"), ctx = cv.getContext("2d"), im = ctx.createImageData(W, Hh);
+    for (let i = 0; i < W * Hh; i++) {
+      const I = Math.min(1, Math.max(0, (1 - r) + (base[i] - 0.5) * k * 1.6)) * 255;
+      im.data[4 * i] = im.data[4 * i + 1] = im.data[4 * i + 2] = I; im.data[4 * i + 3] = 255;
+    }
+    ctx.putImageData(im, 0, 0);
+    $("scene-cap").textContent = r === 0 ? "d = 2, 3 · saturación en blanco: la imagen se vela" :
+      "regulación tan θ / tan θ∞ = " + r.toFixed(3) + (r > 0.9 ? " · cerca de la otra saturación: todo negro" : "");
+  }
+  function drawContrast() {
+    const acc = css("--accent"), warm = css("--warm"), mut = css("--mut");
+    const d = +$("d").value, Ns = []; for (let N = 2; N <= 80; N++) Ns.push(N);
+    const t = N => Math.sqrt(Math.max(0, C2(N) - 1));
+    Plotly.react("contrast", [
+      { type: "scatter", mode: "lines+markers", name: "tan θ_NRS(d)", x: Ns, y: Ns.map(t), line: { color: acc, width: 2 }, marker: { size: 4 } },
+      { type: "scatter", mode: "lines", name: "saturación blanca (d = 2, 3)", x: [2, 80], y: [0, 0], line: { color: mut, dash: "dot" } },
+      { type: "scatter", mode: "lines", name: "saturación negra √(C∞² − 1), nunca alcanzada", x: [2, 80], y: [tanInf, tanInf], line: { color: css("--fg"), dash: "dot" } },
+      { type: "scatter", mode: "markers", name: "d elegida", x: [d], y: [t(d)], marker: { color: warm, size: 11 } }
+    ], layout("d", "contraste tan θ"), cfg);
+    scene(t(d));
+  }
+  $("d").addEventListener("input", drawContrast);
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawContrast);
+  drawContrast();
   $("d").addEventListener("input", draw);
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
   draw();

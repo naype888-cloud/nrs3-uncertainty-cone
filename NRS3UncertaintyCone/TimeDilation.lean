@@ -26,6 +26,7 @@ the vector lies on the light cone, positive from `d = 4` on.
 - `UncertaintyCone.properTime_le_time` : `τ ≤ v₀`.
 - `UncertaintyCone.properTime_maxCurrentState` : `τ = ‖x‖ ‖y‖ sin θ_NRS(d)`.
 - `UncertaintyCone.properTime_maxCurrentState_pos` : `0 < τ` from `d = 4` on.
+- `UncertaintyCone.contrast_maxCurrentState` : the contrast `τ / ‖⟪x, y⟫‖` is `tan θ_NRS(d)`.
 -/
 
 @[expose] public noncomputable section
@@ -105,5 +106,25 @@ theorem properTime_maxCurrentState_pos (hd : 4 ≤ d) :
     0 < properTime (coneVector (centered (TdOp d) (maxCurrentState d))
         (centered (PdOp d) (maxCurrentState d))) :=
   Real.sqrt_pos.mpr (timelike_maxCurrentState hd)
+
+/-- **The contrast.** At the maximal current state the ratio of the dark leg to the leg of light,
+`τ / ‖⟪x, y⟫‖`, is `tan θ_NRS(d)`. -/
+theorem contrast_maxCurrentState (hd : 2 ≤ d) :
+    properTime (coneVector (centered (TdOp d) (maxCurrentState d))
+        (centered (PdOp d) (maxCurrentState d))) /
+      ‖inner ℂ (centered (TdOp d) (maxCurrentState d)) (centered (PdOp d) (maxCurrentState d))‖ =
+      Real.tan (angleNRS d) := by
+  have hn := norm_mul_norm_maxCurrentState_ne_zero hd
+  have hc : Real.cos (angleNRS d) ≠ 0 := by
+    rw [angleNRS_eq hd, Real.cos_arccos (by
+      have := CoherenceConstant_ge_one hd
+      have : 0 < 1 / CoherenceConstant d := by positivity
+      linarith) (by
+      rw [div_le_one (by linarith [CoherenceConstant_ge_one hd])]
+      exact CoherenceConstant_ge_one hd)]
+    have := CoherenceConstant_ge_one hd
+    positivity
+  rw [properTime_maxCurrentState hd, norm_inner_eq_mul_cos, angle, speed_maxCurrentState hd,
+    ← angleNRS_eq hd, Real.tan_eq_sin_div_cos, mul_div_mul_left _ _ hn]
 
 end UncertaintyCone

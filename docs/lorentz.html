@@ -125,8 +125,8 @@
     determinant is the interval (<code>det_herm</code>), <code>SL(2, ℂ)</code> keeps the interval
     (<code>det_conj</code>) and the future cone (<code>posSemidef_conj</code>), the Gram matrix of two vectors is future
     causal (<code>robertsonSchrodinger_future</code>), and <code>A → λA</code>, <code>B → B/λ</code> is the boost
-    <code>diag(λ, λ⁻¹)</code> (<code>gram_boost</code>) — the slider η₃ with λ = e<sup>η₃/2</sup>. The four components
-    are statistics of the pair, not coordinates of events.</p>
+    <code>diag(λ, λ⁻¹)</code> (<code>gram_boost</code>) — the slider η₃ with λ = e<sup>η₃/2</sup>.
+    In Physlib it is a <code>Lorentz.Vector 3</code> that causally follows the origin (<code>causallyFollows_uncertaintyVector</code>).</p>
 </main>
 <script src="cone-core.js"></script>
 <script>

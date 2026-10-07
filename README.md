@@ -103,6 +103,23 @@ quantum opens the NRS angle and with it the first time. In Physlib the same tria
 `TimeDilation.lean`, where `τ ≤ v₀` comes from the reverse Cauchy–Schwarz inequality of causal
 vectors (Kevorkian), next to Langevin's twin paradox (1911).
 
+### `RoundTrip` — going and coming back
+
+Reversing the direction, `y ↦ -y`, reflects the four-vector: `v₁`, `v₂` change sign, `v₀`, `v₃`
+do not, and the proper time is the same both ways. The way there and back has no net covariance
+and no net commutator, yet it carries at least twice the proper time of one way: the round trip
+pays twice, and returning to the start does not undo it.
+
+| Statement | Lean |
+|---|---|
+| same proper time going and coming back | `properTime_neg` |
+| no net `v₁`, no net `v₂` | `round_trip_one`, `round_trip_two` |
+| `2 τ ≤ τ(there + back)` | `two_mul_properTime_le_round_trip` |
+| positive from `d = 4` on | `round_trip_maxCurrentState_pos` |
+
+In Physlib the same statement is `RoundTrip.lean`, where `2 τ ≤ τ(there + back)` is Kevorkian's
+reverse triangle inequality of causal vectors.
+
 ## Why `ℂ`
 
 Over `ℝ` the inner product is real, `v₂ = Im ⟪x, y⟫ = 0` for every state, and the commutator

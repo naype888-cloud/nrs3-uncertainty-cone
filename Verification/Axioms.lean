@@ -25,3 +25,7 @@ import NRS3UncertaintyCone
 #print axioms UncertaintyCone.properTime_maxCurrentState
 #print axioms UncertaintyCone.properTime_maxCurrentState_pos
 #print axioms UncertaintyCone.contrast_maxCurrentState
+#print axioms UncertaintyCone.properTime_neg
+#print axioms UncertaintyCone.round_trip_two
+#print axioms UncertaintyCone.two_mul_properTime_le_round_trip
+#print axioms UncertaintyCone.round_trip_maxCurrentState_pos

@@ -4,3 +4,4 @@ public import NRS3UncertaintyCone.VanDerWaerden1929
 public import NRS3UncertaintyCone.Cone
 public import NRS3UncertaintyCone.Band
 public import NRS3UncertaintyCone.TimeDilation
+public import NRS3UncertaintyCone.RoundTrip

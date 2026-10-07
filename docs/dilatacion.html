@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dilatación NRS³</title>
+<meta name="description" content="El triángulo rectángulo de la incertidumbre: τ = σ_A σ_B sen θ, la dilatación del tiempo y el ángulo NRS, cada valor con su teorema de Lean.">
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<style>
+/* Layout: one instrument column — control strip on top, live readouts, three linked plots, then the Lean ledger and the static figures. */
+:root {
+  --bg: #fcfcfb; --panel: #ffffff; --fg: #0b0b0b; --mut: #52514e; --line: #e4e3df;
+  --accent: #2a78d6; --warm: #eb6834; --ok: #1f7a4d; --code: #f1f0ec;
+  --display: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111110; --panel: #191918; --fg: #f2f1ee; --mut: #c4c3bf; --line: #2c2b29;
+  --accent: #5b9be6; --warm: #f08a5d; --ok: #5cc98f; --code: #1f1f1d; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111110; --panel: #191918; --fg: #f2f1ee; --mut: #c4c3bf; --line: #2c2b29;
+  --accent: #5b9be6; --warm: #f08a5d; --ok: #5cc98f; --code: #1f1f1d; color-scheme: dark }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 var(--body); }
+.meta a { color: var(--accent); }
+.wrap { max-width: 1080px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 56px; display: grid; gap: 28px; }
+h1, h2 { font-family: var(--display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 700; }
+h2 { font-size: 1.3rem; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+.eyebrow { font: 600 .74rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--mut); }
+header { display: grid; gap: 10px; }
+.formula { font-family: var(--mono); font-size: 1.05rem; color: var(--accent); }
+.mut { color: var(--mut); }
+code, .mono { font-family: var(--mono); font-size: .86em; }
+code { background: var(--code); padding: 1px 5px; border-radius: 4px; }
+
+.controls { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: grid; gap: 14px; }
+.ctl-row { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; }
+.ctl-row label { font-weight: 600; }
+input[type="range"] { flex: 1 1 320px; min-width: 0; accent-color: var(--accent); }
+.sval { font-family: var(--mono); font-variant-numeric: tabular-nums; min-width: 12ch; }
+button, .seg label { font: 600 .9rem var(--body); border: 1px solid var(--line); background: var(--bg); color: var(--fg); border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+button:hover, .seg label:hover { border-color: var(--accent); }
+button:focus-visible, input:focus-visible + label, input[type="range"]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seg { display: inline-flex; gap: 6px; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg input:checked + label { background: var(--accent); border-color: var(--accent); color: var(--panel); }
+
+.readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.ro { background: var(--panel); padding: 12px 14px; display: grid; gap: 2px; min-width: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.ro .k { font: 600 .72rem var(--mono); color: var(--mut); letter-spacing: .04em; }
+.ro .v { font: 500 1.05rem var(--mono); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ro .u { font-size: .8rem; color: var(--mut); overflow-wrap: anywhere; }
+.ro.check .v { color: var(--ok); }
+
+.plots { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 18px; }
+.plot { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px; min-width: 0; }
+.plot .cap { font: .78rem var(--mono); color: var(--mut); padding: 2px 6px 6px; overflow-wrap: anywhere; }
+.plot .chart { width: 100%; height: 340px; }
+.plot.wide { grid-column: 1 / -1; }
+
+.ledger { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: .92rem; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 .74rem var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--mut); }
+tr:last-child td { border-bottom: 0; }
+td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); white-space: nowrap; }
+.pill { font: 600 .72rem var(--mono); color: var(--ok); border: 1px solid var(--ok); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font: .82rem var(--mono); color: var(--mut); }
+
+.figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 14px; }
+.figs figure { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 8px; }
+.figs img { display: block; width: 100%; height: auto; border-radius: 6px; }
+.figs figcaption { font-size: .82rem; color: var(--mut); padding: 6px 4px 2px; }
+.note { border-left: 3px solid var(--warm); padding: 4px 0 4px 14px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+<body>
+<main class="wrap">
+  <header>
+    <div class="eyebrow">NRS³ · El cono de incertidumbre · Dilatación</div>
+    <h1>El triángulo rectángulo de la incertidumbre</h1>
+    <p class="formula">τ = σ<sub>A</sub> σ<sub>B</sub> sen θ &nbsp;·&nbsp; ‖⟪x, y⟫‖ = σ<sub>A</sub> σ<sub>B</sub> cos θ</p>
+    <p>Robertson–Schrödinger es Cauchy–Schwarz en el espacio de Hilbert; en el cono es causalidad. Entre los dos
+      hay un triángulo rectángulo: la hipotenusa es el producto de incertidumbres σ<sub>A</sub>σ<sub>B</sub>, el cateto
+      que resuelve la luz es el pairing σ<sub>A</sub>σ<sub>B</sub> cos θ y el cateto del tiempo propio es
+      τ = σ<sub>A</sub>σ<sub>B</sub> sen θ. En la saturación (d = 2, 3) θ = 0 y el tiempo propio es cero; desde d = 4 el
+      cuanto abre el ángulo NRS y con él el primer tiempo.</p>
+    <div class="meta"><a href="https://github.com/naype888-cloud/nrs3-uncertainty-cone">código Lean</a>
+      <a href="./">el cono de NRS³</a><a href="lorentz.html">SL(2, ℂ)</a></div>
+  </header>
+
+  <section class="controls" aria-label="Controles">
+    <div class="ctl-row"><label for="d">dimensión del eje d</label><input id="d" type="range" min="2" max="80" step="1" value="4"><span class="sval" id="dv"></span></div>
+  </section>
+
+  <section class="readouts" aria-live="polite">
+    <div class="ro"><span class="k">C_Nava(d)</span><span class="v" id="ro-c"></span><span class="u">hipotenusa / cateto de luz</span></div>
+    <div class="ro"><span class="k">θ_NRS(d)</span><span class="v" id="ro-t"></span><span class="u">cos θ = 1 / C_Nava</span></div>
+    <div class="ro"><span class="k">β = cos θ</span><span class="v" id="ro-b"></span><span class="u">velocidad del vector</span></div>
+    <div class="ro check"><span class="k">τ / (σ_A σ_B) = sen θ</span><span class="v" id="ro-s"></span><span class="u" id="ro-su"></span></div>
+    <div class="ro"><span class="k">γ = 1 / sen θ</span><span class="v" id="ro-g"></span><span class="u">factor de Lorentz</span></div>
+  </section>
+
+  <section class="plots">
+    <div class="plot"><div class="cap">El triángulo para la d elegida: hipotenusa 1 = σ_A σ_B, cateto de luz cos θ, cateto del tiempo sen θ.</div><div class="chart" id="tri"></div></div>
+    <div class="plot"><div class="cap">sen θ_NRS(d) = τ / (σ_A σ_B): cero en 2 y 3, positivo y creciente desde 4, bajo su límite de Szegő.</div><div class="chart" id="curve"></div></div>
+  </section>
+
+  <p class="note">La luz resuelve el cateto cos θ; el cateto sen θ es el tiempo propio, lo que la luz no resuelve. Cuando
+    β = cos θ → 1 (saturación, en c) el tiempo propio se anula. El cuanto de NRS³ mantiene β &lt; 1 desde d = 4, y el
+    límite de Szegő C∞ = √(π²/3 − 2) acota el ángulo sin alcanzarlo nunca.</p>
+
+  <section>
+    <h2>Cada valor y su teorema</h2>
+    <div class="ledger"><table>
+      <thead><tr><th>Enunciado</th><th>Lean</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>τ = ‖x‖ ‖y‖ sen θ, cualquier par, cualquier estado</td><td class="name">properTime_eq_mul_sin</td><td><span class="pill">probado</span></td></tr>
+        <tr><td>‖⟪x, y⟫‖ = ‖x‖ ‖y‖ cos θ</td><td class="name">norm_inner_eq_mul_cos</td><td><span class="pill">probado</span></td></tr>
+        <tr><td>dilatación: τ ≤ v₀</td><td class="name">properTime_le_time</td><td><span class="pill">probado</span></td></tr>
+        <tr><td>en el estado de máxima corriente, τ = ‖x‖ ‖y‖ sen θ_NRS(d)</td><td class="name">properTime_maxCurrentState</td><td><span class="pill">probado</span></td></tr>
+        <tr><td>τ &gt; 0 desde d = 4</td><td class="name">properTime_maxCurrentState_pos</td><td><span class="pill">probado</span></td></tr>
+        <tr><td>en Physlib: τ ≤ v₀ por la Cauchy–Schwarz inversa (Kevorkian)</td><td class="name">properTime_uncertaintyVector_le_timeComponent</td><td><span class="pill">probado</span></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  function C2(N) {
+    if (N <= 3) return 1;
+    const n = N + 1, x = Math.PI / n, s = Math.sin(x) / x;
+    return 2 * (1 - 2 / n) / Math.cos(x) ** 2 * ((Math.PI ** 2 * s * s + 2 * Math.sin(x) ** 2) / 6 - 1);
+  }
+  const C = N => Math.sqrt(C2(N));
+  const Cinf = Math.sqrt(Math.PI ** 2 / 3 - 2), sInf = Math.sqrt(1 - 1 / (Cinf * Cinf));
+  const cfg = { responsive: true, displaylogo: false, modeBarButtonsToRemove: ["lasso2d", "select2d"] };
+  function layout(xt, yt, extra) {
+    const fg = css("--fg"), mut = css("--mut"), line = css("--line");
+    const ax = t => ({ title: { text: t, font: { color: fg, size: 12 } }, gridcolor: line, zerolinecolor: line, linecolor: mut, tickfont: { color: mut, size: 11 } });
+    return Object.assign({ paper_bgcolor: "rgba(0,0,0,0)", plot_bgcolor: "rgba(0,0,0,0)", font: { family: "system-ui, sans-serif", color: fg },
+      margin: { l: 60, r: 20, t: 10, b: 50 }, xaxis: ax(xt), yaxis: ax(yt), showlegend: true,
+      legend: { orientation: "h", y: -0.25, font: { size: 11, color: fg } } }, extra || {});
+  }
+  function draw() {
+    const acc = css("--accent"), warm = css("--warm"), mut = css("--mut"), fg = css("--fg");
+    const d = +$("d").value, c = C(d), b = 1 / c, s = Math.sqrt(Math.max(0, 1 - b * b)), th = Math.acos(b);
+    $("dv").textContent = d;
+    $("ro-c").textContent = c.toFixed(6);
+    $("ro-t").textContent = (th * 180 / Math.PI).toFixed(3) + "°";
+    $("ro-b").textContent = b.toFixed(6);
+    $("ro-s").textContent = s.toFixed(6);
+    $("ro-su").textContent = s > 0 ? "positivo: el primer tiempo" : "cero: saturación, en c";
+    $("ro-g").textContent = s > 0 ? (1 / s).toFixed(4) : "∞";
+    // right triangle: hypotenuse from origin at angle θ, legs cos θ (light) and sin θ (time)
+    Plotly.react("tri", [
+      { type: "scatter", mode: "lines", name: "cateto de luz · cos θ", x: [0, b], y: [0, 0], line: { color: warm, width: 4 } },
+      { type: "scatter", mode: "lines", name: "tiempo propio · sen θ", x: [b, b], y: [0, s], line: { color: acc, width: 4 } },
+      { type: "scatter", mode: "lines", name: "hipotenusa · σ_A σ_B", x: [0, b], y: [0, s], line: { color: fg, width: 2 } }
+    ], layout("", "", { xaxis: Object.assign(layout("", "").xaxis, { range: [-0.05, 1.08], zeroline: false }),
+      yaxis: Object.assign(layout("", "").yaxis, { range: [-0.05, 0.6], scaleanchor: "x", zeroline: false }) }), cfg);
+    const Ns = []; for (let N = 2; N <= 80; N++) Ns.push(N);
+    Plotly.react("curve", [
+      { type: "scatter", mode: "lines+markers", name: "sen θ_NRS(d)", x: Ns, y: Ns.map(N => Math.sqrt(Math.max(0, 1 - 1 / C2(N)))), line: { color: acc, width: 2 }, marker: { size: 4 } },
+      { type: "scatter", mode: "lines", name: "límite de Szegő (nunca se alcanza)", x: [2, 80], y: [sInf, sInf], line: { color: mut, dash: "dot" } },
+      { type: "scatter", mode: "markers", name: "d elegida", x: [d], y: [s], marker: { color: warm, size: 11 } }
+    ], layout("d", "τ / (σ_A σ_B)"), cfg);
+  }
+  $("d").addEventListener("input", draw);
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+  draw();
+})();
+</script>
+</body>
+</html>

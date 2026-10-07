@@ -10,7 +10,8 @@ every axis, entangled or not. Its speed is `1 / C_Nava(d)`, and its square is th
 Mandelstam–Tamm ratio. Lean 4, Mathlib, and the base repository.
 
 **[▶ Try it: the cone of NRS³ — move d, the state, the units, ℂ or ℝ](https://naype888-cloud.github.io/nrs3-uncertainty-cone/)** ·
-**[▶ Try it: SL(2, ℂ) — boost and rotate the vector, it never leaves the cone](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz.html)**
+**[▶ Try it: SL(2, ℂ) — boost and rotate the vector, it never leaves the cone](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz.html)** ·
+**[▶ Pruébalo (español): el triángulo de la incertidumbre y la dilatación del tiempo](https://naype888-cloud.github.io/nrs3-uncertainty-cone/dilatacion.html)**
 
 ![The uncertainty cone](docs/figures/cone_3d.png)
 

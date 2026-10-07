@@ -24,7 +24,7 @@ commutator; Robertson–Schrödinger (1929–30) says that `v` is a future causa
 built from the interval and `v₂` carries no units: in NRS³ this is `C_Nava` (`Cone`).
 
 Over `ℝ` the inner product is real and `v₂ = 0`: without complex numbers there is no commutator
-axis. The four components are statistics of the pair, not coordinates of events.
+axis.
 
 ## Main results
 

@@ -92,9 +92,11 @@ lives in `v₂`, cannot appear. A real space carries it only with a complex stru
 
 ## Scope
 
-The four components are statistics of the pair — variances, covariance, commutator — and the
-cone is the geometry of those statistics. They are not coordinates of events; reading them as
-spacetime would be a further, separate bridge. The statements are on `H_d = ℂ^d` with `d` finite;
+The four components are the variances, the covariance and the commutator of the pair. In
+Physlib the same vector is a `Lorentz.Vector 3` that causally follows the origin, and its
+commutator component is half the velocity `⟨J⟩` of the chain, bounded by the speed limit
+(`PhyslibAlpha/CondensedMatter/TightBindingChain/CausalCone.lean`). The statements are on
+`H_d = ℂ^d` with `d` finite;
 `d → ∞` is the Szegő limit `C∞ = √(π²/3 − 2)`, `β∞ = 1/C∞ ≈ 0.8805`, never reached.
 
 ## History

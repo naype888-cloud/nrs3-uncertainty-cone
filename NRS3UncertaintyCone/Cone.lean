@@ -30,8 +30,7 @@ so `v₁` is the covariance and `v₂` is half the commutator.
   `β = 1 / C_Nava(d)`: `v` is null iff
   `d = 2, 3` and timelike from `d = 4` on.
 
-Over `ℝ` the inner product is real and `v₂ = 0`: the commutator axis is lost. The four
-components are variances, covariance and commutator of the pair, not coordinates of events.
+Over `ℝ` the inner product is real and `v₂ = 0`: the commutator axis is lost.
 
 ## Main results
 

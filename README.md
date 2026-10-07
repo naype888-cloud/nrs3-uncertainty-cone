@@ -81,6 +81,26 @@ Robertson as `0 = 0` on position eigenstates (`D47`) and on the mirror state, wh
 
 ![The band on the cube](docs/figures/band_cube_3d.png)
 
+### `TimeDilation` — the right triangle of the uncertainty
+
+Robertson–Schrödinger is Cauchy–Schwarz in the Hilbert space; in the cone it is causality. Between
+the two sits a right triangle: the hypotenuse `‖x‖ ‖y‖`, the angle `θ` between the fluctuations,
+the leg light resolves `‖⟪x, y⟫‖ = ‖x‖ ‖y‖ cos θ`, and the leg of proper time
+`τ = √η(v, v) = ‖x‖ ‖y‖ sin θ`.
+
+| Statement | Lean |
+|---|---|
+| `τ = ‖x‖ ‖y‖ sin θ`, any pair, any state | `properTime_eq_mul_sin` |
+| `‖⟪x, y⟫‖ = ‖x‖ ‖y‖ cos θ` | `norm_inner_eq_mul_cos` |
+| time dilation: `τ ≤ v₀` | `properTime_le_time` |
+| at the maximal current state, `τ = ‖x‖ ‖y‖ sin θ_NRS(d)` | `properTime_maxCurrentState` |
+| `τ > 0` from `d = 4` on; `τ = 0` exactly at `d = 2, 3` | `properTime_maxCurrentState_pos`, `null_maxCurrentState_iff` |
+
+Saturation is `θ = 0`: all of the hypotenuse is the leg of light and the proper time is zero. The
+quantum opens the NRS angle and with it the first time. In Physlib the same triangle is
+`TimeDilation.lean`, where `τ ≤ v₀` comes from the reverse Cauchy–Schwarz inequality of causal
+vectors (Kevorkian), next to Langevin's twin paradox (1911).
+
 ## Why `ℂ`
 
 Over `ℝ` the inner product is real, `v₂ = Im ⟪x, y⟫ = 0` for every state, and the commutator

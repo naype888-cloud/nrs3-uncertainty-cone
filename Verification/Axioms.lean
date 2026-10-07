@@ -19,3 +19,8 @@ import NRS3UncertaintyCone
 #print axioms UncertaintyCone.timelike_maxCurrentState
 #print axioms UncertaintyCone.timelike_of_band
 #print axioms UncertaintyCone.robertson_det_strict_of_band
+#print axioms UncertaintyCone.properTime_eq_mul_sin
+#print axioms UncertaintyCone.norm_inner_eq_mul_cos
+#print axioms UncertaintyCone.properTime_le_time
+#print axioms UncertaintyCone.properTime_maxCurrentState
+#print axioms UncertaintyCone.properTime_maxCurrentState_pos

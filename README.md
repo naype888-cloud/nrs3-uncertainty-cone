@@ -153,6 +153,7 @@ not part of NRS³.
 | Year | Event | Repository |
 |---|---|---|
 | 1911 | First Solvay conference: radiation and the quanta | |
+| 1911 | Langevin: the twin paradox, proper time against coordinate time | **[`nrs3-uncertainty-cone`](https://github.com/naype888-cloud/nrs3-uncertainty-cone)** (this one, `TimeDilation`) |
 | 1911–12 | Poincaré: Planck's law forces discrete levels | [`nrs3-poincare`](https://github.com/naype888-cloud/nrs3-poincare) |
 | 1915–20 | Szegő: limit theorems for Toeplitz matrices (the limit `C∞`, `D8`) | [base repository (NRS, NRS³)](https://github.com/naype888-cloud/nava-robertson-schrodinger) |
 | 1917–27 | Einstein and de Sitter: `Λ` and the empty universe; Friedmann and Lemaître: the expanding universe | [`nrs3-de-sitter`](https://github.com/naype888-cloud/nrs3-de-sitter) |

@@ -114,18 +114,14 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
   </section>
 
   <section class="plot wide" aria-label="Tres escalas">
-    <div class="cap">Ilustración (no es un teorema): la misma regla en toda escala. A la izquierda, la imagen real, regulada por Ω_b ≈ 0.0495 de luz y 1 − Ω_b de oscuridad. A la derecha, la misma escena con la proporción invertida: la luz se come la oscuridad que regula el contraste y la imagen se vela.</div>
-      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:760px;margin:0 auto">
-        <div class="cap" style="grid-column:1/-1;padding-top:6px">microscopio · células</div>
-        <figure style="margin:0"><canvas id="sc-micro-r" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Imagen real, microscopio · células"></canvas><figcaption class="cap">real · Ω_b : 1 − Ω_b</figcaption></figure>
-        <figure style="margin:0"><canvas id="sc-micro-i" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Proporción invertida, microscopio · células"></canvas><figcaption class="cap">invertida · 1 − Ω_b : Ω_b · se destruye</figcaption></figure>
-        <div class="cap" style="grid-column:1/-1;padding-top:6px">salón de clases</div>
-        <figure style="margin:0"><canvas id="sc-aula-r" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Imagen real, salón de clases"></canvas><figcaption class="cap">real · Ω_b : 1 − Ω_b</figcaption></figure>
-        <figure style="margin:0"><canvas id="sc-aula-i" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Proporción invertida, salón de clases"></canvas><figcaption class="cap">invertida · 1 − Ω_b : Ω_b · se destruye</figcaption></figure>
-        <div class="cap" style="grid-column:1/-1;padding-top:6px">universo · galaxia y estrellas</div>
-        <figure style="margin:0"><canvas id="sc-cosmos-r" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Imagen real, universo · galaxia y estrellas"></canvas><figcaption class="cap">real · Ω_b : 1 − Ω_b</figcaption></figure>
-        <figure style="margin:0"><canvas id="sc-cosmos-i" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Proporción invertida, universo · galaxia y estrellas"></canvas><figcaption class="cap">invertida · 1 − Ω_b : Ω_b · se destruye</figcaption></figure>
-      </div>
+    <div class="cap">Ilustración (no es un teorema): un dimmer sobre las tres escalas a la vez. En el centro, la proporción real: Ω_b de luz y 1 − Ω_b de oscuridad, la imagen perfecta. A la derecha todo se carga a Ω_b y desaparece el 1: las tres se velan en blanco. A la izquierda todo se carga al 1: las tres se van a negro.</div>
+    <div class="ctl-row" style="padding:8px 6px"><label for="dim">dimmer</label><input id="dim" type="range" min="-1" max="1" step="0.01" value="0"><span class="sval" id="dimv"></span></div>
+    <div class="cap" id="dim-cap" style="text-align:center"></div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px">
+      <figure style="margin:0"><canvas id="sc-micro" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Microscopio"></canvas><figcaption class="cap">microscopio · células</figcaption></figure>
+      <figure style="margin:0"><canvas id="sc-aula" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Salón de clases"></canvas><figcaption class="cap">salón de clases</figcaption></figure>
+      <figure style="margin:0"><canvas id="sc-cosmos" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Universo"></canvas><figcaption class="cap">universo · galaxia y estrellas</figcaption></figure>
+    </div>
   </section>
 
   <p class="note">La luz resuelve el cateto cos θ; el cateto sen θ es el tiempo propio, lo que la luz no resuelve. Cuando
@@ -197,7 +193,7 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
     ], layout("d", "τ / (σ_A σ_B)"), cfg);
   }
   const tanInf = Math.sqrt(Cinf * Cinf - 1);
-  const OB = 0.0495437, INV = OB / (1 - OB);
+  const OB = 0.0495437;
   function rng(seed) { let x = seed; return () => (x = (x * 16807) % 2147483647) / 2147483647; }
   function drawMicro(ctx) {
     const g = ctx.createRadialGradient(150, 100, 10, 150, 100, 150); g.addColorStop(0, "#d9d9d9"); g.addColorStop(1, "#2a2a2a");
@@ -224,15 +220,25 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
     const g = ctx.createRadialGradient(160, 95, 0, 160, 95, 18); g.addColorStop(0, "rgba(255,255,255,0.95)"); g.addColorStop(1, "rgba(255,255,255,0)");
     ctx.fillStyle = g; ctx.fillRect(130, 70, 60, 50);
   }
+  const srcs = {};
   function scene() {
+    const x = +$("dim").value;
+    const L = x >= 0 ? OB + x * (1 - OB) : OB * (1 + x);
+    $("dimv").textContent = x === 0 ? "centro" : (x > 0 ? "→ " : "← ") + Math.abs(x).toFixed(2);
+    $("dim-cap").textContent = "luz : oscuridad = " + L.toFixed(4) + " : " + (1 - L).toFixed(4) +
+      (Math.abs(x) < 0.005 ? "  ·  Ω_b : 1 − Ω_b, la imagen real" : x > 0 ? "  ·  se carga a Ω_b, el 1 desaparece: se vela" : "  ·  se carga al 1: se oscurece");
     for (const [k, f] of [["micro", drawMicro], ["aula", drawAula], ["cosmos", drawCosmos]]) {
-      const cr = $("sc-" + k + "-r").getContext("2d"); f(cr);
-      const ci = $("sc-" + k + "-i").getContext("2d"); f(ci);
-      const im = ci.getImageData(0, 0, 300, 200);
-      for (let p = 0; p < im.data.length; p += 4) for (let c = 0; c < 3; c++) im.data[p + c] = 255 - (255 - im.data[p + c]) * INV;
-      ci.putImageData(im, 0, 0);
+      const c = $("sc-" + k).getContext("2d");
+      if (!srcs[k]) { f(c); srcs[k] = c.getImageData(0, 0, 300, 200); }
+      const src = srcs[k].data, im = c.createImageData(300, 200);
+      for (let p = 0; p < src.length; p += 4) {
+        for (let q = 0; q < 3; q++) { const v = src[p + q]; im.data[p + q] = x >= 0 ? 255 - (255 - v) * (1 - x) : v * (1 + x); }
+        im.data[p + 3] = 255;
+      }
+      c.putImageData(im, 0, 0);
     }
   }
+  $("dim").addEventListener("input", scene);
   function drawContrast() {
     const acc = css("--accent"), warm = css("--warm"), mut = css("--mut");
     const d = +$("d").value, Ns = []; for (let N = 2; N <= 80; N++) Ns.push(N);

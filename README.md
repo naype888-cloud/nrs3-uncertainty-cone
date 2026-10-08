@@ -96,7 +96,7 @@ the leg light resolves `‖⟪x, y⟫‖ = ‖x‖ ‖y‖ cos θ`, and the leg 
 | time dilation: `τ ≤ v₀` | `properTime_le_time` |
 | at the maximal current state, `τ = ‖x‖ ‖y‖ sin θ_NRS(d)` | `properTime_maxCurrentState` |
 | `τ > 0` from `d = 4` on; `τ = 0` exactly at `d = 2, 3` | `properTime_maxCurrentState_pos`, `null_maxCurrentState_iff` |
-| the contrast `τ / ‖⟪x, y⟫‖ = tan θ_NRS(d)`, strictly between the two saturations `0` (`d = 2, 3`) and `√(C∞² − 1)` (never reached) | `contrast_maxCurrentState` |
+| the contrast `τ / ‖⟪x, y⟫‖ = tan θ_NRS(d)`: `0` at saturation (`d = 2, 3`), positive from `d = 4`, below the Szegő limit `√(C∞² − 1)`, never reached | `contrast_maxCurrentState` |
 
 Saturation is `θ = 0`: all of the hypotenuse is the leg of light and the proper time is zero. The
 quantum opens the NRS angle and with it the first time. In Physlib the same triangle is

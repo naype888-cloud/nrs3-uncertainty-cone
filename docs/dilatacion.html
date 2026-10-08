@@ -111,12 +111,21 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
 
   <section class="plots">
     <div class="plot"><div class="cap">Contraste tan θ_NRS(d) = cateto oscuro / cateto de luz: cero en la saturación, positivo desde 4 y bajo su límite de Szegő.</div><div class="chart" id="contrast"></div></div>
-    <div class="plot"><div class="cap">Ilustración (no es un teorema): la imagen real la regula Ω_b, la misma en toda escala. Los dos extremos son supuestos y no se ven: sin oscuridad, todo blanco; sin Ω_b, todo negro.</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        <figure style="margin:0"><canvas id="scene-w" width="240" height="180" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Supuesto sin oscuridad: todo blanco"></canvas><figcaption class="cap">supuesto: sin oscuridad (1 − Ω_b = 0) · todo blanco</figcaption></figure>
-        <figure style="margin:0"><canvas id="scene-r" width="240" height="180" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Imagen real regulada por Omega b"></canvas><figcaption class="cap">real: Ω_b ≈ 0.0495 de luz, 1 − Ω_b de oscuridad · nítida</figcaption></figure>
-        <figure style="margin:0"><canvas id="scene-k" width="240" height="180" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Supuesto sin Omega b: todo negro"></canvas><figcaption class="cap">supuesto: sin Ω_b (queda solo el 1) · todo negro</figcaption></figure>
-      </div></div>
+  </section>
+
+  <section class="plot wide" aria-label="Tres escalas">
+    <div class="cap">Ilustración (no es un teorema): la misma regla en toda escala. A la izquierda, la imagen real, regulada por Ω_b ≈ 0.0495 de luz y 1 − Ω_b de oscuridad. A la derecha, la misma escena con la proporción invertida: la luz se come la oscuridad que regula el contraste y la imagen se vela.</div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-width:760px;margin:0 auto">
+        <div class="cap" style="grid-column:1/-1;padding-top:6px">microscopio · células</div>
+        <figure style="margin:0"><canvas id="sc-micro-r" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Imagen real, microscopio · células"></canvas><figcaption class="cap">real · Ω_b : 1 − Ω_b</figcaption></figure>
+        <figure style="margin:0"><canvas id="sc-micro-i" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Proporción invertida, microscopio · células"></canvas><figcaption class="cap">invertida · 1 − Ω_b : Ω_b · se destruye</figcaption></figure>
+        <div class="cap" style="grid-column:1/-1;padding-top:6px">salón de clases</div>
+        <figure style="margin:0"><canvas id="sc-aula-r" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Imagen real, salón de clases"></canvas><figcaption class="cap">real · Ω_b : 1 − Ω_b</figcaption></figure>
+        <figure style="margin:0"><canvas id="sc-aula-i" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Proporción invertida, salón de clases"></canvas><figcaption class="cap">invertida · 1 − Ω_b : Ω_b · se destruye</figcaption></figure>
+        <div class="cap" style="grid-column:1/-1;padding-top:6px">universo · galaxia y estrellas</div>
+        <figure style="margin:0"><canvas id="sc-cosmos-r" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Imagen real, universo · galaxia y estrellas"></canvas><figcaption class="cap">real · Ω_b : 1 − Ω_b</figcaption></figure>
+        <figure style="margin:0"><canvas id="sc-cosmos-i" width="300" height="200" style="width:100%;height:auto;display:block;border-radius:6px;border:1px solid var(--line)" role="img" aria-label="Proporción invertida, universo · galaxia y estrellas"></canvas><figcaption class="cap">invertida · 1 − Ω_b : Ω_b · se destruye</figcaption></figure>
+      </div>
   </section>
 
   <p class="note">La luz resuelve el cateto cos θ; el cateto sen θ es el tiempo propio, lo que la luz no resuelve. Cuando
@@ -188,20 +197,41 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
     ], layout("d", "τ / (σ_A σ_B)"), cfg);
   }
   const tanInf = Math.sqrt(Cinf * Cinf - 1);
-  const W = 240, Hh = 180, base = new Float32Array(W * Hh);
-  for (let y = 0; y < Hh; y++) for (let x = 0; x < W; x++) {
-    const u = (x - W / 2) / 55, v = (y - Hh / 2) / 55, r = Math.hypot(u, v);
-    base[y * W + x] = Math.min(1, Math.max(0, 0.5 + 0.35 * Math.cos(6 * r) * Math.exp(-0.35 * r * r) + 0.15 * (x / W - 0.5) + 0.12 * Math.sin(3 * u) * Math.cos(2 * v)));
+  const OB = 0.0495437, INV = OB / (1 - OB);
+  function rng(seed) { let x = seed; return () => (x = (x * 16807) % 2147483647) / 2147483647; }
+  function drawMicro(ctx) {
+    const g = ctx.createRadialGradient(150, 100, 10, 150, 100, 150); g.addColorStop(0, "#d9d9d9"); g.addColorStop(1, "#2a2a2a");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, 300, 200); const r = rng(7);
+    for (let n = 0; n < 14; n++) { const x = 20 + r() * 260, y = 20 + r() * 160, a = 14 + r() * 16;
+      ctx.beginPath(); ctx.ellipse(x, y, a, a * (0.7 + 0.3 * r()), r() * 3, 0, 2 * Math.PI);
+      ctx.fillStyle = "rgba(120,120,120,0.55)"; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = "#151515"; ctx.stroke();
+      ctx.beginPath(); ctx.arc(x + 2, y - 1, a * 0.3, 0, 2 * Math.PI); ctx.fillStyle = "#1c1c1c"; ctx.fill(); }
   }
-  function paint(id, f) {
-    const ctx = $(id).getContext("2d"), im = ctx.createImageData(W, Hh);
-    for (let i = 0; i < W * Hh; i++) { const I = f(base[i]) * 255; im.data[4 * i] = im.data[4 * i + 1] = im.data[4 * i + 2] = I; im.data[4 * i + 3] = 255; }
-    ctx.putImageData(im, 0, 0);
+  function drawAula(ctx) {
+    ctx.fillStyle = "#5a5a5a"; ctx.fillRect(0, 0, 300, 120); ctx.fillStyle = "#3a3a3a"; ctx.fillRect(0, 120, 300, 80);
+    ctx.fillStyle = "#1e1e1e"; ctx.fillRect(70, 25, 160, 60); ctx.strokeStyle = "#9a9a9a"; ctx.lineWidth = 3; ctx.strokeRect(70, 25, 160, 60);
+    ctx.fillStyle = "#e6e6e6"; ctx.fillRect(10, 20, 45, 70); ctx.fillStyle = "#4a4a4a"; ctx.fillRect(31, 20, 3, 70); ctx.fillRect(10, 53, 45, 3);
+    ctx.strokeStyle = "#cfcfcf"; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(85, 45); ctx.lineTo(140, 45); ctx.moveTo(85, 60); ctx.lineTo(180, 60); ctx.stroke();
+    for (const [x, y, w] of [[30, 135, 70], [120, 135, 70], [210, 135, 70], [45, 165, 80], [170, 165, 80]]) {
+      ctx.fillStyle = "#8a8a8a"; ctx.fillRect(x, y, w, 10); ctx.fillStyle = "#222"; ctx.fillRect(x + 5, y + 10, 4, 18); ctx.fillRect(x + w - 9, y + 10, 4, 18); }
+  }
+  function drawCosmos(ctx) {
+    ctx.fillStyle = "#000"; ctx.fillRect(0, 0, 300, 200); const r = rng(11);
+    for (let n = 0; n < 220; n++) { const b = r(); ctx.fillStyle = `rgba(255,255,255,${0.25 + 0.75 * b})`; ctx.fillRect(r() * 300, r() * 200, b > 0.92 ? 2 : 1, b > 0.92 ? 2 : 1); }
+    for (let n = 0; n < 1400; n++) { const t = r() * 4 * Math.PI, arm = n % 2 ? 0 : Math.PI, rr = 4 + t * 6 + r() * 6;
+      const x = 160 + rr * Math.cos(t + arm), y = 95 + 0.55 * rr * Math.sin(t + arm);
+      ctx.fillStyle = `rgba(255,255,255,${0.15 + 0.5 * r() * (1 - t / (4 * Math.PI))})`; ctx.fillRect(x, y, 1.4, 1.4); }
+    const g = ctx.createRadialGradient(160, 95, 0, 160, 95, 18); g.addColorStop(0, "rgba(255,255,255,0.95)"); g.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = g; ctx.fillRect(130, 70, 60, 50);
   }
   function scene() {
-    paint("scene-w", () => 1);
-    paint("scene-r", b => b);
-    paint("scene-k", () => 0);
+    for (const [k, f] of [["micro", drawMicro], ["aula", drawAula], ["cosmos", drawCosmos]]) {
+      const cr = $("sc-" + k + "-r").getContext("2d"); f(cr);
+      const ci = $("sc-" + k + "-i").getContext("2d"); f(ci);
+      const im = ci.getImageData(0, 0, 300, 200);
+      for (let p = 0; p < im.data.length; p += 4) for (let c = 0; c < 3; c++) im.data[p + c] = 255 - (255 - im.data[p + c]) * INV;
+      ci.putImageData(im, 0, 0);
+    }
   }
   function drawContrast() {
     const acc = css("--accent"), warm = css("--warm"), mut = css("--mut");

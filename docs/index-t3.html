@@ -73,7 +73,9 @@
   #phasors { aspect-ratio: 16 / 4.6; }
   #betas { aspect-ratio: 16 / 5.4; }
   #cube { aspect-ratio: 16 / 4.2; }
-  @media (max-width: 640px) { #phasors, #betas, #cube { aspect-ratio: 4 / 3; } }
+  #sphere { aspect-ratio: 16 / 8.2; cursor: grab; }
+  #sphere:active { cursor: grabbing; }
+  @media (max-width: 640px) { #phasors, #betas, #cube { aspect-ratio: 4 / 3; } #sphere { aspect-ratio: 1 / 1; } }
   .wide { margin-top: 14px; }
   table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 0.88rem; }
   th, td { padding: 6px 8px; border-bottom: 1px solid var(--grid); text-align: left; vertical-align: top; }
@@ -152,6 +154,15 @@
       <canvas id="boost" aria-label="The hyperbola of boosts in the plane v3, v0"></canvas></div>
   </div>
 
+  <div class="card wide"><h2>The sphere: the three axes of T³ inside the light sphere</h2><span class="hint">drag to turn</span>
+    <p class="sub">Each axis of the torus gives a vector <code>v</code>; its direction <code>𝐯 / v₀ = (v₁, v₂, v₃) / v₀</code> is a point of the
+      unit ball. The surface is the light sphere, the sphere of null directions (the celestial sphere on which SL(2, ℂ) acts as Möbius maps).
+      On the surface the axis is all light; inside it is timelike, and the dashed segment is the light it has lost. Press
+      <strong>✦ Random walk of the state</strong> and watch each axis (x blue, y green, z violet) leave the surface and diffuse inside, with its trail.
+      Units λ slide the points; the invariant light share β² does not move.</p>
+    <canvas id="sphere" aria-label="The three axis vectors divided by v0 inside the unit light sphere"></canvas>
+    <div class="verdict" id="sverdict" aria-live="polite"></div></div>
+
   <div class="card wide"><h2>Step 1, seen: the two vectors site by site</h2>
     <p class="sub">Each site j carries x<sub>j</sub> (blue) and y<sub>j</sub> (orange) as arrows in the complex plane.
       β = |⟪x, y⟫| / (‖x‖‖y‖) = cos θ<sub>NRS</sub>: the two vectors are parallel only when β = 1.</p>
@@ -176,8 +187,8 @@
       d = 3, so 125/64 on <code>T³</code>), and it is strict for every state with the three axes in the band.</p>
     <div class="sliders">
       <label class="sl">d<sub>x</sub><input type="range" id="dx" min="3" max="16" value="3"><b id="vdx">3</b></label>
-      <label class="sl">d<sub>y</sub><input type="range" id="dy" min="3" max="16" value="3"><b id="vdy">3</b></label>
-      <label class="sl">d<sub>z</sub><input type="range" id="dz" min="3" max="16" value="3"><b id="vdz">3</b></label>
+      <label class="sl">d<sub>y</sub><input type="range" id="dy" min="3" max="16" value="4"><b id="vdy">4</b></label>
+      <label class="sl">d<sub>z</sub><input type="range" id="dz" min="3" max="16" value="6"><b id="vdz">6</b></label>
     </div>
     <canvas id="cube" aria-label="The three axis speeds of the box and the determinant ratio"></canvas></div>
 
@@ -375,6 +386,33 @@
     g.font = "12px system-ui"; g.fillText(strict ? "> 1: det|NRS³| strict on T³" : "= 1", w - pr + 16, 80);
   }
 
+function axisDims() { return [+$("dx").value, +$("dy").value, +$("dz").value]; }
+  const view2 = { yaw: -0.6, pitch: 0.5, user: false };
+  let axS = null, trails = [[], [], []];
+  const AXC = ["--blue", "--green", "--violet"], AXN = ["x", "y", "z"];
+  function axisStates() { return axS || axisDims().map((d, i) => Rg.state(d, 0, 1 + i, false)); }
+  function drawSphere() {
+    const { g, w, h } = C.setup($("sphere"));
+    const P = C.projector(w, h, view2, 0.36, 0);
+    const muted = C.css("--muted"), grid = C.css("--grid"), red = C.css("--red"), ink = C.css("--ink");
+    const ring = (f) => { const pts = []; for (let t = 0; t <= 72; t++) pts.push(f(t * Math.PI / 36)); return pts; };
+    for (const f of [(a) => [Math.cos(a), Math.sin(a), 0], (a) => [Math.cos(a), 0, Math.sin(a)], (a) => [0, Math.cos(a), Math.sin(a)]]) C.poly(g, P, ring(f), C.mix(red, 0.55), 1.2);
+    for (const z of [-0.5, 0.5]) C.poly(g, P, ring((a) => [Math.sqrt(1 - z * z) * Math.cos(a), Math.sqrt(1 - z * z) * Math.sin(a), z]), C.mix(red, 0.2), 1);
+    C.line(g, P, [-1.2, 0, 0], [1.2, 0, 0], grid); C.line(g, P, [0, -1.2, 0], [0, 1.2, 0], grid); C.line(g, P, [0, 0, -1.2], [0, 0, 1.2], grid);
+    C.label(g, P, [1.25, 0, 0], "v₁ cov", muted); C.label(g, P, [0, 1.25, 0], "v₂ comm", muted); C.label(g, P, [0, 0, 1.25], "v₃ (ΔVar)", muted);
+    C.label(g, P, [0.72, 0.72, 0], "light sphere |𝐯| = v₀", red, 6, -8, "11px system-ui");
+    const dims = axisDims(), sts = axisStates(), lines = [];
+    sts.forEach((s, i) => {
+      const a = Rg.analyse(dims[i], s, st.lam), u = [a.v[1] / a.v[0], a.v[2] / a.v[0], a.v[3] / a.v[0]], n = Math.hypot(...u), col = C.css(AXC[i]);
+      if (trails[i].length > 1) C.poly(g, P, trails[i], C.mix(col, 0.5), 1.4);
+      if (n > 1e-9) C.line(g, P, u, [u[0] / n, u[1] / n, u[2] / n], C.mix(col, 0.7), 1.2, [3, 3]);
+      C.line(g, P, [0, 0, 0], u, col, 2);
+      C.dot(g, P, u, 6, col);
+      C.label(g, P, u, `${AXN[i]}`, ink, 8, -8, "600 12px system-ui");
+      lines.push(`<span class="pill info" style="border-color:${col};color:${col}">${AXN[i]}: d = ${dims[i]} · |𝐯|/v₀ = ${f(n, 4)} · light β² = ${f(a.light, 4)} · lost ${f(1 - n, 4)}</span>`);
+    });
+    $("sverdict").innerHTML = lines.join("");
+  }
   function drawWalk() {
     const { g, w, h } = C.setup($("walkplot"));
     const blue = C.css("--blue"), orange = C.css("--orange"), red = C.css("--red"), muted = C.css("--muted"), grid = C.css("--grid"), violet = C.css("--violet");
@@ -395,19 +433,21 @@
     walkS = Rg.step(walkS, 0.05, walkRng);
     st.lam = 1; compute();
     hist.push({ light: R.light, dark: R.dark, band: R.band, interval: R.interval }); if (hist.length > 400) hist.shift();
-    steps(); drawCone(); drawBoost(); drawPhasors(); drawWalk();
+    axS = axS.map((s) => Rg.step(s, 0.05, walkRng));
+    axisDims().forEach((d, i) => { const a = Rg.analyse(d, axS[i]); trails[i].push([a.v[1] / a.v[0], a.v[2] / a.v[0], a.v[3] / a.v[0]]); if (trails[i].length > 240) trails[i].shift(); });
+    steps(); drawCone(); drawBoost(); drawPhasors(); drawWalk(); drawSphere();
     const out = hist.filter((p) => !p.band).length;
     $("wverdict").innerHTML = `<span class="pill ok">light ${f(R.light, 4)} · dark ${f(R.dark, 4)}</span><span class="pill ${R.band ? "ok" : "info"}">${R.band ? "in the band" : "outside the band"}</span><span class="pill info">${out} of ${hist.length} steps outside the band</span>`;
     walkT = requestAnimationFrame(() => setTimeout(walkStep, 40));
   }
   function setWalk(on) {
-    walking = on; $("walk").setAttribute("aria-pressed", on);
+    walking = on; $("walk").setAttribute("aria-pressed", on); if (!on) { axS = null; trails = [[], [], []]; }
     if (walkT) { cancelAnimationFrame(walkT); walkT = null; }
-    if (on) { walkS = Rg.copy(R.s); hist = []; walkRng = C.rng((Math.random() * 1e9) | 0); walkStep(); }
+    if (on) { walkS = Rg.copy(R.s); hist = []; trails = [[], [], []]; axS = axisDims().map((d, i) => Rg.state(d, 0, 1 + i, false)); walkRng = C.rng((Math.random() * 1e9) | 0); walkStep(); }
   }
   let walkRng = null;
   $("walk").addEventListener("click", () => setWalk(!walking));
-  function drawAll() { compute(); steps(); drawCone(); drawBoost(); drawPhasors(); drawBetas(); drawCube(); drawWalk(); }
+  function drawAll() { compute(); steps(); drawCone(); drawBoost(); drawPhasors(); drawBetas(); drawCube(); drawWalk(); drawSphere(); }
 
   function sync() {
     $("d").value = st.d; $("vd").textContent = st.d;
@@ -424,8 +464,9 @@
     const [d, e] = b.dataset.p.split(",").map(Number);
     setWalk(false); hist = []; st.d = d; st.eps = e; st.lam = 1; st.real = false; sync(); drawAll();
   }));
-  ["dx", "dy", "dz"].forEach((id) => $(id).addEventListener("input", drawCube));
+  ["dx", "dy", "dz"].forEach((id) => $(id).addEventListener("input", () => { setWalk(false); drawCube(); drawSphere(); }));
   C.view3d($("cone"), view, drawCone);
+  C.view3d($("sphere"), view2, drawSphere);
   C.themeToggle($("theme"), drawAll);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
   window.addEventListener("resize", drawAll);
@@ -454,7 +495,7 @@
     if (tourT) { clearInterval(tourT); tourT = null; $("tourbtn").setAttribute("aria-pressed", "false"); return; }
     stop = 0; $("tourbtn").setAttribute("aria-pressed", "true"); runStop(); tourT = setInterval(runStop, 6500);
   });
-  function spin() { if (!view.user) { view.yaw += 0.0025; drawCone(); } requestAnimationFrame(spin); }
+  function spin() { if (!view.user) { view.yaw += 0.0025; drawCone(); } if (!view2.user) { view2.yaw += 0.0025; drawSphere(); } requestAnimationFrame(spin); }
   sync(); drawAll();
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches) requestAnimationFrame(spin);
 })();

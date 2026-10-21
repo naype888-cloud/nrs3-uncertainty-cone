@@ -90,7 +90,7 @@
 <body>
 <main>
   <div class="top">
-    <a class="navlink" href="lorentz-t3.html">SL(2, ℂ) on T³ →</a> · <a class="navlink" href="index.html">open-chain version</a>
+    <a class="navlink" href="lorentz-t3.html">SL(2, ℂ) on T³ →</a> · <a class="navlink" href="index.html">open chain (variation)</a>
     <button class="theme" id="theme" type="button" aria-label="Toggle dark mode">Theme</button>
   </div>
   <h1>NRS³-Minkowski on T³ — the uncertainty cone of a closed axis</h1>
@@ -202,10 +202,11 @@
       base theorem: <a href="https://github.com/naype888-cloud/nava-robertson-schrodinger">nava-robertson-schrodinger</a>.</p>
   </div>
 </main>
-<script src="cone-core.js"></script>
-<script src="cone-t3.js"></script>
+<script src="cone-core.js?v=20261020d"></script>
+<script src="cone-t3.js?v=20261020d"></script>
 <script>
 (() => {
+  if (!window.Cone || !window.Cone.ring) { document.body.insertAdjacentHTML("afterbegin", "<p style=\"padding:16px\">This page needs the latest cone-t3.js. Reload with Ctrl+F5 (or Shift+reload).</p>"); return; }
   const C = window.Cone, Rg = C.ring, $ = (id) => document.getElementById(id);
   const st = { d: 3, eps: 0, lam: 1, seed: 1, real: false };
   const view = { yaw: -0.9, pitch: 0.55, user: false };

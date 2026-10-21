@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NRS³-Minkowski on T³, the uncertainty cone</title>
+<meta name="description" content="The uncertainty of a pair of observables is a four-vector of Minkowski space. Robertson–Schrödinger is the light cone; the quantum of NRS³ keeps the vector strictly inside it.">
+<style>
+  :root {
+    --bg: #fcfcfb; --panel: #ffffff; --ink: #0b0b0b; --ink2: #52514e; --muted: #8a8985;
+    --grid: #e4e3df; --blue: #2a78d6; --orange: #eb6834; --green: #2f8f5b; --red: #d0343a; --violet: #7c5cd6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f0f0e; --panel: #171716; --ink: #f2f1ee; --ink2: #c4c3bf; --muted: #8a8985;
+      --grid: #2a2927; --blue: #5b9be6; --orange: #f08a5d; --green: #4fb37d; --red: #f0605f; --violet: #a48bf0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f0f0e; --panel: #171716; --ink: #f2f1ee; --ink2: #c4c3bf; --muted: #8a8985;
+    --grid: #2a2927; --blue: #5b9be6; --orange: #f08a5d; --green: #4fb37d; --red: #f0605f; --violet: #a48bf0;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1180px; margin: 0 auto; padding: 22px 16px 40px; }
+  h1 { font-size: 1.5rem; margin: 0 0 4px; font-weight: 650; }
+  .lead { color: var(--ink2); margin: 0 0 14px; max-width: 860px; }
+  .top { display: flex; gap: 8px; float: right; }
+  .theme, .navlink { font: inherit; font-size: 0.8rem; padding: 4px 10px; border-radius: 999px;
+    border: 1px solid var(--grid); background: var(--panel); color: var(--ink); cursor: pointer; text-decoration: none; }
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+  @media (max-width: 900px) { .steps { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+  .step { background: var(--panel); border: 1px solid var(--grid); border-radius: 12px; padding: 10px 12px;
+    font-variant-numeric: tabular-nums; }
+  .step .n { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--blue); color: #fff; font-size: 0.78rem; font-weight: 650; margin-right: 6px; }
+  .step h3 { font-size: 0.92rem; margin: 0 0 6px; font-weight: 620; display: flex; align-items: center; }
+  .step p { margin: 0; font-size: 0.84rem; color: var(--ink2); }
+  .step .val { margin-top: 6px; font-size: 0.86rem; color: var(--ink); }
+  .mat { display: inline-grid; grid-template-columns: auto auto; gap: 2px 14px; padding: 2px 8px;
+    border-left: 1.5px solid var(--ink2); border-right: 1.5px solid var(--ink2); border-radius: 6px;
+    font-size: 0.82rem; margin: 2px 0; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 10px 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  button.chip, button.act {
+    font: inherit; font-size: 0.88rem; padding: 6px 12px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--grid); background: var(--panel); color: var(--ink);
+  }
+  button[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .sliders { display: grid; grid-template-columns: repeat(3, minmax(170px, 1fr)); gap: 8px 18px; }
+  @media (max-width: 760px) { .sliders { grid-template-columns: 1fr; } }
+  .sl { display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; font-size: 0.92rem; }
+  .sl input { flex: 1; min-width: 0; accent-color: var(--blue); }
+  .sl b { min-width: 3.4em; text-align: right; }
+  .verdict { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+  .pill { border-radius: 999px; padding: 5px 12px; font-size: 0.86rem; border: 1.5px solid var(--grid); }
+  .pill.ok { border-color: var(--green); color: var(--green); background: color-mix(in srgb, var(--green) 9%, transparent); }
+  .pill.null { border-color: var(--red); color: var(--red); background: color-mix(in srgb, var(--red) 9%, transparent); }
+  .pill.info { border-color: var(--violet); color: var(--violet); }
+  .grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 14px; margin-top: 12px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  .card { background: var(--panel); border: 1px solid var(--grid); border-radius: 12px; padding: 10px; position: relative; }
+  .card h2 { font-size: 0.95rem; margin: 2px 4px 4px; font-weight: 600; color: var(--ink2); }
+  .card .hint { position: absolute; right: 12px; top: 10px; font-size: 0.75rem; color: var(--muted); }
+  .card .sub { color: var(--ink2); font-size: .86rem; margin: 0 4px 6px; }
+  canvas { width: 100%; display: block; touch-action: none; }
+  #cone { aspect-ratio: 1 / 0.92; cursor: grab; }
+  #cone:active { cursor: grabbing; }
+  #boost { aspect-ratio: 1 / 0.92; }
+  #phasors { aspect-ratio: 16 / 4.6; }
+  #betas { aspect-ratio: 16 / 5.4; }
+  #cube { aspect-ratio: 16 / 4.2; }
+  @media (max-width: 640px) { #phasors, #betas, #cube { aspect-ratio: 4 / 3; } }
+  .wide { margin-top: 14px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 0.88rem; }
+  th, td { padding: 6px 8px; border-bottom: 1px solid var(--grid); text-align: left; vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+  .tablewrap { overflow-x: auto; }
+  .note { color: var(--ink2); font-size: 0.88rem; margin-top: 14px; max-width: 900px; }
+  code { font-size: 0.86em; }
+  a { color: var(--blue); }
+  .tour { border: 1.5px solid var(--blue); border-radius: 10px; padding: 8px 12px; margin: 10px 0 0;
+    background: color-mix(in srgb, var(--blue) 7%, transparent); font-size: 0.92rem; }
+  .tour[hidden] { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <a class="navlink" href="lorentz-t3.html">SL(2, ℂ) on T³ →</a> · <a class="navlink" href="index.html">open-chain version</a>
+    <button class="theme" id="theme" type="button" aria-label="Toggle dark mode">Theme</button>
+  </div>
+  <h1>NRS³-Minkowski on T³ — the uncertainty cone of a closed axis</h1>
+  <p class="lead">On <code>T³</code> each axis is a ring of <code>d ≥ 3</code> positions with the pair
+    <code>T°</code> (ring adjacency / 2) and <code>P</code> (centred position). A state ψ gives two fluctuation vectors in
+    <code>ℂ<sup>d</sup></code>; their Gram matrix is a Hermitian 2×2 matrix, and that <em>is</em> a vector of Minkowski space
+    (van der Waerden 1929). Robertson–Schrödinger says it never leaves the light cone. <strong>Each axis fixes its own
+    <code>C°(d)</code></strong> — the light speed of that field is its maximal current — and everything below is solved on
+    it: in the band the vector stays strictly inside, and the light share <code>β² = 1 / C°²</code> is what the state keeps
+    of the cone while the rest, <code>1 − β²</code>, is dark. Every number is computed live from the matrices; every claim is a Lean
+    theorem (table at the end).</p>
+
+  <div class="steps" aria-live="polite">
+    <div class="step"><h3><span class="n">1</span>Two fluctuation vectors</h3>
+      <p><code>x = (T − ⟨T⟩)ψ</code>, <code>y = (P − ⟨P⟩)ψ</code> in ℂ<sup>d</sup>.</p>
+      <div class="val" id="s1">–</div></div>
+    <div class="step"><h3><span class="n">2</span>Their Gram matrix</h3>
+      <p>Hermitian: <code>G = [‖x‖², ⟪x,y⟫; ⟪y,x⟫, ‖y‖²]</code>.</p>
+      <div class="val" id="s2">–</div></div>
+    <div class="step"><h3><span class="n">3</span>A four-vector</h3>
+      <p><code>G = v₀1 + v₁σ₁ − v₂σ₂ + v₃σ₃</code>; v₁ covariance, v₂ commutator.</p>
+      <div class="val" id="s3">–</div></div>
+    <div class="step"><h3><span class="n">4</span>The interval</h3>
+      <p><code>det G = v₀² − v₁² − v₂² − v₃²</code> ≥ 0: inside the cone.</p>
+      <div class="val" id="s4">–</div></div>
+  </div>
+
+  <div class="bar">
+    <div class="chips" role="group" aria-label="Presets">
+      <button class="chip" type="button" data-p="3,-1">saturating state, d = 3 (null)</button>
+      <button class="chip" type="button" data-p="3,0">max current, d = 3</button>
+      <button class="chip" type="button" data-p="4,0">max current, d = 4</button>
+      <button class="chip" type="button" data-p="12,0">max current, d = 12</button>
+      <button class="chip" type="button" data-p="6,0.03">in the band</button>
+      <button class="chip" type="button" data-p="8,0.9">a far state</button>
+      <button class="chip" type="button" id="seed">🎲 New direction</button>
+    </div>
+    <button class="act" type="button" id="field" aria-pressed="false">ℝ only</button>
+    <button class="act" type="button" id="walk" aria-pressed="false">✦ Random walk of the state</button>
+    <button class="act" type="button" id="tourbtn" aria-pressed="false">✦ Guided tour</button>
+  </div>
+  <div class="sliders">
+    <label class="sl">d<input type="range" id="d" min="3" max="16" value="3"><b id="vd">3</b></label>
+    <label class="sl">ε away from the maximal current state<input type="range" id="eps" min="0" max="1" step="0.001" value="0"><b id="veps">0</b></label>
+    <label class="sl">units λ<input type="range" id="lam" min="-2" max="2" step="0.01" value="0"><b id="vlam">1</b></label>
+  </div>
+  <div class="tour" id="tour" hidden></div>
+  <div class="verdict" id="verdict" aria-live="polite"></div>
+
+  <div class="grid">
+    <div class="card"><h2>The cone, in the frame v₃ = 0</h2><span class="hint">drag to turn</span>
+      <p class="sub">The arrow is the uncertainty vector, rescaled to height 1. The rim is the speed of light β = 1:
+        saturation. Dots: the maximal current state for d = 3 … 16; dashed ring: the Szegő limit 1/C°<sub>∞</sub> = 1/√2 of the ring.</p>
+      <canvas id="cone" aria-label="Three-dimensional light cone with the uncertainty vector"></canvas></div>
+    <div class="card"><h2>Units are a boost</h2>
+      <p class="sub"><code>A → λA</code>, <code>B → B/λ</code> keeps <code>[A, B]</code> and slides the vector along its
+        hyperbola <code>v₀² − v₃² = (‖x‖‖y‖)²</code>. The interval, the covariance and the commutator do not move: that is
+        why <code>C°</code> has no units.</p>
+      <canvas id="boost" aria-label="The hyperbola of boosts in the plane v3, v0"></canvas></div>
+  </div>
+
+  <div class="card wide"><h2>Step 1, seen: the two vectors site by site</h2>
+    <p class="sub">Each site j carries x<sub>j</sub> (blue) and y<sub>j</sub> (orange) as arrows in the complex plane.
+      β = |⟪x, y⟫| / (‖x‖‖y‖) = cos θ<sub>NRS</sub>: the two vectors are parallel only when β = 1.</p>
+    <canvas id="phasors" aria-label="The components of the two fluctuation vectors as phasors"></canvas></div>
+
+  <div class="card wide"><h2>Random walk of the state: how the light decays</h2>
+    <p class="sub">Press <strong>✦ Random walk of the state</strong>: ψ takes small random steps on the unit sphere of <code>ℂ<sup>d</sup></code>
+      starting where you are. Blue: the light share <code>β² = |⟪x, y⟫|² / (‖x‖²‖y‖²)</code>; orange: the dark share <code>1 − β²</code>
+      (they always add to 1). Red bands: the state left the band <code>|t| &gt; 1</code>. At the maximal current state of
+      <code>d = 3</code> the light is 4/5; for large <code>d</code> it goes to 1/2.</p>
+    <div class="verdict" id="wverdict" aria-live="polite"></div>
+    <canvas id="walkplot" aria-label="Light and dark share of the state along the random walk"></canvas></div>
+
+  <div class="card wide"><h2>The speed of the vector at the maximal current state: β(d) = 1 / C°(d)</h2>
+    <p class="sub">Timelike for every d ≥ 3 (only the saturating state of d = 3 is null). β(3) = √(4/5) = 0.8944, β(4) = 0.6495, β(5) = 0.7115 …
+      it goes to 1/√2 = 0.7071 (the Szegő limit of the ring) from both sides: it is not monotone, so there is no floor and ceiling as on the open chain. Dashed: β², the light share.</p>
+    <canvas id="betas" aria-label="The speed beta of d against d"></canvas></div>
+
+  <div class="card wide"><h2>Three closed axes, one determinant: det|NRS³| at the maximal current state of T³</h2>
+    <p class="sub">On <code>T³</code> each axis is a ring with its own <code>C°</code>. Robertson 1934 for the six observables gives
+      <code>det Σ / |det Ω| = C°(d<sub>x</sub>)² C°(d<sub>y</sub>)² C°(d<sub>z</sub>)²</code> at the maximal current state (5/4 per axis at
+      d = 3, so 125/64 on <code>T³</code>), and it is strict for every state with the three axes in the band.</p>
+    <div class="sliders">
+      <label class="sl">d<sub>x</sub><input type="range" id="dx" min="3" max="16" value="3"><b id="vdx">3</b></label>
+      <label class="sl">d<sub>y</sub><input type="range" id="dy" min="3" max="16" value="3"><b id="vdy">3</b></label>
+      <label class="sl">d<sub>z</sub><input type="range" id="dz" min="3" max="16" value="3"><b id="vdz">3</b></label>
+    </div>
+    <canvas id="cube" aria-label="The three axis speeds of the box and the determinant ratio"></canvas></div>
+
+  <div class="card wide"><h2>What you see, and the theorem behind it</h2>
+    <div class="tablewrap"><table>
+      <tr><th>On the page</th><th>Statement</th><th>Lean</th></tr>
+      <tr><td>Steps 2 → 4</td><td>G in the components of v; det G is the Minkowski interval</td><td><code>gramMatrix_eq</code>, <code>herm_coords</code>, <code>det_gramMatrix</code></td></tr>
+      <tr><td>never outside</td><td>every axis of every state lies in the closed future cone</td><td><code>TorusCone.axisVector_mem_futureCone</code></td></tr>
+      <tr><td>interval</td><td>the interval of an axis is its Robertson–Schrödinger defect</td><td><code>TorusCone.interval_axisVector</code></td></tr>
+      <tr><td>“in the band”</td><td>|t| &gt; 1: strictly timelike, proper time &gt; 0, entangled across axes or not</td><td><code>TorusCone.timelike_of_band</code>, <code>TorusCone.properTime_pos_of_band</code></td></tr>
+      <tr><td>light + dark</td><td>β² and 1 − β² add to 1 on each axis, every state; in the band the dark part is &gt; 0</td><td><code>TorusDark.lightShare_add_darkShare</code>, <code>TorusDark.darkShare_pos_of_band</code></td></tr>
+      <tr><td>d = 3, max current</td><td>light 4/5, dark 1/5</td><td><code>TorusDark.lightShare_maxState</code>, <code>TorusDark.darkShare_maxState</code></td></tr>
+      <tr><td>β(d) → 1/√2</td><td>light and dark → 1/2, angle → 45°, det Σ / |det Ω| → 2 per axis</td><td><code>RingSzego.tendsto_lightShare</code>, <code>RingSzego.tendsto_angle</code>, <code>RingSzego.tendsto_det_ratio</code></td></tr>
+      <tr><td>cube card</td><td>det|NRS³| strict on <code>T³</code> for every state with the three axes in the band; 125/64 at max current</td><td><code>TorusStrict.robertson_det_torus_lt</code>, <code>Torus.three_torus</code></td></tr>
+      <tr><td>λ slider</td><td>units are a boost; the interval does not move</td><td><code>coneVector_smul</code>, <code>interval_smul</code>, <code>gram_boost</code></td></tr>
+      <tr><td>ℝ only</td><td>over ℝ the commutator component v₂ vanishes</td><td><code>coords_gram_two</code></td></tr>
+    </table></div>
+    <p class="note">The four components are statistics of the pair — variances, covariance, commutator — not coordinates of
+      events. Outside the band the defect can vanish only trivially (Robertson as 0 = 0, nothing moves). Source:
+      <a href="https://github.com/naype888-cloud/nrs3-uncertainty-cone">nrs3-uncertainty-cone</a> ·
+      Lean of <code>T³</code>: <a href="https://github.com/naype888-cloud/nrs3-tritoro">nrs3-tritoro</a> ·
+      base theorem: <a href="https://github.com/naype888-cloud/nava-robertson-schrodinger">nava-robertson-schrodinger</a>.</p>
+  </div>
+</main>
+<script src="cone-core.js"></script>
+<script src="cone-t3.js"></script>
+<script>
+(() => {
+  const C = window.Cone, Rg = C.ring, $ = (id) => document.getElementById(id);
+  const st = { d: 3, eps: 0, lam: 1, seed: 1, real: false };
+  const view = { yaw: -0.9, pitch: 0.55, user: false };
+  const f = (x, n = 4) => (Math.abs(x) < 1e-12 ? "0" : x.toFixed(n));
+  const cpx = (re, im) => `${f(re)} ${im < 0 ? "−" : "+"} ${f(Math.abs(im))}i`;
+  let R = null, walking = false, walkS = null, walkT = null, hist = [];
+
+  function compute() {
+    const s = walking && walkS && walkS.re.length === st.d ? walkS : Rg.state(st.d, st.eps, st.seed, st.real);
+    R = Rg.analyse(st.d, s, st.lam);
+    R.s = s;
+  }
+  function steps() {
+    $("s1").innerHTML = `‖x‖² = ${f(R.a)} &nbsp; ‖y‖² = ${f(R.b)}<br>⟪x, y⟫ = ${cpx(R.v[1], R.v[2])}`;
+    $("s2").innerHTML = `<span class="mat"><span>${f(R.a)}</span><span>${cpx(R.v[1], R.v[2])}</span>
+      <span>${cpx(R.v[1], -R.v[2])}</span><span>${f(R.b)}</span></span>`;
+    $("s3").innerHTML = `v = (${f(R.v[0])}, ${f(R.v[1])}, ${f(R.v[2])}, ${f(R.v[3])})`;
+    $("s4").innerHTML = `det G = ${R.interval.toExponential(4)}<br>β = ${f(R.beta, 6)} &nbsp; 1 − β² = ${(1 - R.beta ** 2).toExponential(3)}`;
+    const pills = [];
+    const nullish = R.interval <= 1e-12 * Math.max(1, R.v[0] ** 2);
+    pills.push(nullish ? `<span class="pill null">on the cone: saturated (null)</span>`
+                       : `<span class="pill ok">strictly inside: timelike, defect ${R.interval.toExponential(3)}</span>`);
+    pills.push(R.band ? `<span class="pill ok">tension |t| = ${f(Math.abs(R.tension), 5)} &gt; 1: in the band, strictly timelike</span>`
+                      : `<span class="pill info">tension |t| = ${f(Math.abs(R.tension), 5)} ≤ 1: outside the band</span>`);
+    pills.push(`<span class="pill info">light β² = ${f(R.light, 5)} · dark 1 − β² = ${f(R.dark, 5)} · C°(${st.d}) = ${f(Rg.CNava(st.d), 5)}</span>`);
+    if (st.real) pills.push(`<span class="pill info">ℝ only: v₂ = 0, the commutator axis is lost</span>`);
+    if (st.eps === 0 && !st.real) pills.push(`<span class="pill info">max current: β = 1/C°(${st.d}) = ${f(1 / Rg.CNava(st.d), 6)}</span>`);
+    $("verdict").innerHTML = pills.join("");
+  }
+
+  function drawCone() {
+    const { g, w, h } = C.setup($("cone"));
+    const P = C.projector(w, h, view, 0.42, 0.62);
+    const ink = C.css("--ink"), muted = C.css("--muted"), blue = C.css("--blue"), red = C.css("--red"),
+      green = C.css("--green"), violet = C.css("--violet"), orange = C.css("--orange"), grid = C.css("--grid");
+    C.line(g, P, [-1.25, 0, 0], [1.25, 0, 0], grid); C.line(g, P, [0, -1.25, 0], [0, 1.25, 0], grid);
+    C.line(g, P, [0, 0, 0], [0, 0, 1.25], grid);
+    C.label(g, P, [1.3, 0, 0], "v₁ cov", muted); C.label(g, P, [0, 1.3, 0], "v₂ comm", muted);
+    C.label(g, P, [0, 0, 1.3], "v₀′", muted);
+    C.drawCone(g, P, 1, blue);
+    const ring = [];
+    for (let t = 0; t <= 80; t++) ring.push([Math.cos(t * Math.PI / 40) / Rg.C_INF, Math.sin(t * Math.PI / 40) / Rg.C_INF, 1]);
+    C.poly(g, P, ring, violet, 1.2, [5, 4]);
+    for (let d = 3; d <= 16; d++) {
+      const b = 1 / Rg.CNava(d);
+      C.dot(g, P, [0, -b, 1], d === st.d ? 4.5 : 2.6, green);
+    }
+    // the current vector, rescaled to v₀′ = 1 (balanced frame)
+    const b1 = R.rest > 0 ? R.v[1] / R.rest : 0, b2 = R.rest > 0 ? R.v[2] / R.rest : 0;
+    const tip = [b1, b2, 1];
+    const rr = [];
+    for (let t = 0; t <= 80; t++) rr.push([R.beta * Math.cos(t * Math.PI / 40), R.beta * Math.sin(t * Math.PI / 40), 1]);
+    C.poly(g, P, rr, C.mix(orange, 0.55), 1);
+    C.line(g, P, [b1, b2, 0], tip, C.mix(muted, 0.6), 1, [3, 3]);
+    C.line(g, P, [0, 0, 0], tip, orange, 2.6);
+    C.dot(g, P, tip, 5, orange);
+    C.label(g, P, tip, `β = ${R.beta.toFixed(4)}`, ink, 9, -8, "600 12px system-ui");
+    C.label(g, P, [0, 1, 1], "rim: β = 1", red, 6, -8, "11px system-ui");
+  }
+
+  function drawBoost() {
+    const { g, w, h } = C.setup($("boost"));
+    const ink = C.css("--ink"), muted = C.css("--muted"), blue = C.css("--blue"), red = C.css("--red"),
+      orange = C.css("--orange"), grid = C.css("--grid");
+    const m = R.rest, L = Math.max(m * Math.cosh(1.5), Math.abs(R.v[3]) * 1.15, R.v[0] * 1.08);
+    const pad = 34, sx = (w - 2 * pad) / (2 * L), sy = (h - 2 * pad) / L, S = Math.min(sx, sy);
+    const X = (v3) => w / 2 + v3 * S, Y = (v0) => h - pad - v0 * S;
+    g.strokeStyle = grid; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(X(-L), Y(0)); g.lineTo(X(L), Y(0)); g.moveTo(X(0), Y(0)); g.lineTo(X(0), Y(L)); g.stroke();
+    g.setLineDash([4, 4]); g.strokeStyle = red;
+    g.beginPath(); g.moveTo(X(0), Y(0)); g.lineTo(X(L), Y(L)); g.moveTo(X(0), Y(0)); g.lineTo(X(-L), Y(L)); g.stroke();
+    g.setLineDash([]);
+    g.strokeStyle = blue; g.lineWidth = 2.2; g.beginPath();
+    for (let k = 0; k <= 200; k++) {
+      const e = -3 + 6 * k / 200, a = m * Math.sinh(e), b = m * Math.cosh(e);
+      if (b > L) continue;
+      const px = X(a), py = Y(b);
+      k && g.lineTo(px, py) || g.moveTo(px, py);
+    }
+    g.stroke();
+    g.fillStyle = ink; g.beginPath(); g.arc(X(0), Y(m), 4, 0, 7); g.fill();
+    g.font = "12px system-ui"; g.fillText("v₃ = 0, v₀ = ‖x‖‖y‖", X(0) + 8, Y(m) + 16);
+    g.fillStyle = orange; g.beginPath(); g.arc(X(R.v[3]), Y(R.v[0]), 6, 0, 7); g.fill();
+    g.font = "600 12px system-ui"; g.fillText(`λ = ${st.lam.toFixed(2)}`, X(R.v[3]) + 9, Y(R.v[0]) - 8);
+    g.fillStyle = muted; g.font = "12px system-ui";
+    g.fillText("v₃ = (Var A − Var B)/2", w - pad - 150, Y(0) - 6);
+    g.fillText("v₀ = (Var A + Var B)/2", X(0) + 6, pad - 6);
+    g.fillStyle = red; g.fillText("light lines", X(L * 0.62) + 6, Y(L * 0.62));
+    g.fillStyle = ink;
+    g.fillText(`interval = ${R.interval.toExponential(4)} (same for every λ)`, pad, pad + 4);
+  }
+
+  function drawPhasors() {
+    const { g, w, h } = C.setup($("phasors"));
+    const blue = C.css("--blue"), orange = C.css("--orange"), muted = C.css("--muted"), grid = C.css("--grid");
+    const d = st.d, cw = (w - 20) / d, r = Math.min(cw * 0.42, h * 0.2);
+    let mx = 1e-12, my = 1e-12;
+    for (let j = 0; j < d; j++) {
+      mx = Math.max(mx, Math.hypot(R.x.re[j], R.x.im[j]) * st.lam);
+      my = Math.max(my, Math.hypot(R.y.re[j], R.y.im[j]) / st.lam);
+    }
+    const row = (cy, vec, k, m, col) => {
+      for (let j = 0; j < d; j++) {
+        const cx = 10 + cw * (j + 0.5);
+        g.strokeStyle = grid; g.beginPath(); g.arc(cx, cy, r, 0, 7); g.stroke();
+        const re = vec.re[j] * k / m * r, im = vec.im[j] * k / m * r;
+        g.strokeStyle = col; g.lineWidth = 2; g.beginPath(); g.moveTo(cx, cy); g.lineTo(cx + re, cy - im); g.stroke();
+        g.fillStyle = col; g.beginPath(); g.arc(cx + re, cy - im, 2.6, 0, 7); g.fill();
+      }
+    };
+    row(h * 0.3, R.x, st.lam, mx, blue);
+    row(h * 0.74, R.y, 1 / st.lam, my, orange);
+    g.font = "12px system-ui"; g.fillStyle = blue; g.fillText("x = (T − ⟨T⟩)ψ", 10, 14);
+    g.fillStyle = orange; g.fillText("y = (P − ⟨P⟩)ψ", 10, h * 0.52);
+    g.fillStyle = muted;
+    for (let j = 0; j < d; j++) g.fillText(`${j + 1}`, 10 + cw * (j + 0.5) - 3, h - 4);
+  }
+
+  function drawBetas() {
+    const { g, w, h } = C.setup($("betas"));
+    const blue = C.css("--blue"), red = C.css("--red"), violet = C.css("--violet"), orange = C.css("--orange"),
+      muted = C.css("--muted"), grid = C.css("--grid"), green = C.css("--green"), ink = C.css("--ink");
+    const D = 60, lo = 0.62, hi = 1.02, pl = 46, pr = 14, pt = 12, pb = 26;
+    const X = (d) => pl + (d - 3) / (D - 3) * (w - pl - pr), Y = (b) => pt + (hi - b) / (hi - lo) * (h - pt - pb);
+    g.strokeStyle = grid; g.fillStyle = muted; g.font = "11px system-ui";
+    for (let b = 0.65; b <= 1.0001; b += 0.05) { g.beginPath(); g.moveTo(pl, Y(b)); g.lineTo(w - pr, Y(b)); g.stroke(); g.fillText(b.toFixed(2), 8, Y(b) + 4); }
+    for (const d of [3, 10, 20, 30, 40, 50, 60]) g.fillText(`${d}`, X(d) - 5, h - 8);
+    const hl = (b, col, dash, txt) => { g.strokeStyle = col; g.setLineDash(dash); g.beginPath(); g.moveTo(pl, Y(b)); g.lineTo(w - pr, Y(b)); g.stroke(); g.setLineDash([]); g.fillStyle = col; g.fillText(txt, w - pr - 210, Y(b) - 4); };
+    hl(1, red, [2, 3], "β = 1: the rim, saturation");
+    hl(1 / Rg.C_INF, violet, [6, 4], `1/√2 = ${(1 / Rg.C_INF).toFixed(4)}: the Szegő limit`);
+    const curve = (fn, col, dash) => { g.strokeStyle = col; g.lineWidth = 2; g.setLineDash(dash); g.beginPath();
+      for (let d = 3; d <= D; d++) { const y = Y(fn(d)); d === 3 ? g.moveTo(X(d), y) : g.lineTo(X(d), y); } g.stroke(); g.setLineDash([]); g.lineWidth = 1; };
+    curve((d) => 1 / Rg.CNava(d), blue, []);
+    curve((d) => 1 / Rg.CNava(d) ** 2, orange, [5, 4]);
+    for (let d = 3; d <= D; d++) { g.fillStyle = blue; g.beginPath(); g.arc(X(d), Y(1 / Rg.CNava(d)), d === st.d ? 5 : 1.8, 0, 7); g.fill(); }
+    g.fillStyle = ink; g.font = "600 12px system-ui";
+    g.fillText(`d = ${st.d}: β = ${(1 / Rg.CNava(st.d)).toFixed(5)}`, X(st.d) + 8, Y(1 / Rg.CNava(st.d)) + 18);
+    g.font = "11px system-ui"; g.fillStyle = muted; g.fillText("positions per axis d", X(13), h - 8);
+  }
+
+  function drawCube() {
+    const { g, w, h } = C.setup($("cube"));
+    const ds = [+$("dx").value, +$("dy").value, +$("dz").value];
+    ["x", "y", "z"].forEach((a, i) => { $("vd" + a).textContent = ds[i]; });
+    const blue = C.css("--blue"), red = C.css("--red"), green = C.css("--green"), muted = C.css("--muted"),
+      ink = C.css("--ink"), grid = C.css("--grid"), violet = C.css("--violet");
+    const pl = 70, pr = 270, lo = 0.62, hi = 1.0;
+    const X = (b) => pl + (b - lo) / (hi - lo) * (w - pl - pr);
+    let ratio = 1;
+    ds.forEach((d, i) => {
+      const c = Rg.CNava(d), b = 1 / c, y = 18 + i * (h - 30) / 3;
+      ratio *= c * c;
+      g.strokeStyle = grid; g.beginPath(); g.moveTo(X(lo), y + 10); g.lineTo(X(hi), y + 10); g.stroke();
+      g.strokeStyle = violet; g.setLineDash([4, 3]); g.beginPath(); g.moveTo(X(1 / Rg.C_INF), y); g.lineTo(X(1 / Rg.C_INF), y + 20); g.stroke(); g.setLineDash([]);
+      g.fillStyle = green; g.fillRect(X(lo), y + 4, X(b) - X(lo), 12);
+      g.fillStyle = ink; g.font = "12px system-ui"; g.fillText(`${"xyz"[i]}: d = ${d}`, 8, y + 14);
+      g.fillStyle = muted; g.fillText(`β = ${b.toFixed(5)} · C° = ${c.toFixed(4)}`, X(b) + 6, y + 14);
+    });
+    g.fillStyle = muted; g.font = "11px system-ui";
+    g.fillText("0.62", X(lo) - 10, h - 2); g.fillText("1", X(hi) - 3, h - 2);
+    g.fillStyle = violet; g.fillText("1/√2", X(1 / Rg.C_INF) - 12, h - 2);
+    const strict = ratio > 1 + 1e-12;
+    g.fillStyle = strict ? green : red; g.font = "600 13px system-ui";
+    g.fillText("det Σ / |det Ω| at max current", w - pr + 16, 30);
+    g.font = "600 20px system-ui"; g.fillText(ratio.toFixed(6), w - pr + 16, 58);
+    g.font = "12px system-ui"; g.fillText(strict ? "> 1: det|NRS³| strict on T³" : "= 1", w - pr + 16, 80);
+  }
+
+  function drawWalk() {
+    const { g, w, h } = C.setup($("walkplot"));
+    const blue = C.css("--blue"), orange = C.css("--orange"), red = C.css("--red"), muted = C.css("--muted"), grid = C.css("--grid"), violet = C.css("--violet");
+    const pl = 44, pr = 12, pt = 12, pb = 24, N = 400, X = (i) => pl + i / (N - 1) * (w - pl - pr), Y = (v) => pt + (1 - v) * (h - pt - pb);
+    g.font = "11px system-ui"; g.fillStyle = muted; g.strokeStyle = grid;
+    for (const v of [0, 0.25, 0.5, 0.75, 1]) { g.beginPath(); g.moveTo(pl, Y(v)); g.lineTo(w - pr, Y(v)); g.stroke(); g.fillText(v.toFixed(2), 8, Y(v) + 4); }
+    g.strokeStyle = violet; g.setLineDash([6, 4]); g.beginPath(); g.moveTo(pl, Y(0.5)); g.lineTo(w - pr, Y(0.5)); g.stroke(); g.setLineDash([]);
+    g.fillStyle = violet; g.fillText("1/2: the Szegő limit of light and dark", pl + 8, Y(0.5) - 5);
+    if (!hist.length) { g.fillStyle = muted; g.fillText("press ✦ Random walk of the state", pl + 8, h / 2); return; }
+    hist.forEach((p, i) => { if (!p.band) { g.fillStyle = C.mix(red, 0.16); g.fillRect(X(i) - 1, pt, 2.5, h - pt - pb); } });
+    const line = (key, col) => { g.strokeStyle = col; g.lineWidth = 2; g.beginPath(); hist.forEach((p, i) => { i ? g.lineTo(X(i), Y(p[key])) : g.moveTo(X(i), Y(p[key])); }); g.stroke(); g.lineWidth = 1; };
+    line("light", blue); line("dark", orange);
+    g.fillStyle = blue; g.fillText("light β²", pl + 8, pt + 12); g.fillStyle = orange; g.fillText("dark 1 − β²", pl + 70, pt + 12);
+    g.fillStyle = muted; g.fillText("steps →", w - pr - 44, h - 8);
+  }
+  function walkStep() {
+    if (!walking) return;
+    walkS = Rg.step(walkS, 0.05, walkRng);
+    st.lam = 1; compute();
+    hist.push({ light: R.light, dark: R.dark, band: R.band, interval: R.interval }); if (hist.length > 400) hist.shift();
+    steps(); drawCone(); drawBoost(); drawPhasors(); drawWalk();
+    const out = hist.filter((p) => !p.band).length;
+    $("wverdict").innerHTML = `<span class="pill ok">light ${f(R.light, 4)} · dark ${f(R.dark, 4)}</span><span class="pill ${R.band ? "ok" : "info"}">${R.band ? "in the band" : "outside the band"}</span><span class="pill info">${out} of ${hist.length} steps outside the band</span>`;
+    walkT = requestAnimationFrame(() => setTimeout(walkStep, 40));
+  }
+  function setWalk(on) {
+    walking = on; $("walk").setAttribute("aria-pressed", on);
+    if (walkT) { cancelAnimationFrame(walkT); walkT = null; }
+    if (on) { walkS = Rg.copy(R.s); hist = []; walkRng = C.rng((Math.random() * 1e9) | 0); walkStep(); }
+  }
+  let walkRng = null;
+  $("walk").addEventListener("click", () => setWalk(!walking));
+  function drawAll() { compute(); steps(); drawCone(); drawBoost(); drawPhasors(); drawBetas(); drawCube(); drawWalk(); }
+
+  function sync() {
+    $("d").value = st.d; $("vd").textContent = st.d;
+    $("eps").value = Math.cbrt(st.eps); $("veps").textContent = st.eps.toFixed(st.eps < 0.01 ? 4 : 3);
+    $("lam").value = Math.log2(st.lam); $("vlam").textContent = st.lam.toFixed(2);
+    $("field").setAttribute("aria-pressed", st.real);
+  }
+  $("d").addEventListener("input", (e) => { setWalk(false); hist = []; st.d = +e.target.value; sync(); drawAll(); });
+  $("eps").addEventListener("input", (e) => { setWalk(false); hist = []; st.eps = (+e.target.value) ** 3; sync(); drawAll(); });
+  $("lam").addEventListener("input", (e) => { st.lam = 2 ** (+e.target.value); sync(); drawAll(); });
+  $("seed").addEventListener("click", () => { st.seed = 1 + Math.floor(Math.random() * 1e6); if (st.eps === 0) st.eps = 0.2; sync(); drawAll(); });
+  $("field").addEventListener("click", () => { st.real = !st.real; if (st.real && st.eps === 0) st.eps = 0.3; sync(); drawAll(); });
+  document.querySelectorAll("[data-p]").forEach((b) => b.addEventListener("click", () => {
+    const [d, e] = b.dataset.p.split(",").map(Number);
+    setWalk(false); hist = []; st.d = d; st.eps = e; st.lam = 1; st.real = false; sync(); drawAll();
+  }));
+  ["dx", "dy", "dz"].forEach((id) => $(id).addEventListener("input", drawCube));
+  C.view3d($("cone"), view, drawCone);
+  C.themeToggle($("theme"), drawAll);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawAll);
+  window.addEventListener("resize", drawAll);
+
+  // guided tour: each stop sets the controls and explains
+  const STOPS = [
+    [{ d: 3, eps: -1, lam: 1, real: false }, "d = 3, the saturating state: the arrow touches the rim. β = 1, the interval is 0: Robertson–Schrödinger is saturated, the vector is null. Its tension is exactly 1, the edge of the band."],
+    [{ d: 3, eps: 0, lam: 1, real: false }, "d = 3 at the maximal current state: the closed axis has a quantum already. β = √(4/5) = 0.8944, the tension is √(3/2) > 1, the vector is strictly inside. Light 4/5, dark 1/5 (TorusDark.lightShare_maxState)."],
+    [{ d: 4, eps: 0, lam: 1, real: false }, "d = 4: β = 0.6495, below 1/√2. The light share is 0.42; the dark share is bigger."],
+    [{ d: 5, eps: 0, lam: 1, real: false }, "d = 5: β = 0.7115, above 1/√2. The ring does not go monotonically to its limit: there is no floor and ceiling band as on the open chain."],
+    [{ d: 16, eps: 0, lam: 1, real: false }, "More positions: β goes to 1/√2, light and dark to 1/2 (RingSzego). Each axis fixes its own C° and the state is solved on it."],
+    [{ d: 6, eps: 0.03, lam: 1, real: false }, "Move the state a little away from the maximal current state: its tension stays above 1 and the vector stays strictly inside, for every such state (TorusCone.timelike_of_band)."],
+    [{ d: 6, eps: 0.03, lam: 3.2, real: false }, "Change the units, A → λA and B → B/λ: the point slides on its hyperbola (a Lorentz boost) and the interval does not change (interval_smul)."],
+    [{ d: 6, eps: 0.5, lam: 1, real: true }, "ℝ only: drop the imaginary part of the state. The commutator component v₂ is 0 for every real state; the arrow is stuck in the plane v₂ = 0. The cone needs ℂ."],
+    [{ d: 3, eps: 0, lam: 1, real: false }, "Back to d = 3. Press the random walk to watch the light decay, or turn the cone."],
+  ];
+  let tourT = null, stop = 0;
+  function runStop() {
+    const [s, txt] = STOPS[stop];
+    Object.assign(st, s); sync(); drawAll();
+    $("tour").hidden = false; $("tour").innerHTML = `<strong>${stop + 1}/${STOPS.length}</strong> · ${txt}`;
+    stop += 1;
+    if (stop >= STOPS.length) { clearInterval(tourT); tourT = null; $("tourbtn").setAttribute("aria-pressed", "false"); }
+  }
+  $("tourbtn").addEventListener("click", () => {
+    if (tourT) { clearInterval(tourT); tourT = null; $("tourbtn").setAttribute("aria-pressed", "false"); return; }
+    stop = 0; $("tourbtn").setAttribute("aria-pressed", "true"); runStop(); tourT = setInterval(runStop, 6500);
+  });
+  function spin() { if (!view.user) { view.yaw += 0.0025; drawCone(); } requestAnimationFrame(spin); }
+  sync(); drawAll();
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches) requestAnimationFrame(spin);
+})();
+</script>
+</body>
+</html>

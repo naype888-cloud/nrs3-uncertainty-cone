@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NRS³-Minkowski on T³, the uncertainty cone</title>
-<meta name="description" content="The uncertainty of a pair of observables is a four-vector of Minkowski space. Robertson–Schrödinger is the light cone; the quantum of NRS³ keeps the vector strictly inside it.">
+<title>RS^N³-Minkowski on T³, the uncertainty cone</title>
+<meta name="description" content="The uncertainty of a pair of observables is a four-vector of Minkowski space. Robertson–Schrödinger is the light cone; the quantum of RS^N³ keeps the vector strictly inside it.">
 <style>
   :root {
     --bg: #fcfcfb; --panel: #ffffff; --ink: #0b0b0b; --ink2: #52514e; --muted: #8a8985;
@@ -95,7 +95,7 @@
     <a class="navlink" href="lorentz-t3.html">SL(2, ℂ) on T³ →</a> · <a class="navlink" href="index.html">open chain (variation)</a>
     <button class="theme" id="theme" type="button" aria-label="Toggle dark mode">Theme</button>
   </div>
-  <h1>NRS³-Minkowski on T³ — the uncertainty cone of a closed axis</h1>
+  <h1>RS^N³-Minkowski on T³ — the uncertainty cone of a closed axis</h1>
   <p class="lead">On <code>T³</code> each axis is a ring of <code>d ≥ 3</code> positions with the pair
     <code>T°</code> (ring adjacency / 2) and <code>P</code> (centred position). A state ψ gives two fluctuation vectors in
     <code>ℂ<sup>d</sup></code>; their Gram matrix is a Hermitian 2×2 matrix, and that <em>is</em> a vector of Minkowski space
@@ -165,7 +165,7 @@
 
   <div class="card wide"><h2>Step 1, seen: the two vectors site by site</h2>
     <p class="sub">Each site j carries x<sub>j</sub> (blue) and y<sub>j</sub> (orange) as arrows in the complex plane.
-      β = |⟪x, y⟫| / (‖x‖‖y‖) = cos θ<sub>NRS</sub>: the two vectors are parallel only when β = 1.</p>
+      β = |⟪x, y⟫| / (‖x‖‖y‖) = cos θ<sub>RS^N</sub>: the two vectors are parallel only when β = 1.</p>
     <canvas id="phasors" aria-label="The components of the two fluctuation vectors as phasors"></canvas></div>
 
   <div class="card wide"><h2>Random walk of the state: how the light decays</h2>
@@ -181,7 +181,7 @@
       it goes to 1/√2 = 0.7071 (the Szegő limit of the ring) from both sides: it is not monotone, so there is no floor and ceiling as on the open chain. Dashed: β², the light share.</p>
     <canvas id="betas" aria-label="The speed beta of d against d"></canvas></div>
 
-  <div class="card wide"><h2>Three closed axes, one determinant: det|NRS³| at the maximal current state of T³</h2>
+  <div class="card wide"><h2>Three closed axes, one determinant: det|RS^N³| at the maximal current state of T³</h2>
     <p class="sub">On <code>T³</code> each axis is a ring with its own <code>C°</code>. Robertson 1934 for the six observables gives
       <code>det Σ / |det Ω| = C°(d<sub>x</sub>)² C°(d<sub>y</sub>)² C°(d<sub>z</sub>)²</code> at the maximal current state (5/4 per axis at
       d = 3, so 125/64 on <code>T³</code>), and it is strict for every state with the three axes in the band.</p>
@@ -202,7 +202,7 @@
       <tr><td>light + dark</td><td>β² and 1 − β² add to 1 on each axis, every state; in the band the dark part is &gt; 0</td><td><code>TorusDark.lightShare_add_darkShare</code>, <code>TorusDark.darkShare_pos_of_band</code></td></tr>
       <tr><td>d = 3, max current</td><td>light 4/5, dark 1/5</td><td><code>TorusDark.lightShare_maxState</code>, <code>TorusDark.darkShare_maxState</code></td></tr>
       <tr><td>β(d) → 1/√2</td><td>light and dark → 1/2, angle → 45°, det Σ / |det Ω| → 2 per axis</td><td><code>RingSzego.tendsto_lightShare</code>, <code>RingSzego.tendsto_angle</code>, <code>RingSzego.tendsto_det_ratio</code></td></tr>
-      <tr><td>cube card</td><td>det|NRS³| strict on <code>T³</code> for every state with the three axes in the band; 125/64 at max current</td><td><code>TorusStrict.robertson_det_torus_lt</code>, <code>Torus.three_torus</code></td></tr>
+      <tr><td>cube card</td><td>det|RS^N³| strict on <code>T³</code> for every state with the three axes in the band; 125/64 at max current</td><td><code>TorusStrict.robertson_det_torus_lt</code>, <code>Torus.three_torus</code></td></tr>
       <tr><td>λ slider</td><td>units are a boost; the interval does not move</td><td><code>coneVector_smul</code>, <code>interval_smul</code>, <code>gram_boost</code></td></tr>
       <tr><td>ℝ only</td><td>over ℝ the commutator component v₂ vanishes</td><td><code>coords_gram_two</code></td></tr>
     </table></div>
@@ -383,7 +383,7 @@
     g.fillStyle = strict ? green : red; g.font = "600 13px system-ui";
     g.fillText("det Σ / |det Ω| at max current", w - pr + 16, 30);
     g.font = "600 20px system-ui"; g.fillText(ratio.toFixed(6), w - pr + 16, 58);
-    g.font = "12px system-ui"; g.fillText(strict ? "> 1: det|NRS³| strict on T³" : "= 1", w - pr + 16, 80);
+    g.font = "12px system-ui"; g.fillText(strict ? "> 1: det|RS^N³| strict on T³" : "= 1", w - pr + 16, 80);
   }
 
 function axisDims() { return [+$("dx").value, +$("dy").value, +$("dz").value]; }

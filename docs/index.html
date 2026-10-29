@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NRS³ Uncertainty Cone</title>
-<meta name="description" content="The uncertainty of a pair of observables is a four-vector of Minkowski space. Robertson–Schrödinger is the light cone; the quantum of NRS³ keeps the vector strictly inside it.">
+<title>RS^N³ Uncertainty Cone</title>
+<meta name="description" content="The uncertainty of a pair of observables is a four-vector of Minkowski space. Robertson–Schrödinger is the light cone; the quantum of RS^N³ keeps the vector strictly inside it.">
 <style>
   :root {
     --bg: #fcfcfb; --panel: #ffffff; --ink: #0b0b0b; --ink2: #52514e; --muted: #8a8985;
@@ -93,11 +93,11 @@
     <a class="navlink" href="lorentz.html">SL(2, ℂ) page →</a> · <a class="navlink" href="index-t3.html">same on T³ (canon)</a>
     <button class="theme" id="theme" type="button" aria-label="Toggle dark mode">Theme</button>
   </div>
-  <h1>NRS³ — the uncertainty cone</h1>
+  <h1>RS^N³ — the uncertainty cone</h1>
   <p class="lead">Take a state ψ and the pair transport <code>T</code> : position <code>P</code> on an axis with
     <code>d</code> positions. Their fluctuations are two vectors of <code>ℂ<sup>d</sup></code>; their Gram matrix is a
     Hermitian 2×2 matrix, and a Hermitian 2×2 matrix <em>is</em> a vector of Minkowski space (van der Waerden 1929).
-    Robertson–Schrödinger says that vector never leaves the light cone. The quantum of NRS³ says more: from four
+    Robertson–Schrödinger says that vector never leaves the light cone. The quantum of RS^N³ says more: from four
     positions on, in the band, it stays <strong>strictly inside</strong>. Every number below is computed live from the
     matrices <code>T<sub>d</sub></code>, <code>P<sub>d</sub></code>; every claim is a Lean theorem (table at the end).</p>
 
@@ -140,26 +140,26 @@
   <div class="grid">
     <div class="card"><h2>The cone, in the frame v₃ = 0</h2><span class="hint">drag to turn</span>
       <p class="sub">The arrow is the uncertainty vector, rescaled to height 1. The rim is the speed of light β = 1:
-        saturation. Dots: the maximal current state for d = 2 … 16; dashed ring: the limit 1/C<sub>∞</sub>, never reached.</p>
+        saturation. Dots: the maximal current state for d = 2 … 16; dashed ring: the limit 1/C<sub>N</sub><sup>∞</sup>, never reached.</p>
       <canvas id="cone" aria-label="Three-dimensional light cone with the uncertainty vector"></canvas></div>
     <div class="card"><h2>Units are a boost</h2>
       <p class="sub"><code>A → λA</code>, <code>B → B/λ</code> keeps <code>[A, B]</code> and slides the vector along its
         hyperbola <code>v₀² − v₃² = (‖x‖‖y‖)²</code>. The interval, the covariance and the commutator do not move: that is
-        why <code>C<sub>Nava</sub></code> has no units.</p>
+        why <code>C<sub>N</sub></code> has no units.</p>
       <canvas id="boost" aria-label="The hyperbola of boosts in the plane v3, v0"></canvas></div>
   </div>
 
   <div class="card wide"><h2>Step 1, seen: the two vectors site by site</h2>
     <p class="sub">Each site j carries x<sub>j</sub> (blue) and y<sub>j</sub> (orange) as arrows in the complex plane.
-      β = |⟪x, y⟫| / (‖x‖‖y‖) = cos θ<sub>NRS</sub>: the two vectors are parallel only when β = 1.</p>
+      β = |⟪x, y⟫| / (‖x‖‖y‖) = cos θ<sub>RS^N</sub>: the two vectors are parallel only when β = 1.</p>
     <canvas id="phasors" aria-label="The components of the two fluctuation vectors as phasors"></canvas></div>
 
-  <div class="card wide"><h2>The speed of the vector at the maximal current state: β(d) = 1 / C<sub>Nava</sub>(d)</h2>
-    <p class="sub">Null at d = 2, 3, timelike from d = 4, decreasing towards 1/C<sub>∞</sub> = 0.8805 without reaching it.
+  <div class="card wide"><h2>The speed of the vector at the maximal current state: β(d) = 1 / C<sub>N</sub>(d)</h2>
+    <p class="sub">Null at d = 2, 3, timelike from d = 4, decreasing towards 1/C<sub>N</sub><sup>∞</sup> = 0.8805 without reaching it.
       Dashed: β², the Mandelstam–Tamm ratio ⟨K⟩² / (4 Var T Var P).</p>
     <canvas id="betas" aria-label="The speed beta of d against d"></canvas></div>
 
-  <div class="card wide"><h2>Three axes, one determinant: det|NRS³ at the maximal current state of the cube</h2>
+  <div class="card wide"><h2>Three axes, one determinant: det|RS^N³ at the maximal current state of the cube</h2>
     <p class="sub">On the box d<sub>x</sub> × d<sub>y</sub> × d<sub>z</sub> each axis has its own cone. Robertson 1934 for
       the six observables gives det Σ / |det Ω| = C(d<sub>x</sub>)² C(d<sub>y</sub>)² C(d<sub>z</sub>)², strict as soon as
       one axis has 4 positions; in the band it is strict for every state, entangled or not (D49t).</p>
@@ -179,8 +179,8 @@
       <tr><td>on the rim</td><td>saturation is a null vector</td><td><code>interval_eq_zero_iff</code></td></tr>
       <tr><td>λ slider</td><td>units are a boost; the interval does not move</td><td><code>coneVector_smul</code>, <code>interval_smul</code>, <code>gram_boost</code></td></tr>
       <tr><td>frame v₃ = 0</td><td>a rescaling reaches it, with v₀ = ‖x‖‖y‖</td><td><code>balanced_frame</code></td></tr>
-      <tr><td>β(d)</td><td>at the maximal current state, β = 1 / C<sub>Nava</sub>(d); null iff d = 2, 3; timelike from 4</td><td><code>speed_maxCurrentState</code>, <code>null_maxCurrentState_iff</code>, <code>timelike_maxCurrentState</code></td></tr>
-      <tr><td>“in the band”</td><td>every axis strictly timelike for every state in Ϙ, entangled included; det|NRS³ strict</td><td><code>timelike_of_band</code>, <code>robertson_det_strict_of_band</code></td></tr>
+      <tr><td>β(d)</td><td>at the maximal current state, β = 1 / C<sub>N</sub>(d); null iff d = 2, 3; timelike from 4</td><td><code>speed_maxCurrentState</code>, <code>null_maxCurrentState_iff</code>, <code>timelike_maxCurrentState</code></td></tr>
+      <tr><td>“in the band”</td><td>every axis strictly timelike for every state in Ϙ, entangled included; det|RS^N³ strict</td><td><code>timelike_of_band</code>, <code>robertson_det_strict_of_band</code></td></tr>
       <tr><td>ℝ only</td><td>over ℝ the commutator component v₂ vanishes</td><td>stated in the docstrings; <code>coords_gram_two</code></td></tr>
     </table></div>
     <p class="note">The four components are statistics of the pair — variances, covariance, commutator — not coordinates of
@@ -218,7 +218,7 @@
     else if (R.band === false) pills.push(`<span class="pill info">speed ${f(Math.abs(R.speed), 5)} below v*(${st.d}) = ${R.vstar}: outside the band</span>`);
     else pills.push(`<span class="pill info">d = ${st.d}: no band (Ϙ(2) = Ϙ(3) = ∅)</span>`);
     if (st.real) pills.push(`<span class="pill info">ℝ only: v₂ = 0, the commutator axis is lost</span>`);
-    if (st.eps === 0 && !st.real) pills.push(`<span class="pill info">max current: β = 1/C<sub>Nava</sub>(${st.d}) = ${f(1 / C.CNava(st.d), 6)}</span>`);
+    if (st.eps === 0 && !st.real) pills.push(`<span class="pill info">max current: β = 1/C<sub>N</sub>(${st.d}) = ${f(1 / C.CNava(st.d), 6)}</span>`);
     $("verdict").innerHTML = pills.join("");
   }
 
@@ -321,7 +321,7 @@
     for (const d of [2, 10, 20, 30, 40, 50, 60]) g.fillText(`${d}`, X(d) - 5, h - 8);
     const hl = (b, col, dash, txt) => { g.strokeStyle = col; g.setLineDash(dash); g.beginPath(); g.moveTo(pl, Y(b)); g.lineTo(w - pr, Y(b)); g.stroke(); g.setLineDash([]); g.fillStyle = col; g.fillText(txt, w - pr - 210, Y(b) - 4); };
     hl(1, red, [2, 3], "β = 1: the rim, saturation");
-    hl(1 / C.C_INF, violet, [6, 4], `1/C∞ = ${(1 / C.C_INF).toFixed(4)}: never reached`);
+    hl(1 / C.C_INF, violet, [6, 4], `1/C_N^∞ = ${(1 / C.C_INF).toFixed(4)}: never reached`);
     const curve = (fn, col, dash) => { g.strokeStyle = col; g.lineWidth = 2; g.setLineDash(dash); g.beginPath();
       for (let d = 2; d <= D; d++) { const y = Y(fn(d)); d === 2 ? g.moveTo(X(d), y) : g.lineTo(X(d), y); } g.stroke(); g.setLineDash([]); g.lineWidth = 1; };
     curve((d) => 1 / C.CNava(d), blue, []);
@@ -352,12 +352,12 @@
     });
     g.fillStyle = muted; g.font = "11px system-ui";
     g.fillText("0.86", X(lo) - 10, h - 2); g.fillText("1", X(hi) - 3, h - 2);
-    g.fillStyle = violet; g.fillText("1/C∞", X(1 / C.C_INF) - 12, h - 2);
+    g.fillStyle = violet; g.fillText("1/C_N^∞", X(1 / C.C_INF) - 12, h - 2);
     const strict = ratio > 1 + 1e-12;
     g.fillStyle = strict ? green : red; g.font = "600 13px system-ui";
     g.fillText("det Σ / |det Ω| at max current", w - pr + 16, 30);
     g.font = "600 20px system-ui"; g.fillText(ratio.toFixed(6), w - pr + 16, 58);
-    g.font = "12px system-ui"; g.fillText(strict ? "> 1: det|NRS³ strict" : "= 1: every axis has 2 or 3", w - pr + 16, 80);
+    g.font = "12px system-ui"; g.fillText(strict ? "> 1: det|RS^N³ strict" : "= 1: every axis has 2 or 3", w - pr + 16, 80);
   }
 
   function drawAll() { compute(); steps(); drawCone(); drawBoost(); drawPhasors(); drawBetas(); drawCube(); }
@@ -388,7 +388,7 @@
     [{ d: 2, eps: 0, lam: 1, real: false }, "d = 2 at the maximal current state: the arrow touches the rim. β = 1, the interval is 0: Robertson–Schrödinger is saturated, the vector is null."],
     [{ d: 3, eps: 0, lam: 1, real: false }, "d = 3: still on the rim. With 2 or 3 positions there is no quantum (null_maxCurrentState_iff)."],
     [{ d: 4, eps: 0, lam: 1, real: false }, "d = 4: the arrow leaves the rim and goes inside, β = 0.99159. The defect is positive: the vector is timelike (timelike_maxCurrentState)."],
-    [{ d: 16, eps: 0, lam: 1, real: false }, "More positions push it further in, towards the dashed ring 1/C∞ = 0.8805, which no finite d reaches."],
+    [{ d: 16, eps: 0, lam: 1, real: false }, "More positions push it further in, towards the dashed ring 1/C_N^∞ = 0.8805, which no finite d reaches."],
     [{ d: 6, eps: 0.03, lam: 1, real: false }, "Move the state a little away from the maximal current state: its speed stays in the band Ϙ(6) and the vector stays strictly inside, for every such state (timelike_of_band)."],
     [{ d: 6, eps: 0.03, lam: 3.2, real: false }, "Change the units, A → λA and B → B/λ: the point slides on its hyperbola (a Lorentz boost) and the interval does not change (interval_smul)."],
     [{ d: 6, eps: 0.5, lam: 1, real: true }, "ℝ only: drop the imaginary part of the state. The commutator component v₂ is 0 for every real state; the arrow is stuck in the plane v₂ = 0. The cone needs ℂ."],

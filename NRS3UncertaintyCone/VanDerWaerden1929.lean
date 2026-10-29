@@ -21,7 +21,7 @@ The Gram matrix of two fluctuation vectors `x = (A − ⟨A⟩)ψ`, `y = (B − 
 positive semidefinite. In the four-vector it carries, `v₁` is the covariance and `v₂` is half the
 commutator; Robertson–Schrödinger (1929–30) says that `v` is a future causal vector. Rescaling
 `A → λA`, `B → B/λ` keeps `[A, B]` and is the boost `diag(λ, λ⁻¹) ∈ SL(2, ℂ)`, so every ratio
-built from the interval and `v₂` carries no units: in NRS³ this is `C_Nava` (`Cone`).
+built from the interval and `v₂` carries no units: in RS^N³ this is `C_N` (`Cone`).
 
 Over `ℝ` the inner product is real and `v₂ = 0`: without complex numbers there is no commutator
 axis.

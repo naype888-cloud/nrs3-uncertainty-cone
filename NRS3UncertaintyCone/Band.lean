@@ -18,7 +18,7 @@ the speeds of a state on `x`, `y`, `z` lie in `Ϙ(dx)`, `Ϙ(dy)`, `Ϙ(dz)`:
 
 * the four-vector of every axis is strictly timelike, whether or not the state is entangled
   across the axes (`D49e`);
-* det|NRS³, Robertson 1934 for the six observables, is strict (`D49t`).
+* det|RS^N³, Robertson 1934 for the six observables, is strict (`D49t`).
 
 So inside the band the cone is strict on every axis and for the six observables together. Outside
 the band the defect may vanish, but only trivially: Robertson reads `0 = 0` on position
@@ -53,7 +53,7 @@ theorem timelike_of_band (hx : 2 ≤ dx) (hy : 2 ≤ dy) (hz : 2 ≤ dz) {Φ : H
     AxisDefectEntangled.gramDefect_pos_of_band hy (eY dx dy dz) hΦ hby,
     AxisDefectEntangled.gramDefect_pos_of_band hz (eZ dx dy dz) hΦ hbz⟩
 
-/-- **det|NRS³ is strict in the band**, for the six observables of the cube. -/
+/-- **det|RS^N³ is strict in the band**, for the six observables of the cube. -/
 theorem robertson_det_strict_of_band (hx : 2 ≤ dx) (hy : 2 ≤ dy) (hz : 2 ≤ dz)
     {Φ : H3D dx dy dz} (hΦ : ‖Φ‖ = 1) (hbx : |velocityX Φ| ∈ Ϙ dx)
     (hby : |velocityY Φ| ∈ Ϙ dy) (hbz : |velocityZ Φ| ∈ Ϙ dz) :

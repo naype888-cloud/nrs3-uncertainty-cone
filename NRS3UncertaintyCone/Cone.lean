@@ -24,10 +24,10 @@ so `v₁` is the covariance and `v₂` is half the commutator.
 * Robertson–Schrödinger (`D1`) places `v` in the closed future cone; saturation is a null `v`, a
   positive Gram defect a timelike `v`.
 * `A → λA`, `B → B/λ` keeps `[A, B]` and acts on `G` as `diag(λ, 1/λ) ∈ SL(2, ℂ)`: a boost along
-  `v₃`. The interval, `v₁` and `v₂` do not change, which is why `C_Nava` carries no units.
+  `v₃`. The interval, `v₁` and `v₂` do not change, which is why `C_N` carries no units.
 * The boost reaches the frame `v₃ = 0`; there `v₀ = ‖x‖ ‖y‖` and the speed of `v` is
   `β = |⟪x, y⟫| / (‖x‖ ‖y‖) = cos θ_NRS` (`D37b`). At the maximal current state,
-  `β = 1 / C_Nava(d)`: `v` is null iff
+  `β = 1 / C_N(d)`: `v` is null iff
   `d = 2, 3` and timelike from `d = 4` on.
 
 Over `ℝ` the inner product is real and `v₂ = 0`: the commutator axis is lost.
@@ -41,7 +41,7 @@ Over `ℝ` the inner product is real and `v₂ = 0`: the commutator axis is lost
 - `UncertaintyCone.coneVector_smul`, `UncertaintyCone.boost_coeff` : the rescaling is a boost.
 - `UncertaintyCone.balanced_frame` : a rescaling sets `v₃ = 0` and `v₀ = ‖x‖ ‖y‖`.
 - `UncertaintyCone.interval_eq_speed` : `η(v, v) = (‖x‖ ‖y‖)² (1 − β²)`.
-- `UncertaintyCone.speed_maxCurrentState` : `β = 1 / C_Nava(d)` at the maximal current state.
+- `UncertaintyCone.speed_maxCurrentState` : `β = 1 / C_N(d)` at the maximal current state.
 - `UncertaintyCone.null_maxCurrentState_iff`, `UncertaintyCone.timelike_maxCurrentState` : null iff
   `d = 2, 3`,
   timelike for `d ≥ 4`.
@@ -181,7 +181,7 @@ theorem interval_eq_speed (x y : H) (h : ‖x‖ * ‖y‖ ≠ 0) :
 
 variable {d : ℕ}
 
-/-- **The speed at the maximal current state is `1 / C_Nava(d)`.** -/
+/-- **The speed at the maximal current state is `1 / C_N(d)`.** -/
 theorem speed_maxCurrentState (hd : 2 ≤ d) :
     speed (centered (TdOp d) (maxCurrentState d)) (centered (PdOp d) (maxCurrentState d)) =
       1 / CoherenceConstant d :=

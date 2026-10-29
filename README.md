@@ -1,16 +1,16 @@
-# NRS³ · The uncertainty cone
+# RS^N³ · The uncertainty cone
 
 **The uncertainty of a pair of observables is a vector of Minkowski space.** On `H_d = ℂ^d`, the
 Gram matrix of the fluctuations of transport `T_d` and position `P_d` is a Hermitian `2 × 2`
 matrix, and a Hermitian `2 × 2` matrix is a four-vector whose determinant is the Minkowski
 interval (van der Waerden 1929). Robertson–Schrödinger is the light cone; saturation is a null
-vector; changing units is a Lorentz boost; and the quantum of NRS³ keeps the vector **strictly
+vector; changing units is a Lorentz boost; and the quantum of RS^N³ keeps the vector **strictly
 inside the cone** — at the maximal current state from four positions on, and in the band `Ϙ(d)` for every state, on
-every axis, entangled or not. Its speed is `1 / C_Nava(d)`, and its square is the
+every axis, entangled or not. Its speed is `1 / C_N(d)`, and its square is the
 Mandelstam–Tamm ratio. Lean 4, Mathlib, and the base repository.
 
-**[▶ Try it: the cone of NRS³ — move d, the state, the units, ℂ or ℝ](https://naype888-cloud.github.io/nrs3-uncertainty-cone/)** ·
-**[▶ Try it: SL(2, ℂ) — boost and rotate the vector, it never leaves the cone](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz.html)** · **[▶ on T³: the same, from a closed axis](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz-t3.html)** · **[▶ NRS³-Minkowski on T³: each axis fixes its C°, random walk of the light](https://naype888-cloud.github.io/nrs3-uncertainty-cone/index-t3.html)** ·
+**[▶ Try it: the cone of RS^N³ — move d, the state, the units, ℂ or ℝ](https://naype888-cloud.github.io/nrs3-uncertainty-cone/)** ·
+**[▶ Try it: SL(2, ℂ) — boost and rotate the vector, it never leaves the cone](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz.html)** · **[▶ on T³: the same, from a closed axis](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz-t3.html)** · **[▶ RS^N³-Minkowski on T³: each axis fixes its C°, random walk of the light](https://naype888-cloud.github.io/nrs3-uncertainty-cone/index-t3.html)** ·
 **[▶ Pruébalo (español): el triángulo de la incertidumbre y la dilatación del tiempo](https://naype888-cloud.github.io/nrs3-uncertainty-cone/dilatacion.html)**
 
 ![The uncertainty cone](docs/figures/cone_3d.png)
@@ -31,7 +31,7 @@ has components `v = ((‖x‖² + ‖y‖²)/2, Re ⟪x, y⟫, Im ⟪x, y⟫, (�
 | saturation (`d = 2, 3` at the maximal current state) | null vector, on the cone |
 | the quantum (`d ≥ 4`; the band) | timelike vector, strictly inside |
 | units: `A → λA`, `B → B/λ` | boost `diag(λ, λ⁻¹)` along `v₃` |
-| `cos θ_NRS = 1 / C_Nava(d)` | speed `β` of `v` in the frame `v₃ = 0` |
+| `cos θ_NRS = 1 / C_N(d)` | speed `β` of `v` in the frame `v₃ = 0` |
 | Mandelstam–Tamm ratio at the maximal current state | `β²` |
 
 ![Speed by dimension](docs/figures/speed_by_dimension.png)
@@ -60,7 +60,7 @@ has components `v = ((‖x‖² + ‖y‖²)/2, Re ⟪x, y⟫, Im ⟪x, y⟫, (�
 | the rescaling is a boost; the interval does not move | `coneVector_smul`, `boost_coeff`, `interval_smul` |
 | a rescaling reaches `v₃ = 0`, with `v₀ = ‖x‖ ‖y‖` | `balanced_frame` |
 | `η(v, v) = (‖x‖ ‖y‖)² (1 − β²)` | `interval_eq_speed` |
-| at the maximal current state, `β = 1 / C_Nava(d)` | `speed_maxCurrentState` |
+| at the maximal current state, `β = 1 / C_N(d)` | `speed_maxCurrentState` |
 | null iff `d = 2, 3`; timelike from `d = 4` | `null_maxCurrentState_iff`, `timelike_maxCurrentState` |
 
 ![Units are a boost](docs/figures/units_are_a_boost.png)
@@ -73,7 +73,7 @@ On the cube `dx × dy × dz`, if the speeds of a unit state on `x`, `y`, `z` lie
 | Statement | Lean |
 |---|---|
 | the four-vectors of the three axes are strictly timelike, entangled states included (`D49e`) | `timelike_of_band` |
-| det\|NRS³, Robertson 1934 for the six observables, is strict (`D49t`) | `robertson_det_strict_of_band` |
+| det\|RS^N³, Robertson 1934 for the six observables, is strict (`D49t`) | `robertson_det_strict_of_band` |
 
 Robertson 1934 holds for every finite family of observables (`robertson_det`, base `D49`); in
 the band it is strict on the cube. Outside the band the defect can vanish only trivially:
@@ -96,10 +96,10 @@ the leg light resolves `‖⟪x, y⟫‖ = ‖x‖ ‖y‖ cos θ`, and the leg 
 | time dilation: `τ ≤ v₀` | `properTime_le_time` |
 | at the maximal current state, `τ = ‖x‖ ‖y‖ sin θ_NRS(d)` | `properTime_maxCurrentState` |
 | `τ > 0` from `d = 4` on; `τ = 0` exactly at `d = 2, 3` | `properTime_maxCurrentState_pos`, `null_maxCurrentState_iff` |
-| the contrast `τ / ‖⟪x, y⟫‖ = tan θ_NRS(d)`: `0` at saturation (`d = 2, 3`), positive from `d = 4`, below the Szegő limit `√(C∞² − 1)`, never reached | `contrast_maxCurrentState` |
+| the contrast `τ / ‖⟪x, y⟫‖ = tan θ_NRS(d)`: `0` at saturation (`d = 2, 3`), positive from `d = 4`, below the Szegő limit `√((C_N^∞)² − 1)`, never reached | `contrast_maxCurrentState` |
 
 Saturation is `θ = 0`: all of the hypotenuse is the leg of light and the proper time is zero. The
-quantum opens the NRS angle and with it the first time. In Physlib the same triangle is
+quantum opens the RS^N angle and with it the first time. In Physlib the same triangle is
 `TimeDilation.lean`, where `τ ≤ v₀` comes from the reverse Cauchy–Schwarz inequality of causal
 vectors (Kevorkian), next to Langevin's twin paradox (1911).
 
@@ -136,7 +136,7 @@ Physlib the same vector is a `Lorentz.Vector 3` that causally follows the origin
 commutator component is half the velocity `⟨J⟩` of the chain, bounded by the speed limit
 (`PhyslibAlpha/CondensedMatter/TightBindingChain/CausalCone.lean`). The statements are on
 `H_d = ℂ^d` with `d` finite;
-`d → ∞` is the Szegő limit `C∞ = √(π²/3 − 2)`, `β∞ = 1/C∞ ≈ 0.8805`, never reached.
+`d → ∞` is the Szegő limit `C_N^∞ = √(π²/3 − 2)`, `β∞ = 1/C_N^∞ ≈ 0.8805`, never reached.
 
 ## History
 
@@ -165,24 +165,24 @@ Matplotlib); the interactive pages compute from the same matrices in `docs/cone-
 
 ## Timeline 1911–1945
 
-NRS answers a question of the Solvay era with later tools. The series is placed in that window:
+RS^N answers a question of the Solvay era with later tools. The series is placed in that window:
 what falls inside it is the history the theorem belongs to; what falls after it is a proposal,
-not part of NRS³.
+not part of RS^N³.
 
 | Year | Event | Repository |
 |---|---|---|
 | 1911 | First Solvay conference: radiation and the quanta | |
 | 1911 | Langevin: the twin paradox, proper time against coordinate time | **[`nrs3-uncertainty-cone`](https://github.com/naype888-cloud/nrs3-uncertainty-cone)** (this one, `TimeDilation`) |
 | 1911–12 | Poincaré: Planck's law forces discrete levels | [`nrs3-poincare`](https://github.com/naype888-cloud/nrs3-poincare) |
-| 1915–20 | Szegő: limit theorems for Toeplitz matrices (the limit `C∞`, `D8`) | [base repository (NRS, NRS³)](https://github.com/naype888-cloud/nava-robertson-schrodinger) |
+| 1915–20 | Szegő: limit theorems for Toeplitz matrices (the limit `C_N^∞`, `D8`) | [base repository (RS^N, RS^N³)](https://github.com/naype888-cloud/nava-robertson-schrodinger) |
 | 1917–27 | Einstein and de Sitter: `Λ` and the empty universe; Friedmann and Lemaître: the expanding universe | [`nrs3-de-sitter`](https://github.com/naype888-cloud/nrs3-de-sitter) |
 | 1925–27 | Pauli: exclusion, shells `2n²`, spin matrices | [`nrs3-pauli-dirac`](https://github.com/naype888-cloud/nrs3-pauli-dirac) |
 | 1927 | Heisenberg's relation; fifth Solvay conference: electrons and photons | |
 | 1928 | Dirac: the `4 × 4` gamma matrices | [`nrs3-pauli-dirac`](https://github.com/naype888-cloud/nrs3-pauli-dirac) |
 | **1929** | **van der Waerden: spinors, `SL(2, ℂ)` on Hermitian matrices; the uncertainty cone** | **[`nrs3-uncertainty-cone`](https://github.com/naype888-cloud/nrs3-uncertainty-cone)** (this one) |
 | 1929 | Weyl, Fock–Ivanenko: Dirac in curved spacetime | [`nrs3-pauli-dirac`](https://github.com/naype888-cloud/nrs3-pauli-dirac) |
-| 1929–30 | Robertson and Schrödinger: the uncertainty inequality | [base repository (NRS, NRS³)](https://github.com/naype888-cloud/nava-robertson-schrodinger) |
-| 1934 | Robertson: the determinant for several observables (det\|NRS³) | [base repository](https://github.com/naype888-cloud/nava-robertson-schrodinger); strict in the band: **this one** |
+| 1929–30 | Robertson and Schrödinger: the uncertainty inequality | [base repository (RS^N, RS^N³)](https://github.com/naype888-cloud/nava-robertson-schrodinger) |
+| 1934 | Robertson: the determinant for several observables (det\|RS^N³) | [base repository](https://github.com/naype888-cloud/nava-robertson-schrodinger); strict in the band: **this one** |
 | 1945–46 | Mandelstam–Tamm: the time–energy bound; Rao (1945), Cramér (1946) | [`nrs3-mandelstam-tamm-cramer-rao`](https://github.com/naype888-cloud/nrs3-mandelstam-tamm-cramer-rao) |
 
 **Tools from after the window.** Niven (1956), Fiedler (1973), Lean 4 and Mathlib. The question
@@ -190,18 +190,18 @@ is of 1929; the tools are later; the checking is of 2026.
 
 ## The mosaic
 
-- [NRS and NRS³ — the base theorem](https://github.com/naype888-cloud/nava-robertson-schrodinger)
-- [NRS³ · Mandelstam–Tamm and Cramér–Rao](https://github.com/naype888-cloud/nrs3-mandelstam-tamm-cramer-rao)
-- [NRS³ · Landauer and Carnot](https://github.com/naype888-cloud/nrs3-landauer-carnot)
-- [NRS³ · de Sitter](https://github.com/naype888-cloud/nrs3-de-sitter)
-- [NRS³ · Penrose](https://github.com/naype888-cloud/nrs3-penrose) (proposal)
-- [NRS³ · Pauli–Dirac](https://github.com/naype888-cloud/nrs3-pauli-dirac)
-- **[NRS³ · The uncertainty cone](https://github.com/naype888-cloud/nrs3-uncertainty-cone)** (this one)
-- [NRS³ · Poincaré](https://github.com/naype888-cloud/nrs3-poincare)
-- [NRS³ · Defect and curvature](https://github.com/naype888-cloud/nrs3-defect-curvature)
-- [NRS³ · Rovelli — Loop Quantum Gravity](https://github.com/naype888-cloud/nrs3-rovelli-lqg) (proposal)
-- [NRS³ · Dark](https://github.com/naype888-cloud/nrs3-dark)
-- [NRS³ · Cristales](https://github.com/naype888-cloud/nrs3-cristales) (español)
+- [RS^N and RS^N³ — the base theorem](https://github.com/naype888-cloud/nava-robertson-schrodinger)
+- [RS^N³ · Mandelstam–Tamm and Cramér–Rao](https://github.com/naype888-cloud/nrs3-mandelstam-tamm-cramer-rao)
+- [RS^N³ · Landauer and Carnot](https://github.com/naype888-cloud/nrs3-landauer-carnot)
+- [RS^N³ · de Sitter](https://github.com/naype888-cloud/nrs3-de-sitter)
+- [RS^N³ · Penrose](https://github.com/naype888-cloud/nrs3-penrose) (proposal)
+- [RS^N³ · Pauli–Dirac](https://github.com/naype888-cloud/nrs3-pauli-dirac)
+- **[RS^N³ · The uncertainty cone](https://github.com/naype888-cloud/nrs3-uncertainty-cone)** (this one)
+- [RS^N³ · Poincaré](https://github.com/naype888-cloud/nrs3-poincare)
+- [RS^N³ · Defect and curvature](https://github.com/naype888-cloud/nrs3-defect-curvature)
+- [RS^N³ · Rovelli — Loop Quantum Gravity](https://github.com/naype888-cloud/nrs3-rovelli-lqg) (proposal)
+- [RS^N³ · Dark](https://github.com/naype888-cloud/nrs3-dark)
+- [RS^N³ · Cristales](https://github.com/naype888-cloud/nrs3-cristales) (español)
 
 ## License
 

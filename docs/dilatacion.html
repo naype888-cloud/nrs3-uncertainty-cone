@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Dilatación NRS³</title>
-<meta name="description" content="El triángulo rectángulo de la incertidumbre: τ = σ_A σ_B sen θ, la dilatación del tiempo y el ángulo NRS, cada valor con su teorema de Lean.">
+<title>Dilatación RS^N³</title>
+<meta name="description" content="El triángulo rectángulo de la incertidumbre: τ = σ_A σ_B sen θ, la dilatación del tiempo y el ángulo RS^N, cada valor con su teorema de Lean.">
 <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
 <style>
 /* Layout: one instrument column — control strip on top, live readouts, three linked plots, then the Lean ledger and the static figures. */
@@ -80,16 +80,16 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
 <body>
 <main class="wrap">
   <header>
-    <div class="eyebrow">NRS³ · El cono de incertidumbre · Dilatación</div>
+    <div class="eyebrow">RS^N³ · El cono de incertidumbre · Dilatación</div>
     <h1>El triángulo rectángulo de la incertidumbre</h1>
     <p class="formula">τ = σ<sub>A</sub> σ<sub>B</sub> sen θ &nbsp;·&nbsp; ‖⟪x, y⟫‖ = σ<sub>A</sub> σ<sub>B</sub> cos θ</p>
     <p>Robertson–Schrödinger es Cauchy–Schwarz en el espacio de Hilbert; en el cono es causalidad. Entre los dos
       hay un triángulo rectángulo: la hipotenusa es el producto de incertidumbres σ<sub>A</sub>σ<sub>B</sub>, el cateto
       que resuelve la luz es el pairing σ<sub>A</sub>σ<sub>B</sub> cos θ y el cateto del tiempo propio es
       τ = σ<sub>A</sub>σ<sub>B</sub> sen θ. En la saturación (d = 2, 3) θ = 0 y el tiempo propio es cero; desde d = 4 el
-      cuanto abre el ángulo NRS y con él el primer tiempo.</p>
+      cuanto abre el ángulo RS^N y con él el primer tiempo.</p>
     <div class="meta"><a href="https://github.com/naype888-cloud/nrs3-uncertainty-cone">código Lean</a>
-      <a href="./">el cono de NRS³</a><a href="lorentz.html">SL(2, ℂ)</a></div>
+      <a href="./">el cono de RS^N³</a><a href="lorentz.html">SL(2, ℂ)</a></div>
   </header>
 
   <section class="controls" aria-label="Controles">
@@ -97,8 +97,8 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
   </section>
 
   <section class="readouts" aria-live="polite">
-    <div class="ro"><span class="k">C_Nava(d)</span><span class="v" id="ro-c"></span><span class="u">hipotenusa / cateto de luz</span></div>
-    <div class="ro"><span class="k">θ_NRS(d)</span><span class="v" id="ro-t"></span><span class="u">cos θ = 1 / C_Nava</span></div>
+    <div class="ro"><span class="k">C_N(d)</span><span class="v" id="ro-c"></span><span class="u">hipotenusa / cateto de luz</span></div>
+    <div class="ro"><span class="k">θ_NRS(d)</span><span class="v" id="ro-t"></span><span class="u">cos θ = 1 / C_N</span></div>
     <div class="ro"><span class="k">β = cos θ</span><span class="v" id="ro-b"></span><span class="u">velocidad del vector</span></div>
     <div class="ro check"><span class="k">τ / (σ_A σ_B) = sen θ</span><span class="v" id="ro-s"></span><span class="u" id="ro-su"></span></div>
     <div class="ro"><span class="k">γ = 1 / sen θ</span><span class="v" id="ro-g"></span><span class="u">factor de Lorentz</span></div>
@@ -125,8 +125,8 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
   </section>
 
   <p class="note">La luz resuelve el cateto cos θ; el cateto sen θ es el tiempo propio, lo que la luz no resuelve. Cuando
-    β = cos θ → 1 (saturación, en c) el tiempo propio se anula. El cuanto de NRS³ mantiene β &lt; 1 desde d = 4, y el
-    límite de Szegő C∞ = √(π²/3 − 2) acota el ángulo sin alcanzarlo nunca.</p>
+    β = cos θ → 1 (saturación, en c) el tiempo propio se anula. El cuanto de RS^N³ mantiene β &lt; 1 desde d = 4, y el
+    límite de Szegő C_N^∞ = √(π²/3 − 2) acota el ángulo sin alcanzarlo nunca.</p>
 
   <section>
     <h2>Cada valor y su teorema</h2>
@@ -246,7 +246,7 @@ td.name { font-family: var(--mono); font-size: .82rem; color: var(--accent); whi
     Plotly.react("contrast", [
       { type: "scatter", mode: "lines+markers", name: "tan θ_NRS(d)", x: Ns, y: Ns.map(t), line: { color: acc, width: 2 }, marker: { size: 4 } },
       { type: "scatter", mode: "lines", name: "saturación (d = 2, 3): contraste 0", x: [2, 80], y: [0, 0], line: { color: mut, dash: "dot" } },
-      { type: "scatter", mode: "lines", name: "límite de Szegő √(C∞² − 1), nunca alcanzado", x: [2, 80], y: [tanInf, tanInf], line: { color: css("--fg"), dash: "dot" } },
+      { type: "scatter", mode: "lines", name: "límite de Szegő √((C_N^∞)² − 1), nunca alcanzado", x: [2, 80], y: [tanInf, tanInf], line: { color: css("--fg"), dash: "dot" } },
       { type: "scatter", mode: "markers", name: "d elegida", x: [d], y: [t(d)], marker: { color: warm, size: 11 } }
     ], layout("d", "contraste tan θ"), cfg);
   }

@@ -16,7 +16,7 @@ the hypotenuse is `‖x‖ ‖y‖`, the angle `θ` between the fluctuations spl
 `‖x‖ ‖y‖ cos θ` and the proper time `τ = √η(v, v) = ‖x‖ ‖y‖ sin θ`.
 
 The proper time never exceeds the time component `v₀`: time dilation. At the maximal current
-state `θ` is the NRS angle, so `τ = ‖x‖ ‖y‖ sin θ_NRS(d)`: zero exactly for `d = 2, 3`, where
+state `θ` is the RS^N angle, so `τ = ‖x‖ ‖y‖ sin θ_NRS(d)`: zero exactly for `d = 2, 3`, where
 the vector lies on the light cone, positive from `d = 4` on.
 
 ## Main results
@@ -89,7 +89,7 @@ theorem properTime_le_time (x y : H) : properTime (coneVector x y) ≤ coneVecto
   nlinarith [sq_nonneg (coneVector x y 1), sq_nonneg (coneVector x y 2),
     sq_nonneg (coneVector x y 3)]
 
-/-! ## 3. The NRS angle -/
+/-! ## 3. The RS^N angle -/
 
 variable {d : ℕ}
 

@@ -100,6 +100,63 @@
 
 ---
 
+## 🔬 Contributions Physlib fusionnées liées
+
+| PR Physlib | Titre | Lien avec ce dépôt | Statut |
+|:---:|:---|:---|:---:|
+| [**#1649**](https://github.com/leanprover-community/physlib/pull/1649) | characterize equality in state uncertainty relations | Égalité dans Robertson–Schrödinger ⟺ défaut de Gram nul : le vecteur est sur le cône, étape 2 | **MERGED** |
+| [**#1730**](https://github.com/leanprover-community/physlib/pull/1730) | Robertson determinant | `|det Ω| ≤ det Σ` (Robertson 1934), rendu strict dans la bande par `robertson_det_strict_of_band` | **MERGED** |
+| [**#1745**](https://github.com/leanprover-community/physlib/pull/1745) | velocity band of forced uncertainty in the open tight binding chain | La bande de vitesse où le défaut est forcé : l'intérieur strict du cône (`Band.lean`) | **MERGED** |
+| [**#1756**](https://github.com/leanprover-community/physlib/pull/1756) | the NRS angle and the volumetric quantum of the open tight binding cube | `θ_NRS = arccos(1 / C_N)` : la vitesse `β = cos θ_NRS` de l'étape 4 | **MERGED** |
+
+---
+
+## 📚 Catalogue des modules Lean
+
+| Module | Théorème principal | Signification | `sorry` |
+|:---|:---|:---|:---:|
+| [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) | `det_herm` | `det(v₀ 1 + v·σ) = v₀² − v₁² − v₂² − v₃²` | 0 |
+| [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) | `null_maxCurrentState_iff` | Vecteur nul ⟺ `d = 2, 3` dans l'état de courant maximal | 0 |
+| [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) | `properTime_maxCurrentState_pos` | Temps propre strictement positif dès `d = 4` | 0 |
+| [`NRS3UncertaintyCone/RoundTrip.lean`](NRS3UncertaintyCone/RoundTrip.lean) | `two_mul_properTime_le_round_trip` | L'aller-retour porte au moins `2 τ` | 0 |
+| [`NRS3UncertaintyCone/Band.lean`](NRS3UncertaintyCone/Band.lean) | `robertson_det_strict_of_band` | Dans la bande, `|det Ω| < det Σ` | 0 |
+
+### Portée
+
+* Le quadrivecteur est celui de la matrice de Gram de deux vecteurs centrés ; aucune métrique d'espace-temps physique n'est supposée.
+* `β = 1 / C_N(d)` est la vitesse de l'état de courant maximal ; les autres états ne sont pas classés par β.
+
+---
+
+## 🏛️ La mosaïque
+
+| Dépôt | Objet |
+|:---|:---|
+| [**nava-robertson-schrodinger**](https://github.com/naype888-cloud/nava-robertson-schrodinger) | Le canon : l'incertitude élémentaire dimensionnelle sur le cube ouvert |
+| [`lean4-commits`](https://github.com/naype888-cloud/lean4-commits) | Les PRs Lean 4 fusionnées et ouvertes dans Physlib |
+| [`Proper-Time-General-Relativity`](https://github.com/naype888-cloud/Proper-Time-General-Relativity) | Le temps compte les pas à quatre sites |
+| [`nrs3-golab`](https://github.com/naype888-cloud/nrs3-golab) | Le π d'un plan normé et la stabilité des orbites |
+| [`nrs3-mandelstam-tamm-cramer-rao`](https://github.com/naype888-cloud/nrs3-mandelstam-tamm-cramer-rao) | Vitesse d'évolution et borne d'estimation de phase |
+| [`nrs3-de-sitter`](https://github.com/naype888-cloud/nrs3-de-sitter) | L'entropie d'horizon fixe la constante cosmologique ; les deux équations de Friedmann |
+| [`nrs3-penrose`](https://github.com/naype888-cloud/nrs3-penrose) | Le temps d'effondrement ħ/ΔE est une borne, non une durée de vie |
+| [`nrs3-bekenstein`](https://github.com/naype888-cloud/nrs3-bekenstein) | Bits sur la frontière, fibre de Minkowski et borne universelle |
+| [`nrs3-landauer-carnot`](https://github.com/naype888-cloud/nrs3-landauer-carnot) | Effacer un bit coûte k_B T ln 2 ; aucun moteur ne dépasse 1 − T_c/T_h |
+| [`nrs3-rovelli-lqg`](https://github.com/naype888-cloud/nrs3-rovelli-lqg) | Le spectre d'aire LQG, les piqûres d'horizon et le paramètre d'Immirzi |
+
+---
+
+## ⏱️ Chronologie
+
+| Année | Résultat | Étape |
+|:---:|:---|:---:|
+| **1908** | Minkowski : l'espace-temps et le cône de lumière | 2 |
+| **1927** | Pauli : les matrices σ | 1 |
+| **1929** | Robertson : l'inégalité d'incertitude pour deux observables | 2 |
+| **1929** | van der Waerden : SL(2, ℂ) agit sur les matrices hermitiennes 2 × 2 | 1, 3 |
+| **1930** | Schrödinger : le terme de covariance | 2 |
+
+---
+
 ## 🛠️ Compilation et vérification
 
 ```bash
@@ -115,6 +172,12 @@ Le module compile sous la base axiomatique standard de Lean 4 et Mathlib :
 ```
 
 **0 `sorry`**, aucun axiome ad hoc.
+
+---
+
+## 📜 Licence
+
+[NRS Noncommercial License 1.0.0](LICENSE).
 
 ---
 

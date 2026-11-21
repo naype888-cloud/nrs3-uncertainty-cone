@@ -60,6 +60,8 @@
 
 > **Proposition 1.1 (Décomposition dans la base de Pauli).** Soit `G` une matrice hermitienne `2 × 2`. Il existe un unique quadrivecteur réel `v = (v₀, v₁, v₂, v₃)` tel que `G = v₀ 1 + v₁ σ₁ − v₂ σ₂ + v₃ σ₃`, et son déterminant coïncide avec la métrique de Minkowski `det G = v₀² − v₁² − v₂² − v₃²`.
 
+<div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape1.png"><img src="assets/claro/plaque_cone_etape1.png" alt="Étape 1 : Isomorphisme de van der Waerden et quadrivecteurs" width="860"></picture></div>
+
 *Module formel :* [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`det_herm`, `herm_coords`, `future_of_posSemidef`).
 
 ---
@@ -67,6 +69,8 @@
 ### Étape 2 : Robertson–Schrödinger comme géométrie du cône causal
 
 > **Proposition 2.1 (Caractère causal futur de la matrice de Gram).** Pour tout état quantique et toute paire d'observables, la matrice de Gram des fluctuations satisfait `G ≥ 0`. Par conséquent, le quadrivecteur des incertitudes est confiné dans le cône de lumière futur fermé `v ∈ V̄₊`.
+
+<div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape2.png"><img src="assets/claro/plaque_cone_etape2.png" alt="Étape 2 : Robertson–Schrödinger comme géométrie du cône causal" width="860"></picture></div>
 
 *Module formel :* [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`robertsonSchrodinger_future`).  
 *Module formel (cône) :* [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`det_gramMatrix`, `mem_futureCone`, `interval_eq_zero_iff`).
@@ -77,6 +81,8 @@
 
 > **Proposition 3.1 (Boost hyperbolique et invariance d'intervalle).** La redéfinition des échelles de mesure `A ↦ λA`, `B ↦ B/λ` est représentée par la matrice `diag(λ, λ⁻¹) ∈ SL(2, ℂ)`. Elle agit comme un boost pur le long du troisième axe et conserve strictement le temps propre `det G`.
 
+<div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape3.png"><img src="assets/claro/plaque_cone_etape3.png" alt="Étape 3 : Changement d'unités et invariance de Lorentz dans SL(2, ℂ)" width="860"></picture></div>
+
 *Module formel :* [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`det_conj`, `gram_boost`).  
 *Module formel (invariance) :* [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`interval_smul`, `balanced_frame`).
 
@@ -85,6 +91,8 @@
 ### Étape 4 : Temps propre, dilatation et saturation de Mandelstam–Tamm
 
 > **Proposition 4.1 (Vitesse relativiste et temps propre strictement positif).** À l'état de courant maximal, la vitesse du quadrivecteur vaut `β = 1 / C_N(d)`. Dès `d ≥ 4`, le vecteur pénètre à l'intérieur du cône et engendre un temps propre strictement positif `τ > 0`.
+
+<div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape4.png"><img src="assets/claro/plaque_cone_etape4.png" alt="Étape 4 : Temps propre, dilatation et saturation de Mandelstam–Tamm" width="860"></picture></div>
 
 *Module formel :* [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`speed_maxCurrentState`, `timelike_maxCurrentState`).  
 *Module formel (dilatation) :* [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) (`properTime_eq_mul_sin`, `properTime_le_time`, `properTime_maxCurrentState_pos`).  

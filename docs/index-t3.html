@@ -242,9 +242,9 @@
                        : `<span class="pill ok">strictly inside: timelike, defect ${R.interval.toExponential(3)}</span>`);
     pills.push(R.band ? `<span class="pill ok">tension |t| = ${f(Math.abs(R.tension), 5)} &gt; 1: in the band, strictly timelike</span>`
                       : `<span class="pill info">tension |t| = ${f(Math.abs(R.tension), 5)} ≤ 1: outside the band</span>`);
-    pills.push(`<span class="pill info">light β² = ${f(R.light, 5)} · dark 1 − β² = ${f(R.dark, 5)} · C°(${st.d}) = ${f(Rg.CNava(st.d), 5)}</span>`);
+    pills.push(`<span class="pill info">light β² = ${f(R.light, 5)} · dark 1 − β² = ${f(R.dark, 5)} · C°(${st.d}) = ${f(Rg.uncertaintyRatio(st.d), 5)}</span>`);
     if (st.real) pills.push(`<span class="pill info">ℝ only: v₂ = 0, the commutator axis is lost</span>`);
-    if (st.eps === 0 && !st.real) pills.push(`<span class="pill info">max current: β = 1/C°(${st.d}) = ${f(1 / Rg.CNava(st.d), 6)}</span>`);
+    if (st.eps === 0 && !st.real) pills.push(`<span class="pill info">max current: β = 1/C°(${st.d}) = ${f(1 / Rg.uncertaintyRatio(st.d), 6)}</span>`);
     $("verdict").innerHTML = pills.join("");
   }
 
@@ -262,7 +262,7 @@
     for (let t = 0; t <= 80; t++) ring.push([Math.cos(t * Math.PI / 40) / Rg.C_INF, Math.sin(t * Math.PI / 40) / Rg.C_INF, 1]);
     C.poly(g, P, ring, violet, 1.2, [5, 4]);
     for (let d = 3; d <= 16; d++) {
-      const b = 1 / Rg.CNava(d);
+      const b = 1 / Rg.uncertaintyRatio(d);
       C.dot(g, P, [0, -b, 1], d === st.d ? 4.5 : 2.6, green);
     }
     // the current vector, rescaled to v₀′ = 1 (balanced frame)
@@ -350,11 +350,11 @@
     hl(1 / Rg.C_INF, violet, [6, 4], `1/√2 = ${(1 / Rg.C_INF).toFixed(4)}: the Szegő limit`);
     const curve = (fn, col, dash) => { g.strokeStyle = col; g.lineWidth = 2; g.setLineDash(dash); g.beginPath();
       for (let d = 3; d <= D; d++) { const y = Y(fn(d)); d === 3 ? g.moveTo(X(d), y) : g.lineTo(X(d), y); } g.stroke(); g.setLineDash([]); g.lineWidth = 1; };
-    curve((d) => 1 / Rg.CNava(d), blue, []);
-    curve((d) => 1 / Rg.CNava(d) ** 2, orange, [5, 4]);
-    for (let d = 3; d <= D; d++) { g.fillStyle = blue; g.beginPath(); g.arc(X(d), Y(1 / Rg.CNava(d)), d === st.d ? 5 : 1.8, 0, 7); g.fill(); }
+    curve((d) => 1 / Rg.uncertaintyRatio(d), blue, []);
+    curve((d) => 1 / Rg.uncertaintyRatio(d) ** 2, orange, [5, 4]);
+    for (let d = 3; d <= D; d++) { g.fillStyle = blue; g.beginPath(); g.arc(X(d), Y(1 / Rg.uncertaintyRatio(d)), d === st.d ? 5 : 1.8, 0, 7); g.fill(); }
     g.fillStyle = ink; g.font = "600 12px system-ui";
-    g.fillText(`d = ${st.d}: β = ${(1 / Rg.CNava(st.d)).toFixed(5)}`, X(st.d) + 8, Y(1 / Rg.CNava(st.d)) + 18);
+    g.fillText(`d = ${st.d}: β = ${(1 / Rg.uncertaintyRatio(st.d)).toFixed(5)}`, X(st.d) + 8, Y(1 / Rg.uncertaintyRatio(st.d)) + 18);
     g.font = "11px system-ui"; g.fillStyle = muted; g.fillText("positions per axis d", X(13), h - 8);
   }
 
@@ -368,7 +368,7 @@
     const X = (b) => pl + (b - lo) / (hi - lo) * (w - pl - pr);
     let ratio = 1;
     ds.forEach((d, i) => {
-      const c = Rg.CNava(d), b = 1 / c, y = 18 + i * (h - 30) / 3;
+      const c = Rg.uncertaintyRatio(d), b = 1 / c, y = 18 + i * (h - 30) / 3;
       ratio *= c * c;
       g.strokeStyle = grid; g.beginPath(); g.moveTo(X(lo), y + 10); g.lineTo(X(hi), y + 10); g.stroke();
       g.strokeStyle = violet; g.setLineDash([4, 3]); g.beginPath(); g.moveTo(X(1 / Rg.C_INF), y); g.lineTo(X(1 / Rg.C_INF), y + 20); g.stroke(); g.setLineDash([]);

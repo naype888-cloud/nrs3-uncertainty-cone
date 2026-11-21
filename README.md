@@ -1,208 +1,115 @@
-# RS^N³ · The uncertainty cone
+<div align="center">
 
-**The uncertainty of a pair of observables is a vector of Minkowski space.** On `H_d = ℂ^d`, the
-Gram matrix of the fluctuations of transport `T_d` and position `P_d` is a Hermitian `2 × 2`
-matrix, and a Hermitian `2 × 2` matrix is a four-vector whose determinant is the Minkowski
-interval (van der Waerden 1929). Robertson–Schrödinger is the light cone; saturation is a null
-vector; changing units is a Lorentz boost; and the quantum of RS^N³ keeps the vector **strictly
-inside the cone** — at the maximal current state from four positions on, and in the band `Ϙ(d)` for every state, on
-every axis, entangled or not. Its speed is `1 / C_N(d)`, and its square is the
-Mandelstam–Tamm ratio. Lean 4, Mathlib, and the base repository.
+# RS<sup>N</sup>³ · Le Cône d'Incertitude
+### L'incertitude d'une paire d'observables est un quadrivecteur de Minkowski strictement enfermé dans le cône de lumière futur
 
-**[▶ Try it: the cone of RS^N³ — move d, the state, the units, ℂ or ℝ](https://naype888-cloud.github.io/nrs3-uncertainty-cone/)** ·
-**[▶ Try it: SL(2, ℂ) — boost and rotate the vector, it never leaves the cone](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz.html)** · **[▶ on T³: the same, from a closed axis](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz-t3.html)** · **[▶ RS^N³-Minkowski on T³: each axis fixes its C°, random walk of the light](https://naype888-cloud.github.io/nrs3-uncertainty-cone/index-t3.html)** ·
-**[▶ Pruébalo (español): el triángulo de la incertidumbre y la dilatación del tiempo](https://naype888-cloud.github.io/nrs3-uncertainty-cone/dilatacion.html)**
+**Eduardo Nava Hernández**  
+*Vérification formelle certifiée en Lean 4 · 0 sorry · Mathlib (ZFC)*
 
-![The uncertainty cone](docs/figures/cone_3d.png)
+[![Lean 4](https://img.shields.io/badge/Lean_4-v4.35.0-blue.svg?style=flat-square)](https://leanprover.github.io/)
+[![Mathlib](https://img.shields.io/badge/Mathlib-vérifié-2ea44f.svg?style=flat-square)](https://github.com/leanprover-community/mathlib4)
+[![Kernel Status](https://img.shields.io/badge/Kernel-0%20sorry%20%7C%20ZFC-brightgreen.svg?style=flat-square)](Verification/Axioms.lean)
+[![Physlib](https://img.shields.io/badge/Physlib-PRs%20Fusionnées-brightgreen.svg?style=flat-square)](https://github.com/leanprover-community/physlib/pulls?q=is%3Apr+is%3Amerged+author%3Anaype888-cloud)
+[![Simulateur](https://img.shields.io/badge/Simulateur_3D-Cône_Minkowski-00e5ff.svg?style=for-the-badge&logo=three.js)](https://naype888-cloud.github.io/nrs3-uncertainty-cone/)
 
-## The four-vector
+**[▶ Essayer en ligne : Le cône d'incertitude 3D](https://naype888-cloud.github.io/nrs3-uncertainty-cone/)** · **[▶ Boosts et rotations SL(2, ℂ)](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz.html)** · **[▶ Dilatation temporelle et temps propre](https://naype888-cloud.github.io/nrs3-uncertainty-cone/dilatacion.html)**
 
-For a state `ψ`, `x = (T − ⟨T⟩)ψ` and `y = (P − ⟨P⟩)ψ`. The Gram matrix
+</div>
 
-`G = !![‖x‖², ⟪x, y⟫; ⟪y, x⟫, ‖y‖²] = v₀ 1 + v₁ σ₁ − v₂ σ₂ + v₃ σ₃`
+---
 
-has components `v = ((‖x‖² + ‖y‖²)/2, Re ⟪x, y⟫, Im ⟪x, y⟫, (‖x‖² − ‖y‖²)/2)`: the covariance is
-`v₁` and half the commutator is `v₂`. And `det G = v₀² − v₁² − v₂² − v₃²`.
+> ### 🏛️ Ce qui distingue le théorème : van der Waerden et la géométrie causale de l'incertitude
+>
+> Sur `ℋ_d = ℂ^d`, la matrice de Gram des fluctuations de transport T_d et de position P_d est une matrice hermitienne `2 × 2`. D'après van der Waerden (1929), toute matrice hermitienne `2 × 2` est un quadrivecteur de l'espace de Minkowski dont le déterminant est l'intervalle relativiste `det G = τ² ≥ 0`.
+>
+> <div align="center">
+> <picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_master.png"><img src="assets/claro/plaque_cone_master.png" alt="Plaque maîtresse : le cône d'incertitude et la géométrie de Minkowski" width="860"></picture>
+> </div>
+>
+> **1 · Robertson–Schrödinger est le cône de lumière.** La positivité semi-définie `G ≥ 0` équivaut exactement à ce que le quadrivecteur `v` appartienne au cône causal futur fermé `v ∈ V̄₊`.
+>
+> **2 · Saturation luminale vs masse.** En dimension pure `d ≤ 3` à l'état de courant maximal, `det G = 0` : le vecteur est nul et repose sur la surface du cône (propagation à la vitesse de la lumière). Dès `d ≥ 4`, le défaut géométrique de Szegő le propulse strictement à l'intérieur du cône (`det G > 0`, vecteur du genre temps, temps propre positif, masse au repos).
+>
+> **3 · Le changement d'unités est un boost de Lorentz.** La transformation d'échelle `A ↦ λA`, `B ↦ B/λ` correspond exactement au boost diagonal `diag(λ, λ⁻¹) ∈ SL(2, ℂ)` le long du troisième axe spatial : l'intervalle relativiste `det G` reste invariant.
+>
+> **4 · Vitesse relativiste et Mandelstam–Tamm.** La vitesse spatiale dans le référentiel équilibré est `β = 1 / C_N(d) = cos θ_NRS`, et son carré `β²` sature la borne de Mandelstam–Tamm.
 
-| Reading | Minkowski |
-|---|---|
-| Robertson–Schrödinger, `G ≥ 0` | `v` in the closed future cone |
-| Gram defect, `det G` | interval `τ²` |
-| saturation (`d = 2, 3` at the maximal current state) | null vector, on the cone |
-| the quantum (`d ≥ 4`; the band) | timelike vector, strictly inside |
-| units: `A → λA`, `B → B/λ` | boost `diag(λ, λ⁻¹)` along `v₃` |
-| `cos θ_NRS = 1 / C_N(d)` | speed `β` of `v` in the frame `v₃ = 0` |
-| Mandelstam–Tamm ratio at the maximal current state | `β²` |
+---
 
-![Speed by dimension](docs/figures/speed_by_dimension.png)
+## ⚡ Résumé formel
 
-## Results
+* Toute matrice hermitienne `2 × 2` s'identifie à un quadrivecteur `v = (v₀, v₁, v₂, v₃)` vérifiant `det G = v₀² − v₁² − v₂² − v₃²` : [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`det_herm`, `herm_coords`).
+* Une matrice hermitienne est semi-définie positive si et seulement si son vecteur associé est causal futur : [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`future_of_posSemidef`).
+* L'action par congruence de `SL(2, ℂ)` préserve identiquement l'intervalle de Minkowski et le cône causal : [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`det_conj`, `posSemidef_conj`).
+* La matrice de Gram des fluctuations de deux observables est toujours un vecteur causal futur : [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`robertsonSchrodinger_future`).
+* L'intervalle de Minkowski coïncide avec le défaut de Gram `det G = η(v, v)` : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`det_gramMatrix`).
+* Le vecteur est nul si et seulement si l'inégalité de Cauchy–Schwarz est saturée avec égalité : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`interval_eq_zero_iff`).
+* À l'état de courant maximal pour `d ≥ 4`, le vecteur est strictement du genre temps : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`timelike_maxCurrentState`).
+* Le temps propre est borné par le temps coordonnée `τ ≤ t` et est strictement positif à courant maximal : [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) (`properTime_le_time`, `properTime_maxCurrentState_pos`).
+* Le voyage aller-retour vérifie rigoureusement l'inégalité triangulaire de la relativité : [`NRS3UncertaintyCone/RoundTrip.lean`](NRS3UncertaintyCone/RoundTrip.lean) (`two_mul_properTime_le_round_trip`).
 
-### `VanDerWaerden1929` — Hermitian matrices are four-vectors
+---
 
-| Statement | Lean |
-|---|---|
-| `det (v₀ 1 + v·σ) = v₀² − v₁² − v₂² − v₃²` | `det_herm` |
-| every Hermitian `2 × 2` matrix is `v₀ 1 + v·σ` | `herm_coords` |
-| positive semidefinite means future causal | `future_of_posSemidef` |
-| `SL(2, ℂ)` keeps the interval and the future cone | `det_conj`, `posSemidef_conj` |
-| the Gram matrix of two vectors is future causal | `robertsonSchrodinger_future` |
-| `A → λA`, `B → B/λ` is the boost `diag(λ, λ⁻¹)` | `gram_boost`, `interval_gram_boost` |
+## 📐 Démonstration constructive en quatre étapes
 
-### `Cone` — the cone of `T_d : P_d`
+### Étape 1 : Isomorphisme de van der Waerden et quadrivecteurs
 
-| Statement | Lean |
-|---|---|
-| `G` in the components of `v` | `gramMatrix_eq` |
-| `det G = η(v, v)`, the Gram defect of `D1` | `det_gramMatrix`, `interval_eq_gramDefectC` |
-| Robertson–Schrödinger: `0 ≤ v₀`, `0 ≤ η(v, v)` | `mem_futureCone` |
-| null iff Cauchy–Schwarz is saturated | `interval_eq_zero_iff` |
-| the rescaling is a boost; the interval does not move | `coneVector_smul`, `boost_coeff`, `interval_smul` |
-| a rescaling reaches `v₃ = 0`, with `v₀ = ‖x‖ ‖y‖` | `balanced_frame` |
-| `η(v, v) = (‖x‖ ‖y‖)² (1 − β²)` | `interval_eq_speed` |
-| at the maximal current state, `β = 1 / C_N(d)` | `speed_maxCurrentState` |
-| null iff `d = 2, 3`; timelike from `d = 4` | `null_maxCurrentState_iff`, `timelike_maxCurrentState` |
+> **Proposition 1.1 (Décomposition dans la base de Pauli).** Soit `G` une matrice hermitienne `2 × 2`. Il existe un unique quadrivecteur réel `v = (v₀, v₁, v₂, v₃)` tel que `G = v₀ 1 + v₁ σ₁ − v₂ σ₂ + v₃ σ₃`, et son déterminant coïncide avec la métrique de Minkowski `det G = v₀² − v₁² − v₂² − v₃²`.
 
-![Units are a boost](docs/figures/units_are_a_boost.png)
+*Module formel :* [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`det_herm`, `herm_coords`, `future_of_posSemidef`).
 
-### `Band` — strictly inside, for every state, in every direction
+---
 
-On the cube `dx × dy × dz`, if the speeds of a unit state on `x`, `y`, `z` lie in the bands
-`Ϙ(dx)`, `Ϙ(dy)`, `Ϙ(dz)`:
+### Étape 2 : Robertson–Schrödinger comme géométrie du cône causal
 
-| Statement | Lean |
-|---|---|
-| the four-vectors of the three axes are strictly timelike, entangled states included (`D49e`) | `timelike_of_band` |
-| det\|RS^N³, Robertson 1934 for the six observables, is strict (`D49t`) | `robertson_det_strict_of_band` |
+> **Proposition 2.1 (Caractère causal futur de la matrice de Gram).** Pour tout état quantique et toute paire d'observables, la matrice de Gram des fluctuations satisfait `G ≥ 0`. Par conséquent, le quadrivecteur des incertitudes est confiné dans le cône de lumière futur fermé `v ∈ V̄₊`.
 
-Robertson 1934 holds for every finite family of observables (`robertson_det`, base `D49`); in
-the band it is strict on the cube. Outside the band the defect can vanish only trivially:
-Robertson as `0 = 0` on position eigenstates (`D47`) and on the mirror state, where nothing moves
-(`D49m`).
+*Module formel :* [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`robertsonSchrodinger_future`).  
+*Module formel (cône) :* [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`det_gramMatrix`, `mem_futureCone`, `interval_eq_zero_iff`).
 
-![The band on the cube](docs/figures/band_cube_3d.png)
+---
 
-### `TimeDilation` — the right triangle of the uncertainty
+### Étape 3 : Changement d'unités et invariance de Lorentz dans SL(2, ℂ)
 
-Robertson–Schrödinger is Cauchy–Schwarz in the Hilbert space; in the cone it is causality. Between
-the two sits a right triangle: the hypotenuse `‖x‖ ‖y‖`, the angle `θ` between the fluctuations,
-the leg light resolves `‖⟪x, y⟫‖ = ‖x‖ ‖y‖ cos θ`, and the leg of proper time
-`τ = √η(v, v) = ‖x‖ ‖y‖ sin θ`.
+> **Proposition 3.1 (Boost hyperbolique et invariance d'intervalle).** La redéfinition des échelles de mesure `A ↦ λA`, `B ↦ B/λ` est représentée par la matrice `diag(λ, λ⁻¹) ∈ SL(2, ℂ)`. Elle agit comme un boost pur le long du troisième axe et conserve strictement le temps propre `det G`.
 
-| Statement | Lean |
-|---|---|
-| `τ = ‖x‖ ‖y‖ sin θ`, any pair, any state | `properTime_eq_mul_sin` |
-| `‖⟪x, y⟫‖ = ‖x‖ ‖y‖ cos θ` | `norm_inner_eq_mul_cos` |
-| time dilation: `τ ≤ v₀` | `properTime_le_time` |
-| at the maximal current state, `τ = ‖x‖ ‖y‖ sin θ_NRS(d)` | `properTime_maxCurrentState` |
-| `τ > 0` from `d = 4` on; `τ = 0` exactly at `d = 2, 3` | `properTime_maxCurrentState_pos`, `null_maxCurrentState_iff` |
-| the contrast `τ / ‖⟪x, y⟫‖ = tan θ_NRS(d)`: `0` at saturation (`d = 2, 3`), positive from `d = 4`, below the Szegő limit `√((C_N^∞)² − 1)`, never reached | `contrast_maxCurrentState` |
+*Module formel :* [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`det_conj`, `gram_boost`).  
+*Module formel (invariance) :* [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`interval_smul`, `balanced_frame`).
 
-Saturation is `θ = 0`: all of the hypotenuse is the leg of light and the proper time is zero. The
-quantum opens the RS^N angle and with it the first time. In Physlib the same triangle is
-`TimeDilation.lean`, where `τ ≤ v₀` comes from the reverse Cauchy–Schwarz inequality of causal
-vectors (Kevorkian), next to Langevin's twin paradox (1911).
+---
 
-### `RoundTrip` — going and coming back
+### Étape 4 : Temps propre, dilatation et saturation de Mandelstam–Tamm
 
-Reversing the direction, `y ↦ -y`, reflects the four-vector: `v₁`, `v₂` change sign, `v₀`, `v₃`
-do not, and the proper time is the same both ways. The way there and back has no net covariance
-and no net commutator, yet it carries at least twice the proper time of one way: the round trip
-pays twice, and returning to the start does not undo it.
+> **Proposition 4.1 (Vitesse relativiste et temps propre strictement positif).** À l'état de courant maximal, la vitesse du quadrivecteur vaut `β = 1 / C_N(d)`. Dès `d ≥ 4`, le vecteur pénètre à l'intérieur du cône et engendre un temps propre strictement positif `τ > 0`.
 
-| Statement | Lean |
-|---|---|
-| same proper time going and coming back | `properTime_neg` |
-| no net `v₁`, no net `v₂` | `round_trip_one`, `round_trip_two` |
-| `2 τ ≤ τ(there + back)` | `two_mul_properTime_le_round_trip` |
-| positive from `d = 4` on | `round_trip_maxCurrentState_pos` |
+*Module formel :* [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`speed_maxCurrentState`, `timelike_maxCurrentState`).  
+*Module formel (dilatation) :* [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) (`properTime_eq_mul_sin`, `properTime_le_time`, `properTime_maxCurrentState_pos`).  
+*Module formel (aller-retour) :* [`NRS3UncertaintyCone/RoundTrip.lean`](NRS3UncertaintyCone/RoundTrip.lean) (`round_trip_two`, `two_mul_properTime_le_round_trip`).
 
-In Physlib the same statement is `RoundTrip.lean`, where `2 τ ≤ τ(there + back)` is Kevorkian's
-reverse triangle inequality of causal vectors.
+---
 
-## Why `ℂ`
-
-Over `ℝ` the inner product is real, `v₂ = Im ⟪x, y⟫ = 0` for every state, and the commutator
-axis is gone: the cone of the pair drops from `ℝ^{1,3}` to `ℝ^{1,2}` and the quantum, which
-lives in `v₂`, cannot appear. A real space carries it only with a complex structure `J`,
-`J² = −1`, which is `ℂ^d` in real coordinates.
-
-![ℂ against ℝ](docs/figures/complex_vs_real.png)
-
-## Scope
-
-The four components are the variances, the covariance and the commutator of the pair. In
-Physlib the same vector is a `Lorentz.Vector 3` that causally follows the origin, and its
-commutator component is half the velocity `⟨J⟩` of the chain, bounded by the speed limit
-(`PhyslibAlpha/CondensedMatter/TightBindingChain/CausalCone.lean`). The statements are on
-`H_d = ℂ^d` with `d` finite;
-`d → ∞` is the Szegő limit `C_N^∞ = √(π²/3 − 2)`, `β∞ = 1/C_N^∞ ≈ 0.8805`, never reached.
-
-## History
-
-van der Waerden (1929) built spinor calculus on the identification of Hermitian `2 × 2` matrices
-with Minkowski vectors and of `SL(2, ℂ)` with the Lorentz group; Minkowski's geometry is of 1908,
-Lorentz's group of 1904–05. Robertson (1929) and Schrödinger (1930) gave the uncertainty
-inequality, Robertson (1934) its determinant form for several observables; Mandelstam and Tamm
-(1945) read it as a bound on the speed of a state. Everything here could have been stated then;
-the proofs use modern tools.
-
-## Build
-
-Lean 4 `v4.34.0`, Mathlib `v4.34.0`, and the base repository
-[`nava-robertson-schrodinger`](https://github.com/naype888-cloud/nava-robertson-schrodinger)
-(pinned in `lakefile.toml`).
+## 🛠️ Compilation et vérification
 
 ```bash
 lake exe cache get
 lake build
-lake env lean Verification/Axioms.lean   # only propext, Classical.choice, Quot.sound
+lake env lean Verification/Axioms.lean
 ```
 
-Every file: no `sorry`, no axioms beyond the standard three, lines of at most 100 characters,
-English headers. Figures: `python3 docs/simulation/figures_uncertainty_cone.py` (NumPy,
-Matplotlib); the interactive pages compute from the same matrices in `docs/cone-core.js`.
+Le module compile sous la base axiomatique standard de Lean 4 et Mathlib :
 
-## Timeline 1911–1945
+```text
+[propext, Classical.choice, Quot.sound]
+```
 
-RS^N answers a question of the Solvay era with later tools. The series is placed in that window:
-what falls inside it is the history the theorem belongs to; what falls after it is a proposal,
-not part of RS^N³.
+**0 `sorry`**, aucun axiome ad hoc.
 
-| Year | Event | Repository |
-|---|---|---|
-| 1911 | First Solvay conference: radiation and the quanta | |
-| 1911 | Langevin: the twin paradox, proper time against coordinate time | **[`nrs3-uncertainty-cone`](https://github.com/naype888-cloud/nrs3-uncertainty-cone)** (this one, `TimeDilation`) |
-| 1911–12 | Poincaré: Planck's law forces discrete levels | [`nrs3-poincare`](https://github.com/naype888-cloud/nrs3-poincare) |
-| 1915–20 | Szegő: limit theorems for Toeplitz matrices (the limit `C_N^∞`, `D8`) | [base repository (RS^N, RS^N³)](https://github.com/naype888-cloud/nava-robertson-schrodinger) |
-| 1917–27 | Einstein and de Sitter: `Λ` and the empty universe; Friedmann and Lemaître: the expanding universe | [`nrs3-de-sitter`](https://github.com/naype888-cloud/nrs3-de-sitter) |
-| 1925–27 | Pauli: exclusion, shells `2n²`, spin matrices | [`nrs3-pauli-dirac`](https://github.com/naype888-cloud/nrs3-pauli-dirac) |
-| 1927 | Heisenberg's relation; fifth Solvay conference: electrons and photons | |
-| 1928 | Dirac: the `4 × 4` gamma matrices | [`nrs3-pauli-dirac`](https://github.com/naype888-cloud/nrs3-pauli-dirac) |
-| **1929** | **van der Waerden: spinors, `SL(2, ℂ)` on Hermitian matrices; the uncertainty cone** | **[`nrs3-uncertainty-cone`](https://github.com/naype888-cloud/nrs3-uncertainty-cone)** (this one) |
-| 1929 | Weyl, Fock–Ivanenko: Dirac in curved spacetime | [`nrs3-pauli-dirac`](https://github.com/naype888-cloud/nrs3-pauli-dirac) |
-| 1929–30 | Robertson and Schrödinger: the uncertainty inequality | [base repository (RS^N, RS^N³)](https://github.com/naype888-cloud/nava-robertson-schrodinger) |
-| 1934 | Robertson: the determinant for several observables (det\|RS^N³) | [base repository](https://github.com/naype888-cloud/nava-robertson-schrodinger); strict in the band: **this one** |
-| 1945–46 | Mandelstam–Tamm: the time–energy bound; Rao (1945), Cramér (1946) | [`nrs3-mandelstam-tamm-cramer-rao`](https://github.com/naype888-cloud/nrs3-mandelstam-tamm-cramer-rao) |
+---
 
-**Tools from after the window.** Niven (1956), Fiedler (1973), Lean 4 and Mathlib. The question
-is of 1929; the tools are later; the checking is of 2026.
+<div align="center">
 
-## The mosaic
+### 🌌 *« L'incertitude quantique n'est pas un flou probabiliste : c'est la géométrie même de l'espace-temps de Minkowski où chaque particule trace son temps propre. »*
 
-- [RS^N and RS^N³ — the base theorem](https://github.com/naype888-cloud/nava-robertson-schrodinger)
-- [RS^N³ · Mandelstam–Tamm and Cramér–Rao](https://github.com/naype888-cloud/nrs3-mandelstam-tamm-cramer-rao)
-- [RS^N³ · Landauer and Carnot](https://github.com/naype888-cloud/nrs3-landauer-carnot)
-- [RS^N³ · de Sitter](https://github.com/naype888-cloud/nrs3-de-sitter)
-- [RS^N³ · Penrose](https://github.com/naype888-cloud/nrs3-penrose) (proposal)
-- [RS^N³ · Pauli–Dirac](https://github.com/naype888-cloud/nrs3-pauli-dirac)
-- **[RS^N³ · The uncertainty cone](https://github.com/naype888-cloud/nrs3-uncertainty-cone)** (this one)
-- [RS^N³ · Poincaré](https://github.com/naype888-cloud/nrs3-poincare)
-- [RS^N³ · Defect and curvature](https://github.com/naype888-cloud/nrs3-defect-curvature)
-- [RS^N³ · Rovelli — Loop Quantum Gravity](https://github.com/naype888-cloud/nrs3-rovelli-lqg) (proposal)
-- [RS^N³ · Dark](https://github.com/naype888-cloud/nrs3-dark)
-- [RS^N³ · Cristales](https://github.com/naype888-cloud/nrs3-cristales) (español)
+**Eduardo Nava Hernández** · naype888@gmail.com · [naype888-cloud](https://github.com/naype888-cloud)
 
-## License
-
-NRS Noncommercial License 1.0.0, see [`LICENSE`](LICENSE). Author: Eduardo Nava-Hernandez.
+</div>

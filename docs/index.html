@@ -218,7 +218,7 @@
     else if (R.band === false) pills.push(`<span class="pill info">speed ${f(Math.abs(R.speed), 5)} below v*(${st.d}) = ${R.vstar}: outside the band</span>`);
     else pills.push(`<span class="pill info">d = ${st.d}: no band (Ϙ(2) = Ϙ(3) = ∅)</span>`);
     if (st.real) pills.push(`<span class="pill info">ℝ only: v₂ = 0, the commutator axis is lost</span>`);
-    if (st.eps === 0 && !st.real) pills.push(`<span class="pill info">max current: β = 1/C<sub>N</sub>(${st.d}) = ${f(1 / C.CNava(st.d), 6)}</span>`);
+    if (st.eps === 0 && !st.real) pills.push(`<span class="pill info">max current: β = 1/C<sub>N</sub>(${st.d}) = ${f(1 / C.uncertaintyRatio(st.d), 6)}</span>`);
     $("verdict").innerHTML = pills.join("");
   }
 
@@ -236,7 +236,7 @@
     for (let t = 0; t <= 80; t++) ring.push([Math.cos(t * Math.PI / 40) / C.C_INF, Math.sin(t * Math.PI / 40) / C.C_INF, 1]);
     C.poly(g, P, ring, violet, 1.2, [5, 4]);
     for (let d = 2; d <= 16; d++) {
-      const b = 1 / C.CNava(d);
+      const b = 1 / C.uncertaintyRatio(d);
       C.dot(g, P, [0, -b, 1], d === st.d ? 4.5 : 2.6, d <= 3 ? red : green);
     }
     // the current vector, rescaled to v₀′ = 1 (balanced frame)
@@ -324,11 +324,11 @@
     hl(1 / C.C_INF, violet, [6, 4], `1/C_N^∞ = ${(1 / C.C_INF).toFixed(4)}: never reached`);
     const curve = (fn, col, dash) => { g.strokeStyle = col; g.lineWidth = 2; g.setLineDash(dash); g.beginPath();
       for (let d = 2; d <= D; d++) { const y = Y(fn(d)); d === 2 ? g.moveTo(X(d), y) : g.lineTo(X(d), y); } g.stroke(); g.setLineDash([]); g.lineWidth = 1; };
-    curve((d) => 1 / C.CNava(d), blue, []);
-    curve((d) => 1 / C.CNava(d) ** 2, orange, [5, 4]);
-    for (let d = 2; d <= D; d++) { g.fillStyle = d <= 3 ? red : blue; g.beginPath(); g.arc(X(d), Y(1 / C.CNava(d)), d === st.d ? 5 : 1.8, 0, 7); g.fill(); }
+    curve((d) => 1 / C.uncertaintyRatio(d), blue, []);
+    curve((d) => 1 / C.uncertaintyRatio(d) ** 2, orange, [5, 4]);
+    for (let d = 2; d <= D; d++) { g.fillStyle = d <= 3 ? red : blue; g.beginPath(); g.arc(X(d), Y(1 / C.uncertaintyRatio(d)), d === st.d ? 5 : 1.8, 0, 7); g.fill(); }
     g.fillStyle = ink; g.font = "600 12px system-ui";
-    g.fillText(`d = ${st.d}: β = ${(1 / C.CNava(st.d)).toFixed(5)}`, X(st.d) + 8, Y(1 / C.CNava(st.d)) + 18);
+    g.fillText(`d = ${st.d}: β = ${(1 / C.uncertaintyRatio(st.d)).toFixed(5)}`, X(st.d) + 8, Y(1 / C.uncertaintyRatio(st.d)) + 18);
     g.font = "11px system-ui"; g.fillStyle = muted; g.fillText("positions per axis d", X(13), h - 8);
   }
 
@@ -342,7 +342,7 @@
     const X = (b) => pl + (b - lo) / (hi - lo) * (w - pl - pr);
     let ratio = 1;
     ds.forEach((d, i) => {
-      const c = C.CNava(d), b = 1 / c, y = 18 + i * (h - 30) / 3;
+      const c = C.uncertaintyRatio(d), b = 1 / c, y = 18 + i * (h - 30) / 3;
       ratio *= c * c;
       g.strokeStyle = grid; g.beginPath(); g.moveTo(X(lo), y + 10); g.lineTo(X(hi), y + 10); g.stroke();
       g.strokeStyle = violet; g.setLineDash([4, 3]); g.beginPath(); g.moveTo(X(1 / C.C_INF), y); g.lineTo(X(1 / C.C_INF), y + 20); g.stroke(); g.setLineDash([]);

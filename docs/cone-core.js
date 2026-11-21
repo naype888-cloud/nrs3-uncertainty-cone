@@ -91,7 +91,7 @@ window.Cone = (() => {
       gram: [[a, 0], [ipr, ipi], [ipr, -ipi], [b, 0]] };
   }
   const cache = {};
-  function CNava(d) {
+  function uncertaintyRatio(d) {
     if (cache[d]) return cache[d];
     const r = analyse(d, maxCurrentState(d));
     return (cache[d] = r.beta > 0 ? 1 / r.beta : Infinity);
@@ -172,6 +172,6 @@ window.Cone = (() => {
       redraw();
     });
   }
-  return { VSTAR, C_INF, maxCurrentState, state, analyse, CNava, css, setup, view3d, projector, line, poly,
+  return { VSTAR, C_INF, maxCurrentState, state, analyse, uncertaintyRatio, css, setup, view3d, projector, line, poly,
     dot, label, mix, drawCone, themeToggle, rng, gauss };
 })();

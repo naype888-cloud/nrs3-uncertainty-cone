@@ -99,6 +99,6 @@
     return { x, y, a: A, b: B, v, interval, rest, beta, tension, band: Math.abs(tension) > 1, light: beta * beta, dark: 1 - beta * beta };
   }
   const cache = {};
-  const CNava = (d) => { if (!cache[d]) { const r = analyse(d, copy(maxCur(d))); cache[d] = r.beta > 0 ? 1 / r.beta : Infinity; } return cache[d]; };
-  C.ring = { state, step, analyse, CNava, C_INF: SQ2, copy };
+  const uncertaintyRatio = (d) => { if (!cache[d]) { const r = analyse(d, copy(maxCur(d))); cache[d] = r.beta > 0 ? 1 / r.beta : Infinity; } return cache[d]; };
+  C.ring = { state, step, analyse, uncertaintyRatio, C_INF: SQ2, copy };
 })();

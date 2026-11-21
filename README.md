@@ -52,6 +52,10 @@
 
 ## 📐 Démonstration constructive en quatre étapes
 
+<div align="center">
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etapes.png"><img src="assets/claro/plaque_cone_etapes.png" alt="L'échelle déductive en quatre étapes : de van der Waerden au cône de Robertson–Schrödinger" width="860"></picture>
+</div>
+
 ### Étape 1 : Isomorphisme de van der Waerden et quadrivecteurs
 
 > **Proposition 1.1 (Décomposition dans la base de Pauli).** Soit `G` une matrice hermitienne `2 × 2`. Il existe un unique quadrivecteur réel `v = (v₀, v₁, v₂, v₃)` tel que `G = v₀ 1 + v₁ σ₁ − v₂ σ₂ + v₃ σ₃`, et son déterminant coïncide avec la métrique de Minkowski `det G = v₀² − v₁² − v₂² − v₃²`.

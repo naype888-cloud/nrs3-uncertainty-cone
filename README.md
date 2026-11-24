@@ -1,3 +1,5 @@
+<div lang="fr">
+
 <div align="center">
 
 # RS<sup>N</sup>³ · Le Cône d'Incertitude
@@ -186,5 +188,8 @@ Le module compile sous la base axiomatique standard de Lean 4 et Mathlib :
 ### 🌌 *« L'incertitude quantique n'est pas un flou probabiliste : c'est la géométrie même de l'espace-temps de Minkowski où chaque particule trace son temps propre relativiste. »*
 
 **Eduardo Nava Hernández** · naype888@gmail.com · [naype888-cloud](https://github.com/naype888-cloud)
+
+</div>
+
 
 </div>

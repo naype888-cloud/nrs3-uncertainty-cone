@@ -12,7 +12,7 @@
 [![Physlib](https://img.shields.io/badge/Physlib-PRs%20Fusionnées-brightgreen.svg?style=flat-square)](https://github.com/leanprover-community/physlib/pulls?q=is%3Apr+is%3Amerged+author%3Anaype888-cloud)
 [![Simulateur](https://img.shields.io/badge/Simulateur_3D-Cône_Minkowski-00e5ff.svg?style=for-the-badge&logo=three.js)](https://naype888-cloud.github.io/nrs3-uncertainty-cone/)
 
-**[▶ Essayer en ligne : Le cône d'incertitude 3D](https://naype888-cloud.github.io/nrs3-uncertainty-cone/)** · **[▶ Boosts et rotations SL(2, ℂ)](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz.html)** · **[▶ Dilatation temporelle et temps propre](https://naype888-cloud.github.io/nrs3-uncertainty-cone/dilatacion.html)**
+**[▶ Essayer en ligne : Le cône d'incertitude 3D](https://naype888-cloud.github.io/nrs3-uncertainty-cone/)** · **[▶ Boosts et rotations SL(2, ℂ)](https://naype888-cloud.github.io/nrs3-uncertainty-cone/lorentz.html)** · **[▶ Dilatation temporelle et temps propre relativiste](https://naype888-cloud.github.io/nrs3-uncertainty-cone/dilatacion.html)**
 
 </div>
 
@@ -28,7 +28,7 @@
 >
 > **1 · Robertson–Schrödinger est le cône de lumière.** La positivité semi-définie `G ≥ 0` équivaut exactement à ce que le quadrivecteur `v` appartienne au cône causal futur fermé `v ∈ V̄₊`.
 >
-> **2 · Saturation luminale vs masse.** En dimension pure `d ≤ 3` à l'état de courant maximal, `det G = 0` : le vecteur est nul et repose sur la surface du cône (propagation à la vitesse de la lumière). Dès `d ≥ 4`, le défaut géométrique de Szegő le propulse strictement à l'intérieur du cône (`det G > 0`, vecteur du genre temps, temps propre positif, masse au repos).
+> **2 · Saturation luminale vs masse.** En dimension pure `d ≤ 3` à l'état de courant maximal, `det G = 0` : le vecteur est nul et repose sur la surface du cône (propagation à la vitesse de la lumière). Dès `d ≥ 4`, le défaut géométrique de Szegő le propulse strictement à l'intérieur du cône (`det G > 0`, vecteur du genre temps, temps propre relativiste positif, masse au repos).
 >
 > **3 · Le changement d'unités est un boost de Lorentz.** La transformation d'échelle `A ↦ λA`, `B ↦ B/λ` correspond exactement au boost diagonal `diag(λ, λ⁻¹) ∈ SL(2, ℂ)` le long du troisième axe spatial : l'intervalle relativiste `det G` reste invariant.
 >
@@ -45,7 +45,7 @@
 * L'intervalle de Minkowski coïncide avec le défaut de Gram `det G = η(v, v)` : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`det_gramMatrix`).
 * Le vecteur est nul si et seulement si l'inégalité de Cauchy–Schwarz est saturée avec égalité : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`interval_eq_zero_iff`).
 * À l'état de courant maximal pour `d ≥ 4`, le vecteur est strictement du genre temps : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`timelike_maxCurrentState`).
-* Le temps propre est borné par le temps coordonnée `τ ≤ t` et est strictement positif à courant maximal : [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) (`properTime_le_time`, `properTime_maxCurrentState_pos`).
+* Le temps propre relativiste est borné par le temps coordonnée `τ ≤ t` et est strictement positif à courant maximal : [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) (`properTime_le_time`, `properTime_maxCurrentState_pos`).
 * Le voyage aller-retour vérifie rigoureusement l'inégalité triangulaire de la relativité : [`NRS3UncertaintyCone/RoundTrip.lean`](NRS3UncertaintyCone/RoundTrip.lean) (`two_mul_properTime_le_round_trip`).
 
 ---
@@ -79,7 +79,7 @@
 
 ### Étape 3 : Changement d'unités et invariance de Lorentz dans SL(2, ℂ)
 
-> **Proposition 3.1 (Boost hyperbolique et invariance d'intervalle).** La redéfinition des échelles de mesure `A ↦ λA`, `B ↦ B/λ` est représentée par la matrice `diag(λ, λ⁻¹) ∈ SL(2, ℂ)`. Elle agit comme un boost pur le long du troisième axe et conserve strictement le temps propre `det G`.
+> **Proposition 3.1 (Boost hyperbolique et invariance d'intervalle).** La redéfinition des échelles de mesure `A ↦ λA`, `B ↦ B/λ` est représentée par la matrice `diag(λ, λ⁻¹) ∈ SL(2, ℂ)`. Elle agit comme un boost pur le long du troisième axe et conserve strictement le temps propre relativiste `det G`.
 
 <div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape3.png"><img src="assets/claro/plaque_cone_etape3.png" alt="Étape 3 : Changement d'unités et invariance de Lorentz dans SL(2, ℂ)" width="860"></picture></div>
 
@@ -88,11 +88,11 @@
 
 ---
 
-### Étape 4 : Temps propre, dilatation et saturation de Mandelstam–Tamm
+### Étape 4 : Temps propre relativiste, dilatation et saturation de Mandelstam–Tamm
 
-> **Proposition 4.1 (Vitesse relativiste et temps propre strictement positif).** À l'état de courant maximal, la vitesse du quadrivecteur vaut `β = 1 / C_N(d)`. Dès `d ≥ 4`, le vecteur pénètre à l'intérieur du cône et engendre un temps propre strictement positif `τ > 0`.
+> **Proposition 4.1 (Vitesse relativiste et temps propre relativiste strictement positif).** À l'état de courant maximal, la vitesse du quadrivecteur vaut `β = 1 / C_N(d)`. Dès `d ≥ 4`, le vecteur pénètre à l'intérieur du cône et engendre un temps propre relativiste strictement positif `τ > 0`.
 
-<div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape4.png"><img src="assets/claro/plaque_cone_etape4.png" alt="Étape 4 : Temps propre, dilatation et saturation de Mandelstam–Tamm" width="860"></picture></div>
+<div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape4.png"><img src="assets/claro/plaque_cone_etape4.png" alt="Étape 4 : Temps propre relativiste, dilatation et saturation de Mandelstam–Tamm" width="860"></picture></div>
 
 *Module formel :* [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`speed_maxCurrentState`, `timelike_maxCurrentState`).  
 *Module formel (dilatation) :* [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) (`properTime_eq_mul_sin`, `properTime_le_time`, `properTime_maxCurrentState_pos`).  
@@ -117,7 +117,7 @@
 |:---|:---|:---|:---:|
 | [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) | `det_herm` | `det(v₀ 1 + v·σ) = v₀² − v₁² − v₂² − v₃²` | 0 |
 | [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) | `null_maxCurrentState_iff` | Vecteur nul ⟺ `d = 2, 3` dans l'état de courant maximal | 0 |
-| [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) | `properTime_maxCurrentState_pos` | Temps propre strictement positif dès `d = 4` | 0 |
+| [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) | `properTime_maxCurrentState_pos` | Temps propre relativiste strictement positif dès `d = 4` | 0 |
 | [`NRS3UncertaintyCone/RoundTrip.lean`](NRS3UncertaintyCone/RoundTrip.lean) | `two_mul_properTime_le_round_trip` | L'aller-retour porte au moins `2 τ` | 0 |
 | [`NRS3UncertaintyCone/Band.lean`](NRS3UncertaintyCone/Band.lean) | `robertson_det_strict_of_band` | Dans la bande, `|det Ω| < det Σ` | 0 |
 
@@ -183,7 +183,7 @@ Le module compile sous la base axiomatique standard de Lean 4 et Mathlib :
 
 <div align="center">
 
-### 🌌 *« L'incertitude quantique n'est pas un flou probabiliste : c'est la géométrie même de l'espace-temps de Minkowski où chaque particule trace son temps propre. »*
+### 🌌 *« L'incertitude quantique n'est pas un flou probabiliste : c'est la géométrie même de l'espace-temps de Minkowski où chaque particule trace son temps propre relativiste. »*
 
 **Eduardo Nava Hernández** · naype888@gmail.com · [naype888-cloud](https://github.com/naype888-cloud)
 

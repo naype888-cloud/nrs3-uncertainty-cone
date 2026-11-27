@@ -2,7 +2,8 @@
 
 <div align="center">
 
-# RS<sup>N</sup>³ · Le Cône d'Incertitude
+<picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/titre_uncertainty_cone.png"><img src="assets/claro/titre_uncertainty_cone.png" alt="RS^N³ · Le Cône d'Incertitude" width="860"></picture>
+**"RS<sup>N</sup>³ · Le Cône d'Incertitude"**
 ### L'incertitude d'une paire d'observables est un quadrivecteur de Minkowski strictement enfermé dans le cône de lumière futur
 
 **Eduardo Nava Hernández**  

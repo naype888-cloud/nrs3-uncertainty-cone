@@ -7,7 +7,7 @@
 ### L'incertitude d'une paire d'observables est un quadrivecteur de Minkowski strictement enfermé dans le cône de lumière futur
 
 **Eduardo Nava Hernández**  
-*Vérification formelle certifiée en Lean 4 · 0 sorry · Mathlib (<code>ZFC</code>)*
+*Vérification formelle certifiée en Lean 4 · `0 sorry` · Mathlib (<code>ZFC</code>)*
 
 [![Lean 4](https://img.shields.io/badge/Lean_4-v4.35.0-blue.svg?style=flat-square)](https://leanprover.github.io/)
 [![Mathlib](https://img.shields.io/badge/Mathlib-vérifié-2ea44f.svg?style=flat-square)](https://github.com/leanprover-community/mathlib4)
@@ -23,17 +23,17 @@
 
 > ### 🏛️ Ce qui distingue le théorème : van der Waerden et la géométrie causale de l'incertitude
 >
-> Sur `ℋ_d = ℂ^d`, la matrice de Gram des fluctuations de transport T_d et de position P_d est une matrice hermitienne `2 × 2`. D'après van der Waerden (1929), toute matrice hermitienne `2 × 2` est un quadrivecteur de l'espace de Minkowski dont le déterminant est l'intervalle relativiste `det G = τ² ≥ 0`.
+> Sur `ℋ_d = ℂ^d`, la matrice de Gram des fluctuations de transport T_d et de position P_d est une matrice hermitienne `2 × 2`. D'après van der Waerden (1929), toute matrice hermitienne `2 × 2` est un quadrivecteur de l'espace de Minkowski dont le déterminant est l'intervalle relativiste det G = τ² ≥ 0.
 >
 > <div align="center">
 > <picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_master.png"><img src="assets/claro/plaque_cone_master.png" alt="Plaque maîtresse : le cône d'incertitude et la géométrie de Minkowski" width="860"></picture>
 > </div>
 >
-> **1 · Robertson–Schrödinger est le cône de lumière.** La positivité semi-définie `G ≥ 0` équivaut exactement à ce que le quadrivecteur `v` appartienne au cône causal futur fermé `v ∈ V̄₊`.
+> **1 · Robertson–Schrödinger est le cône de lumière.** La positivité semi-définie G ≥ 0 équivaut exactement à ce que le quadrivecteur v appartienne au cône causal futur fermé v ∈ V̄₊.
 >
-> **2 · Saturation luminale vs masse.** En dimension pure `d ≤ 3` à l'état de courant maximal, `det G = 0` : le vecteur est nul et repose sur la surface du cône (propagation à la vitesse de la lumière). Dès `d ≥ 4`, le défaut géométrique de Szegő le propulse strictement à l'intérieur du cône (`det G > 0`, vecteur du genre temps, temps propre relativiste positif, masse au repos).
+> **2 · Saturation luminale vs masse.** En dimension pure d ≤ 3 à l'état de courant maximal, `det G = 0` : le vecteur est nul et repose sur la surface du cône (propagation à la vitesse de la lumière). Dès d ≥ 4, le défaut géométrique de Szegő le propulse strictement à l'intérieur du cône (`det G > 0`, vecteur du genre temps, temps propre relativiste positif, masse au repos).
 >
-> **3 · Le changement d'unités est un boost de Lorentz.** La transformation d'échelle `A ↦ λA`, `B ↦ B/λ` correspond exactement au boost diagonal `diag(λ, λ⁻¹) ∈ SL(2, ℂ)` le long du troisième axe spatial : l'intervalle relativiste `det G` reste invariant.
+> **3 · Le changement d'unités est un boost de Lorentz.** La transformation d'échelle A ↦ λA, B ↦ B/λ correspond exactement au boost diagonal diag(λ, λ⁻¹) ∈ SL(2, ℂ) le long du troisième axe spatial : l'intervalle relativiste `det G` reste invariant.
 >
 > **4 · Vitesse relativiste et Mandelstam–Tamm.** La vitesse spatiale dans le référentiel équilibré est `β = 1 / C_N(d) = cos θ_NRS`, et son carré `β²` sature la borne de Mandelstam–Tamm.
 
@@ -47,8 +47,8 @@
 * La matrice de Gram des fluctuations de deux observables est toujours un vecteur causal futur : [`NRS3UncertaintyCone/VanDerWaerden1929.lean`](NRS3UncertaintyCone/VanDerWaerden1929.lean) (`robertsonSchrodinger_future`).
 * L'intervalle de Minkowski coïncide avec le défaut de Gram `det G = η(v, v)` : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`det_gramMatrix`).
 * Le vecteur est nul si et seulement si l'inégalité de Cauchy–Schwarz est saturée avec égalité : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`interval_eq_zero_iff`).
-* À l'état de courant maximal pour `d ≥ 4`, le vecteur est strictement du genre temps : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`timelike_maxCurrentState`).
-* Le temps propre relativiste est borné par le temps coordonnée `τ ≤ t` et est strictement positif à courant maximal : [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) (`properTime_le_time`, `properTime_maxCurrentState_pos`).
+* À l'état de courant maximal pour d ≥ 4, le vecteur est strictement du genre temps : [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) (`timelike_maxCurrentState`).
+* Le temps propre relativiste est borné par le temps coordonnée τ ≤ t et est strictement positif à courant maximal : [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) (`properTime_le_time`, `properTime_maxCurrentState_pos`).
 * Le voyage aller-retour vérifie rigoureusement l'inégalité triangulaire de la relativité : [`NRS3UncertaintyCone/RoundTrip.lean`](NRS3UncertaintyCone/RoundTrip.lean) (`two_mul_properTime_le_round_trip`).
 
 ---
@@ -61,7 +61,7 @@
 
 ### Étape 1 : Isomorphisme de van der Waerden et quadrivecteurs
 
-> **Proposition 1.1 (Décomposition dans la base de Pauli).** Soit `G` une matrice hermitienne `2 × 2`. Il existe un unique quadrivecteur réel `v = (v₀, v₁, v₂, v₃)` tel que `G = v₀ 1 + v₁ σ₁ − v₂ σ₂ + v₃ σ₃`, et son déterminant coïncide avec la métrique de Minkowski `det G = v₀² − v₁² − v₂² − v₃²`.
+> **Proposition 1.1 (Décomposition dans la base de Pauli).** Soit G une matrice hermitienne `2 × 2`. Il existe un unique quadrivecteur réel `v = (v₀, v₁, v₂, v₃)` tel que `G = v₀ 1 + v₁ σ₁ − v₂ σ₂ + v₃ σ₃`, et son déterminant coïncide avec la métrique de Minkowski `det G = v₀² − v₁² − v₂² − v₃²`.
 
 <div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape1.png"><img src="assets/claro/plaque_cone_etape1.png" alt="Étape 1 : Isomorphisme de van der Waerden et quadrivecteurs" width="860"></picture></div>
 
@@ -71,7 +71,7 @@
 
 ### Étape 2 : Robertson–Schrödinger comme géométrie du cône causal
 
-> **Proposition 2.1 (Caractère causal futur de la matrice de Gram).** Pour tout état quantique et toute paire d'observables, la matrice de Gram des fluctuations satisfait `G ≥ 0`. Par conséquent, le quadrivecteur des incertitudes est confiné dans le cône de lumière futur fermé `v ∈ V̄₊`.
+> **Proposition 2.1 (Caractère causal futur de la matrice de Gram).** Pour tout état quantique et toute paire d'observables, la matrice de Gram des fluctuations satisfait G ≥ 0. Par conséquent, le quadrivecteur des incertitudes est confiné dans le cône de lumière futur fermé v ∈ V̄₊.
 
 <div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape2.png"><img src="assets/claro/plaque_cone_etape2.png" alt="Étape 2 : Robertson–Schrödinger comme géométrie du cône causal" width="860"></picture></div>
 
@@ -82,7 +82,7 @@
 
 ### Étape 3 : Changement d'unités et invariance de Lorentz dans SL(2, ℂ)
 
-> **Proposition 3.1 (Boost hyperbolique et invariance d'intervalle).** La redéfinition des échelles de mesure `A ↦ λA`, `B ↦ B/λ` est représentée par la matrice `diag(λ, λ⁻¹) ∈ SL(2, ℂ)`. Elle agit comme un boost pur le long du troisième axe et conserve strictement le temps propre relativiste `det G`.
+> **Proposition 3.1 (Boost hyperbolique et invariance d'intervalle).** La redéfinition des échelles de mesure A ↦ λA, B ↦ B/λ est représentée par la matrice diag(λ, λ⁻¹) ∈ SL(2, ℂ). Elle agit comme un boost pur le long du troisième axe et conserve strictement le temps propre relativiste `det G`.
 
 <div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape3.png"><img src="assets/claro/plaque_cone_etape3.png" alt="Étape 3 : Changement d'unités et invariance de Lorentz dans SL(2, ℂ)" width="860"></picture></div>
 
@@ -93,7 +93,7 @@
 
 ### Étape 4 : Temps propre relativiste, dilatation et saturation de Mandelstam–Tamm
 
-> **Proposition 4.1 (Vitesse relativiste et temps propre relativiste strictement positif).** À l'état de courant maximal, la vitesse du quadrivecteur vaut `β = 1 / C_N(d)`. Dès `d ≥ 4`, le vecteur pénètre à l'intérieur du cône et engendre un temps propre relativiste strictement positif `τ > 0`.
+> **Proposition 4.1 (Vitesse relativiste et temps propre relativiste strictement positif).** À l'état de courant maximal, la vitesse du quadrivecteur vaut `β = 1 / C_N(d)`. Dès d ≥ 4, le vecteur pénètre à l'intérieur du cône et engendre un temps propre relativiste strictement positif `τ > 0`.
 
 <div align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/oscuro/plaque_cone_etape4.png"><img src="assets/claro/plaque_cone_etape4.png" alt="Étape 4 : Temps propre relativiste, dilatation et saturation de Mandelstam–Tamm" width="860"></picture></div>
 
@@ -139,7 +139,7 @@
 | [`01 · nava-robertson-schrodinger`](https://github.com/naype888-cloud/nava-robertson-schrodinger) | Le canon : l'incertitude élémentaire dimensionnelle sur le cube ouvert, ℂᵈ ⊗ ℂᵈ ⊗ ℂᵈ |
 | [`02 · Proper-Time-General-Relativity`](https://github.com/naype888-cloud/Proper-Time-General-Relativity) | Le temps compte les pas : τ = 1/(φ\|t\|) à quatre sites ; masse effective, équivalence, gravitation |
 | [`03 · nrs3-mandelstam-tamm-cramer-rao`](https://github.com/naype888-cloud/nrs3-mandelstam-tamm-cramer-rao) | Mandelstam–Tamm et Cramér–Rao : aucun état n'est orthogonal à lui-même avant πħ/(2ΔE) |
-| [`04 · YM-By-Perelmans-surgery-method`](https://github.com/naype888-cloud/YM-By-Perelmans-surgery-method) | Yang–Mills sur réseau : loi d'aire uniforme, matrice de transfert, défaut de fibre (0 sorry) |
+| [`04 · YM-By-Perelmans-surgery-method`](https://github.com/naype888-cloud/YM-By-Perelmans-surgery-method) | Yang–Mills sur réseau : loi d'aire uniforme, matrice de transfert, défaut de fibre (`0 sorry`) |
 | [`05 · nrs3-tightbinding`](https://github.com/naype888-cloud/nrs3-tightbinding) | La chaîne de Physlib, le cube ouvert et la table périodique (H–Og), un cube 3D par élément |
 | [`06 · nrs3-cristales`](https://github.com/naype888-cloud/nrs3-cristales) | Cristaux : la symétrie donne la forme de Σ et Ω, le spectre donne la taille |
 | [`07 · nrs3-completude`](https://github.com/naype888-cloud/nrs3-completude) | Complétude constructive et limites spectrales par Robertson–Fiedler–Niven–Szegő |
@@ -150,7 +150,7 @@
 | [`12 · nrs3-penrose`](https://github.com/naype888-cloud/nrs3-penrose) | Effondrement gravitationnel de Diósi–Penrose : temps de décohérence par auto-énergie |
 | [`13 · nrs3-rovelli-lqg`](https://github.com/naype888-cloud/nrs3-rovelli-lqg) | Gravité quantique à boucles : spectre d'aire discrète, opérateur de surface et saturation de spin |
 | [**14 · nrs3-uncertainty-cone**](https://github.com/naype888-cloud/nrs3-uncertainty-cone) | Cône de lumière futur et cercle de Minkowski : structure causale sous revêtement SL(2, ℂ) *(ce dépôt)* |
-| [`15 · lean4-commits`](https://github.com/naype888-cloud/lean4-commits) | 53 PRs fusionnées dans leanprover-community/physlib : catalogue de preuves formelles, 0 sorry, ZFC |
+| [`15 · lean4-commits`](https://github.com/naype888-cloud/lean4-commits) | 53 PRs fusionnées dans leanprover-community/physlib : catalogue de preuves formelles, `0 sorry`, ZFC |
 ---
 
 ## ⏱️ Chronologie

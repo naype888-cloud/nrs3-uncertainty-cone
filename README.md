@@ -6,7 +6,7 @@
 ### L'incertitude d'une paire d'observables est un quadrivecteur de Minkowski strictement enfermé dans le cône de lumière futur
 
 **Eduardo Nava Hernández**  
-*Vérification formelle certifiée en Lean 4 · 0 sorry · Mathlib (ZFC)*
+*Vérification formelle certifiée en Lean 4 · 0 sorry · Mathlib (<code>ZFC</code>)*
 
 [![Lean 4](https://img.shields.io/badge/Lean_4-v4.35.0-blue.svg?style=flat-square)](https://leanprover.github.io/)
 [![Mathlib](https://img.shields.io/badge/Mathlib-vérifié-2ea44f.svg?style=flat-square)](https://github.com/leanprover-community/mathlib4)
@@ -107,7 +107,7 @@
 | PR Physlib | Titre | Lien avec ce dépôt | Statut |
 |:---:|:---|:---|:---:|
 | [**#1649**](https://github.com/leanprover-community/physlib/pull/1649) | characterize equality in state uncertainty relations | Égalité dans Robertson–Schrödinger ⟺ défaut de Gram nul : le vecteur est sur le cône, étape 2 | **MERGED** |
-| [**#1730**](https://github.com/leanprover-community/physlib/pull/1730) | Robertson determinant | `|det Ω| ≤ det Σ` (Robertson 1934), rendu strict dans la bande par `robertson_det_strict_of_band` | **MERGED** |
+| [**#1730**](https://github.com/leanprover-community/physlib/pull/1730) | Robertson determinant | `\|det Ω\| ≤ det Σ` (Robertson 1934), rendu strict dans la bande par `robertson_det_strict_of_band` | **MERGED** |
 | [**#1745**](https://github.com/leanprover-community/physlib/pull/1745) | velocity band of forced uncertainty in the open tight binding chain | La bande de vitesse où le défaut est forcé : l'intérieur strict du cône (`Band.lean`) | **MERGED** |
 | [**#1756**](https://github.com/leanprover-community/physlib/pull/1756) | the NRS angle and the volumetric quantum of the open tight binding cube | `θ_NRS = arccos(1 / C_N)` : la vitesse `β = cos θ_NRS` de l'étape 4 | **MERGED** |
 
@@ -121,7 +121,7 @@
 | [`NRS3UncertaintyCone/Cone.lean`](NRS3UncertaintyCone/Cone.lean) | `null_maxCurrentState_iff` | Vecteur nul ⟺ `d = 2, 3` dans l'état de courant maximal | 0 |
 | [`NRS3UncertaintyCone/TimeDilation.lean`](NRS3UncertaintyCone/TimeDilation.lean) | `properTime_maxCurrentState_pos` | Temps propre relativiste strictement positif dès `d = 4` | 0 |
 | [`NRS3UncertaintyCone/RoundTrip.lean`](NRS3UncertaintyCone/RoundTrip.lean) | `two_mul_properTime_le_round_trip` | L'aller-retour porte au moins `2 τ` | 0 |
-| [`NRS3UncertaintyCone/Band.lean`](NRS3UncertaintyCone/Band.lean) | `robertson_det_strict_of_band` | Dans la bande, `|det Ω| < det Σ` | 0 |
+| [`NRS3UncertaintyCone/Band.lean`](NRS3UncertaintyCone/Band.lean) | `robertson_det_strict_of_band` | Dans la bande, `\|det Ω\| < det Σ` | 0 |
 
 ### Portée
 
@@ -136,7 +136,7 @@
 |:---|:---|
 | [`00 · bacqm-substrate`](https://github.com/naype888-cloud/bacqm-systems) | Substrat matériel & moteur du noyau Linux : modules de mémoire dynamiques en temps réel |
 | [`01 · nava-robertson-schrodinger`](https://github.com/naype888-cloud/nava-robertson-schrodinger) | Le canon : l'incertitude élémentaire dimensionnelle sur le cube ouvert, ℂᵈ ⊗ ℂᵈ ⊗ ℂᵈ |
-| [`02 · Proper-Time-General-Relativity`](https://github.com/naype888-cloud/Proper-Time-General-Relativity) | Le temps compte les pas : τ = 1/(φ|t|) à quatre sites ; masse effective, équivalence, gravitation |
+| [`02 · Proper-Time-General-Relativity`](https://github.com/naype888-cloud/Proper-Time-General-Relativity) | Le temps compte les pas : τ = 1/(φ\|t\|) à quatre sites ; masse effective, équivalence, gravitation |
 | [`03 · nrs3-mandelstam-tamm-cramer-rao`](https://github.com/naype888-cloud/nrs3-mandelstam-tamm-cramer-rao) | Mandelstam–Tamm et Cramér–Rao : aucun état n'est orthogonal à lui-même avant πħ/(2ΔE) |
 | [`04 · YM-By-Perelmans-surgery-method`](https://github.com/naype888-cloud/YM-By-Perelmans-surgery-method) | Yang–Mills sur réseau : loi d'aire uniforme, matrice de transfert, défaut de fibre (0 sorry) |
 | [`05 · nrs3-tightbinding`](https://github.com/naype888-cloud/nrs3-tightbinding) | La chaîne de Physlib, le cube ouvert et la table périodique (H–Og), un cube 3D par élément |
